@@ -1,0 +1,12 @@
+<h2>コミュニティ作成</h2>
+<%= form_for @community do |f| %>
+
+  <div class="field">
+    <%= f.label :name, "名前" %>
+    <%= f.text_field :name %>
+  </div>
+  
+  <div class="actions">
+    <%= f.submit "作成する" %>
+  </div>
+<% end %>
