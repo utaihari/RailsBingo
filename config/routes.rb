@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+
+	
+	resources :room, :only => [:index, :create,:edit,:show,:update,:destroy]
+	get 'room/new/:id', to: 'room#new' ,as:'new_room'
 	resources :communities
 
 	root 'pages#index'

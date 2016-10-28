@@ -9,6 +9,7 @@ class CommunitiesController < ApplicationController
   def show
     @current_community = Community.find_by(params[:id])
     @members = CommunityUserList.joins(:user).where(community_id: params[:id])
+    @isOrganizer = isCommunityOrganizer(params[:id])
   end
 
   def new
@@ -67,6 +68,13 @@ class CommunitiesController < ApplicationController
     @communities = Community.where(user_id: current_user.id)
   end
 
+  def isCommunityOrganizer(community_id)
+    if current_user.id == Community.find_by(community_id).user_id
+      return true
+    else
+      return false
+    end
+  end
 
   private
   # Use callbacks to share common setup or constraints between actions.

@@ -11,7 +11,7 @@
 			<% if member.user.id == @current_community.user_id %>
 			<td class="master">・管理者 <%= member.user.name %></td>
 			<% elsif current_user.id == member.user.id%>
-			<td class="my_self">・自分 <%= member.user.name %></td>
+			<td class="my_self"><%= member.user.name %></td>
 			<% else %>
 			<td><%= member.user.name %></td>
 			<% end %>	
@@ -19,3 +19,6 @@
 		<% end %>
 	</tbody>
 </table>
+<% if @isOrganizer %>
+<p><%= link_to "このコミュニティでビンゴを開催する", controller:"room",action:"new", id: @current_community.id%></p> 
+<% end %>

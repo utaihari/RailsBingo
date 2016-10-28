@@ -87,3 +87,5 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+*.sublime-project
+rails_bingo.sublime-workspace
