@@ -68,7 +68,7 @@ class CommunitiesController < ApplicationController
     @communities = Community.where(user_id: current_user.id)
   end
 
-  def isCommunityOrganizer(community_id)
+  def self.isCommunityOrganizer(community_id)
     if current_user.id == Community.find_by(community_id).user_id
       return true
     else

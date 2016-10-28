@@ -89,3 +89,4 @@ $RECYCLE.BIN/
 *.lnk
 *.sublime-project
 rails_bingo.sublime-workspace
+*.sublime-workspace
