@@ -1,0 +1,14 @@
+<h1>Rooms#new</h1>
+<h1><% @community.name %></h1>
+<%= form_for([@community,@room]) do |f|%>
+<div>
+	<%= f.label :name, "名前" %>
+	<%= f.text_field :name %>
+</div>
+
+<div>
+	<%= f.label :canUseItem, "アイテム使用可" %>
+	<%= f.check_box :canUseItem ,{},"true","false" %> 
+</div> 
+<%= f.submit %>
+<% end %>

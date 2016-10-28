@@ -14,11 +14,11 @@
 			<td class="my_self"><%= member.user.name %></td>
 			<% else %>
 			<td><%= member.user.name %></td>
-			<% end %>	
+			<% end %>
 		</tr>
 		<% end %>
 	</tbody>
 </table>
 <% if @isOrganizer %>
-<p><%= link_to "このコミュニティでビンゴを開催する", controller:"room",action:"new", id: @current_community.id%></p> 
+<p><%= link_to "このコミュニティでビンゴを開催する", new_community_room_path(@current_community.id) %></p> 
 <% end %>

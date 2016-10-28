@@ -1,6 +1,9 @@
 # coding: utf-8
 
 class CommunitiesController < ApplicationController
+  before_action :set_community, only: [:show, :edit, :update, :destroy]
+  before_action :community_params, only: [:edit, :update, :destroy]
+
   def index
     @communities = Community.joins(:user).all
     @belong_communities = CommunityUserList.where(user_id: current_user.id)
@@ -32,8 +35,11 @@ class CommunitiesController < ApplicationController
   end
 
   def join
-    if !CommunityUserList.exists?(community_id: params[:id], user_id: current_user)
-      @community_user_list = CommunityUserList.create(community_id: params[:id], user_id: current_user.id)
+    if @community == nil
+      redirect_to 'pages_index_path'
+    end
+    if !CommunityUserList.exists?(community_id: params[:id], user_id: current_user.id)
+      @community_user_list = CommunityUserList.new(community_id: params[:id], user_id: current_user.id)
       if @community_user_list.save
         redirect_to controller: 'communities', action: 'show', id: params[:id]
       else
@@ -45,6 +51,9 @@ class CommunitiesController < ApplicationController
   end
 
   def leave
+    if @community == nil
+      redirect_to 'pages_index_path'
+    end
     if CommunityUserList.exists?(community_id: params[:id], user_id: current_user.id)
       @community_user_list = CommunityUserList.find_by(community_id: params[:id], user_id: current_user.id)
       @community_user_list.destroy
@@ -68,14 +77,6 @@ class CommunitiesController < ApplicationController
     @communities = Community.where(user_id: current_user.id)
   end
 
-  def self.isCommunityOrganizer(community_id)
-    if current_user.id == Community.find_by(community_id).user_id
-      return true
-    else
-      return false
-    end
-  end
-
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_community
@@ -85,5 +86,9 @@ class CommunitiesController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def community_params
     params.require(:community).permit(:name, :user_id)
+  end
+
+  def isCommunityOrganizer(community_id)
+    return current_user.id == Community.find_by(community_id).user_id
   end
 end
