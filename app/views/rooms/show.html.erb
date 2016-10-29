@@ -4,3 +4,12 @@
 <% if @isRoomOrganizer %>
 	<p>管理者です</p>
 <% end %>
+
+<p>参加者一覧</p>
+<% @members.each do |member| %>
+<div>
+	<p><%= member.name %></p>
+</div>
+<% end %>
+<form>
+</form>

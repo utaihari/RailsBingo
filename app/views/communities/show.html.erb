@@ -1,24 +1,36 @@
-<table>
-	<thead>
-		<tr>
-			<th>参加者一覧</th>
-			<th colspan="4"></th>
-		</tr>
-	</thead>
-	<tbody>
-		<% @members.each do |member| %>
-		<tr>
-			<% if member.user.id == @current_community.user_id %>
-			<td class="master">・管理者 <%= member.user.name %></td>
-			<% elsif current_user.id == member.user.id%>
-			<td class="my_self"><%= member.user.name %></td>
-			<% else %>
-			<td><%= member.user.name %></td>
-			<% end %>
-		</tr>
+<h1><%= @community.name %></h1>
+<div class="members">
+	<h2>参加者一覧</h2>
+	<% @members.each do |member| %>
+	<div class="member">
+		<% if member.user.id == @community.user_id %>
+		<p class="organizer">・管理者 <%= member.user.name %></p>
+		<% elsif current_user.id == member.user.id%>
+		<p class="my_self"><%= member.user.name %></p>
+		<% else %>
+		<p class="other"><%= member.user.name %></p>
 		<% end %>
-	</tbody>
-</table>
+		<% end %>
+	</div>
+</div>
+
+<% if !@opened_rooms.blank? %>
+<div class="rooms">
+	<h2>現在開催中のビンゴ</h2>
+	<% @opened_rooms.each do |room| %>
+	<div class="room">
+		<%= link_to room.name, community_room_path(@community.id, room.id) %>
+	</div>
+	<% end %>
+	<% end %>
+</div>
+
+
 <% if @isOrganizer %>
-<p><%= link_to "このコミュニティでビンゴを開催する", new_community_room_path(@current_community.id) %></p> 
+<div class="manage">
+	<p><%= link_to "このコミュニティでビンゴを開催する", new_community_room_path(@community.id) %></p>
+	<p><%= link_to 'このコミュニティを削除', community_path, method: :delete, data: { confirm: '本当に削除してもよろしいですか?' } %></p>
+</div>
 <% end %>
+
+<br>

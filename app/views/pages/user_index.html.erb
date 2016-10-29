@@ -1,23 +1,23 @@
-<h1>こんにちは、<%= current_user.name %>さん</h1>
+<h1><%= current_user.name %>さんのマイページ</h1>
+
+
+<% if !@joined_communities.blank? %>
+<h2>参加中のコミュニティ一覧</h2>
+<% @joined_communities.each do |community| %>
+<div class="joined_communities" >
+	<p><%= link_to community.name, community_path(community.id),class:"community_name" %></p>
+</div>
+<% end %>
+<% end %>
 
 
 <% if !@own_communities.blank? %>
-<table>
-	<thead>
-		<tr>
-			<th>あなたのコミュニティ一覧</th>
-			<th colspan="2"></th>
-		</tr>
-	</thead>
-<tbody>
-	<% @own_communities.each do |community| %>
-	<tr>
-		<td><%= community.name %></td>
-		<td><%= link_to 'メンバーリスト', community_path(community.id) %></td>
-		<td><%= link_to '削除', community, method: :delete, data: { confirm: '本当に削除してもよろしいですか?' } %></td>
-	</tr>
-	<% end %>
-</tbody>
+<h2>あなたのコミュニティ一覧</h2>
+<% @own_communities.each do |community| %>
+<div class="own_communities" >
+	<p><%= link_to community.name, community_path(community.id),class:"community_name" %></p>
+</div>
+<% end %>
 <% end %>
 
 <p>

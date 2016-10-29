@@ -2,7 +2,7 @@
 
 class CommunitiesController < ApplicationController
   before_action :set_community, only: [:show, :edit, :update, :destroy]
-  before_action :community_params, only: [:edit, :update, :destroy]
+  before_action :community_params, only: [:edit, :update]
 
   def index
     @communities = Community.joins(:user).all
@@ -10,9 +10,10 @@ class CommunitiesController < ApplicationController
   end
 
   def show
-    @current_community = Community.find_by(params[:id])
     @members = CommunityUserList.joins(:user).where(community_id: params[:id])
     @isOrganizer = isCommunityOrganizer(params[:id])
+    @isMember = CommunityUserList.exists?(community_id:params[:id], user_id: current_user)
+    @opened_rooms = Room.where(community_id:params[:id], isFinished: false)
   end
 
   def new
@@ -27,7 +28,7 @@ class CommunitiesController < ApplicationController
     if @community.save
       CommunityUserList.create(community_id: @community.id,user_id: current_user.id)
       # @userはuser_path(@user) に自動変換される
-      redirect_to @community, notice: "作成しました"
+      redirect_to action: "show", id: @community.id, notice:"作成しました" and return
     else
       # ValidationエラーなどでDBに保存できない場合 new.html.erb を再表示
       render 'new'
@@ -36,7 +37,7 @@ class CommunitiesController < ApplicationController
 
   def join
     if @community == nil
-      redirect_to 'pages_index_path'
+      redirect_to 'pages_index_path' and return
     end
     if !CommunityUserList.exists?(community_id: params[:id], user_id: current_user.id)
       @community_user_list = CommunityUserList.new(community_id: params[:id], user_id: current_user.id)
@@ -89,6 +90,6 @@ class CommunitiesController < ApplicationController
   end
 
   def isCommunityOrganizer(community_id)
-    return current_user.id == Community.find_by(community_id).user_id
+    return current_user.id == Community.find_by(id:community_id).user_id
   end
 end

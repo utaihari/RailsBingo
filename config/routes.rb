@@ -14,7 +14,7 @@ Rails.application.routes.draw do
 		end
 	end
 
-	get 'communities/:community_id/rooms/:room_id/bingo_cards', to: 'bingo_cards#create', as:'community_room_bingo_cards'
+	get 'communities/:community_id/rooms/:room_id/bingo_cards/create', to: 'bingo_cards#create', as:'community_room_bingo_cards'
 	devise_for :users, controllers:{
 		registrations: 'users/registrations'
 	}
