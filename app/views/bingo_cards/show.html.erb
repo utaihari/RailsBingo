@@ -1,32 +1,39 @@
-<p>
-  <strong>Number:</strong>
-  <table boder = "3" height="600" width="500" style="font-size: 40px">
-  	<thead>
-  		<tr>
-	  		<th>B</th>
-	  		<th>I</th>
-	  		<th>N</th>
-	  		<th>G</th>
-	  		<th>O</th>
-  		</tr>
-  	</thead>
-  	<tr height = "10px">
-		<td style="font-size: 5px" align="center">1-15</td>
-		<td style="font-size: 5px" align="center">16-30</td>
-		<td style="font-size: 5px" align="center">31-45</td>
-		<td style="font-size: 5px" align="center">46-60</td>
-		<td style="font-size: 5px" align="center">61-75</td>
-  	</tr>
-  	<%i=0%>
-  	<% @numbers.each do |num|%>
-  		<% if i == 0 || i == 5 || i == 10 || i == 15  || i == 20 then %>
-  			<tr>
-  		<%end%>
-  		<td style="font-size: 40px" align="center"><%= num%><input type="checkbox"></td>
-  		<%i += 1%>
-  		<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>
-  			</tr>
-  		<%end%>
-  	<%end%>
-  </table>
-</p>
+<button onclick="number_update(<%= @room.id %>)">UpdateNumbers</button>
+<div id="bingo_card">
+	<table boder = "3" height="600" width="500" style="font-size: 40px">
+		<thead>
+			<tr>
+				<th>B</th>
+				<th>I</th>
+				<th>N</th>
+				<th>G</th>
+				<th>O</th>
+			</tr>
+		</thead>
+		<tr height = "10px">
+			<td style="font-size: 5px" align="center">1-15</td>
+			<td style="font-size: 5px" align="center">16-30</td>
+			<td style="font-size: 5px" align="center">31-45</td>
+			<td style="font-size: 5px" align="center">46-60</td>
+			<td style="font-size: 5px" align="center">61-75</td>
+		</tr>
+		<%i=0%>
+		<% @numbers.each do |num|%>
+		<% if i == 0 || i == 5 || i == 10 || i == 15  || i == 20 then %>
+		<tr>
+			<%end%>
+			<% if num > 0 %>
+			<td style="font-size: 40px" align="center" class="bingo_number" data-number=<%= num %>><%= num%></td>
+			<% else %>
+			<td style="font-size: 20px" align="center" class="bingo_number" data-number=-1>FREE</td>
+			<% end %>
+			<%i += 1%>
+			<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>
+		</tr>
+		<%end%>
+		<%end%>
+	</table>
+</div>
+<div class="numbers">
+	<ul id="number_list"></ul>
+</div>

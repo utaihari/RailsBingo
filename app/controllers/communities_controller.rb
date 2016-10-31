@@ -1,7 +1,7 @@
 # coding: utf-8
 
 class CommunitiesController < ApplicationController
-  before_action :set_community, only: [:show, :edit, :update, :destroy]
+  before_action :set_community, only: [:show, :edit, :update, :destroy,:join]
   before_action :community_params, only: [:edit, :update]
 
   def index
@@ -37,7 +37,7 @@ class CommunitiesController < ApplicationController
 
   def join
     if @community == nil
-      redirect_to 'pages_index_path' and return
+      redirect_to pages_index_path and return
     end
     if !CommunityUserList.exists?(community_id: params[:id], user_id: current_user.id)
       @community_user_list = CommunityUserList.new(community_id: params[:id], user_id: current_user.id)

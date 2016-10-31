@@ -1,12 +1,14 @@
 Rails.application.routes.draw do
 
-  get 'bingo_cards/create'
-
-  get 'bingo_cards/show'
-
 	root 'pages#index'
 	get 'pages/index'
 	get 'pages/user_index'
+
+    get 'API/:community_id/:room_id/add_number', to: 'rooms#add_number',as:'add_number'
+	get 'communities/:community_id/rooms/:room_id/card_create', to: 'bingo_cards#create', as:'community_room_bingo_cards'
+
+	#API
+
 
 	resources :communities do
 		resources :rooms do
@@ -14,7 +16,7 @@ Rails.application.routes.draw do
 		end
 	end
 
-	get 'communities/:community_id/rooms/:room_id/bingo_cards/create', to: 'bingo_cards#create', as:'community_room_bingo_cards'
+
 	devise_for :users, controllers:{
 		registrations: 'users/registrations'
 	}
@@ -24,7 +26,10 @@ Rails.application.routes.draw do
 	get 'communities/:community_id/rooms/:room_id/join', to: 'rooms#join', as:'join_room'
 
 
-#API
-	get 'communities/:community_id/rooms/:room_id/add/:number', to: 'rooms#add_number',as:'add_number'
+    #API
+
+    get 'API/get_number', to: 'rooms#get_number',as:'get_number'
+    get 'API/get_number_rate', to: 'rooms#get_number_rate',as:'get_number_rate'
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

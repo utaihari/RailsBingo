@@ -1,6 +1,6 @@
 # coding: utf-8
 class RoomsController < ApplicationController
-  before_action :set_room, only: [:show, :edit, :update, :destroy, :add_number, :get_number]
+  before_action :set_room, only: [:show, :edit, :update, :destroy]
   before_action :room_params, only: [:edit, :update, :create]
 
   def index
@@ -18,9 +18,11 @@ class RoomsController < ApplicationController
       redirect_to 'pages_index_path'
     end
 
-    @room = @community.rooms.build(community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem])
+    number_rate = Array.new(75,10)
+    @room = @community.rooms.build(community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], rates:number_rate.join(","))
 
     if @room.save
+      RoomNumber.create(room_id:params[:room_id],number:-1)
       redirect_to controller: 'rooms', action: 'show', id: @room.id
     else
       redirect_to controller: 'communities', action: 'index', notice: "エラー"
@@ -52,7 +54,7 @@ class RoomsController < ApplicationController
     @room = Room.find_by(id:params[:room_id])
 
     if @community == nil || @room == nil
-      redirect_to 'pages_index_path'
+      redirect_to controller: 'communities', action: 'index'
     end
 
     if !isCommunityMember(community.id)
@@ -65,7 +67,7 @@ class RoomsController < ApplicationController
       if @room_user_list.save
         redirect_to controller: 'bingo_cards', action: 'create', community_id: params[:community_id], room_id: params[:room_id]
       else
-        redirect_to 'pages_index_path'
+        redirect_to controller: 'communities', action: 'index'
       end
     else
       redirect_to controller: 'bingo_cards', action: 'create', community_id: params[:community_id], room_id: params[:room_id]
@@ -87,12 +89,31 @@ class RoomsController < ApplicationController
   end
 
   def get_number
-    if @community == nil || @room == nil
-      render :text => "不正なパラメータです"
+    @room = Room.find(params[:room_id])
+    if @room == nil
+      render :text => "不正なパラメータです" and return
     end
     numbers = RoomNumber.where(room_id: params[:room_id]).select("number")
-    render :json => numbers
+    return_nums = []
+    numbers.each { |num|
+      return_nums << num.number
+    }
+    render :json => return_nums
   end
+
+  def get_number_rate
+    @room = Room.find(params[:room_id])
+    if @room == nil || isRoomOrganizer(params[:community_id])
+      render :text => "不正なパラメータです" and return
+    end
+    numbers = room.rates.split(",")
+    return_nums = []
+    numbers.each { |num|
+      return_nums << num.to_i
+    }
+    render :json => return_nums
+  end
+
   private
 
   def set_room

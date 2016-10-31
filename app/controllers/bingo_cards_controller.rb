@@ -1,33 +1,33 @@
 # coding: utf-8
 class BingoCardsController < ApplicationController
 	def show
-		numbers = BingoCard.joins(:card_number).where(user_id: current_user.id, room_id: params[:room_id]).select("number")
+		@room = Room.find(params[:room_id])
+		numberlist = BingoCard.find_by(user_id: current_user.id, room_id: params[:room_id])
+		if numberlist == nil
+			redirect_to community_path(params[:community_id]) and return
+		end
+
 		@numbers = []
+		numbers = numberlist.numbers.split(",")
 		numbers.each{|n|
-			@numbers << n[:number]
+			@numbers << n.to_i
 		}
 	end
 
 	def create
-
-		if BingoCard.exists?(room_id: params[:room_id], user_id: current_user.id)
-			numbers = BingoCard.joins(:card_number).where(user_id: current_user.id, room_id: params[:room_id]).select("number")
-			@numbers = []
-			numbers.each{|n|
-				@numbers << n.number
-			}
-			render 'show' and return
+		@bingo_card = BingoCard.find_by(room_id: params[:room_id], user_id: current_user.id)
+		if @bingo_card != nil
+			redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@bingo_card.id) and return
 		end
 
-		@card = BingoCard.create(room_id: params[:room_id], user_id: current_user.id)
-
-		@numbers = make_bingo_num()
-		card_id = @card.id
-
-		@numbers.each{|number|
-			CardNumber.create!(bingo_card_id: card_id, number: number)
+		numbers = make_bingo_num()
+		checks =[]
+		25.times { |n|
+			checks << "f"
 		}
-		render 'show'
+
+		@bingo_card = BingoCard.create!(room_id:params[:room_id],user_id:current_user.id,numbers: numbers.join(","),checks: checks.join(","))
+		redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],bingo_card.id)
 	end
 
 

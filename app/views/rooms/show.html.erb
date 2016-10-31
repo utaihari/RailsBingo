@@ -1,8 +1,16 @@
-<h1>Rooms#show</h1>
-<p>Find me in app/views/rooms/show.html.erb</p>
-<p><% @room.name %></p>
+<h1><% @room.name %></h1>
 <% if @isRoomOrganizer %>
-	<p>管理者です</p>
+<p>管理者です</p>
+<p>
+	<% form_tag("/API/#{@community.id}/#{@room.id}/add_number") do %>
+	<%= label_tag(:number, "AddNum") %>
+	<%= text_field_tag(:number) %>
+	<%= submit_tag("Save changes")  %>
+	<% end %>
+</p>
+
+<% else %>
+<%= link_to "このビンゴに参加する", community_room_bingo_cards_path(@community.id,@room.id) %>
 <% end %>
 
 <p>参加者一覧</p>
