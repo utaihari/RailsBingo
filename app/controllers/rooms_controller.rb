@@ -75,14 +75,26 @@ class RoomsController < ApplicationController
   end
 
   def add_number
-    if @community == nil || @room == nil
-      render :text => "不正なパラメータです"
+    @room = Room.find(params[:room_id])
+    @community = Community.find(params[:community_id])
+
+    if params[:number] == nil
+      render :text => "不正なパラメータです" and return
     end
+
+    number = Integer(params[:number])
+
+    if @community == nil || @room == nil || number < 1 || 75 < number
+      render :text => "不正なパラメータです" and return
+    end
+
     if isRoomOrganizer(params[:room_id])
       RoomNumber.create(room_id: params[:room_id],number: params[:number])
-
-      numbers = RoomNumber.where(room_id: params[:room_id]).select("number","rate")
-      render :json => numbers
+      rates = @room.rates.split(",")
+      rates[number-1] = 0
+      @room.rates = rates.join(",")
+      @room.save
+      render :json => rates
     else
       render :text => "ビンゴの主催者では有りません"
     end
@@ -102,14 +114,14 @@ class RoomsController < ApplicationController
   end
 
   def get_number_rate
-    @room = Room.find(params[:room_id])
-    if @room == nil || isRoomOrganizer(params[:community_id])
+    @room = Room.find_by(id: params[:room_id])
+    if @room == nil || !isRoomOrganizer(params[:room_id])
       render :text => "不正なパラメータです" and return
     end
-    numbers = room.rates.split(",")
+    numbers = @room.rates.split(",")
     return_nums = []
     numbers.each { |num|
-      return_nums << num.to_i
+      return_nums << Integer(num)
     }
     render :json => return_nums
   end
@@ -127,7 +139,7 @@ class RoomsController < ApplicationController
   end
 
   def isRoomOrganizer(room_id)
-    return current_user.id == Room.joins(:community).find_by(id:room_id).community.user_id
+    return current_user.id == Room.joins(:community).find_by(id: room_id).community.user_id
   end
   def isCommunityMember(community_id)
     return CommunityUserList.exists?(community_id:community_id, user_id: current_user.id)

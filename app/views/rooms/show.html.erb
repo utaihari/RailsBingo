@@ -2,11 +2,8 @@
 <% if @isRoomOrganizer %>
 <p>管理者です</p>
 <p>
-	<% form_tag("/API/#{@community.id}/#{@room.id}/add_number") do %>
-	<%= label_tag(:number, "AddNum") %>
-	<%= text_field_tag(:number) %>
-	<%= submit_tag("Save changes")  %>
-	<% end %>
+	<div id="number_display"></div>
+	<button onclick="random_number_add(<%= @room.id %>,<%= @community.id %>)">Click to random number adding.</button>
 </p>
 
 <% else %>

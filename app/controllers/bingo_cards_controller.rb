@@ -27,7 +27,7 @@ class BingoCardsController < ApplicationController
 		}
 
 		@bingo_card = BingoCard.create!(room_id:params[:room_id],user_id:current_user.id,numbers: numbers.join(","),checks: checks.join(","))
-		redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],bingo_card.id)
+		redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@bingo_card.id)
 	end
 
 

@@ -21,6 +21,7 @@ $(->
 update_list = ->
 	if number_length isnt numbers.length
 		number_length = numbers.length
+		$('ul#number_list').empty()
 		for number, index in numbers when number isnt -1 and index isnt number_length-1
 			$('ul#number_list').prepend("<li> #{number} </li>")
 		$('ul#number_list').prepend("<li class=\"previous_number\" style=\"font-size:40px\"> #{numbers[number_length-1]} </li>")
