@@ -22,7 +22,7 @@ rate = []
 	return numbers[Math.floor(Math.random() * numbers.length)]
 
 @add_number =(room_id, community_id, number) ->
-	$.getJSON('/API/add_number', {room_id: room_id,community_id: community_id, number: number}, (json) ->
+	$.post('/API/add_number', {room_id: room_id,community_id: community_id, number: number}, (data) ->
 		return
 		)
 	return

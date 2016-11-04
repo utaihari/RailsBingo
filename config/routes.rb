@@ -30,7 +30,8 @@ Rails.application.routes.draw do
 
     get 'API/get_number', to: 'rooms#get_number',as:'get_number'
     get 'API/get_number_rate', to: 'rooms#get_number_rate',as:'get_number_rate'
-    get 'API/add_number', to: 'rooms#add_number',as:'add_number'
+    post 'API/add_number', to: 'rooms#add_number',as:'add_number'
+    get 'API/check_number', to: 'rooms#check_number',as:'check_number'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

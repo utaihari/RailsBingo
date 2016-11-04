@@ -23,9 +23,9 @@
 		<tr>
 			<%end%>
 			<% if num > 0 %>
-			<td style="font-size: 40px" align="center" class="bingo_number" data-number=<%= num %>><%= num%></td>
+			<td style="font-size: 40px" align="center" class="bingo_number" data-number=<%= num %> onclick="check_number(@room.id, i)"><%= num%></td>
 			<% else %>
-			<td style="font-size: 20px" align="center" class="bingo_number" data-number=-1>FREE</td>
+			<td style="font-size: 20px" align="center" class="bingo_number" data-number=-1 onclick="check_number(@room.id, i)">FREE</td>
 			<% end %>
 			<%i += 1%>
 			<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>

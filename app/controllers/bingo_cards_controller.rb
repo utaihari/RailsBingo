@@ -91,4 +91,28 @@ class BingoCardsController < ApplicationController
 		return numbers
 	end
 
+	def check_number
+		card = BingoCard.find_by(user_id:current_user.id,room_id:params[:room_id]).select("checks")
+		if card == nil || params[:index] = nil
+			return
+		end
+		index = Integer(params[:index])
+
+		if index < 0 || 24 < index
+			return
+		end
+
+		checks = card.checks.split(",")
+		if checks[index] == "t"
+			checks[index] == "f"
+		else
+			checks[index] == "t"
+		end
+		
+		card.checks = checks.join(",")
+		card.save
+
+		render :json => checks
+	end
+
 end
