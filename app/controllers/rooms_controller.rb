@@ -32,6 +32,10 @@ class RoomsController < ApplicationController
   def show
     room_id = params[:id]
     @isRoomOrganizer =  isRoomOrganizer(room_id)
+    @isRoomMember = isRoomMember(room_id)
+    if @isRoomMember
+      @card = BingoCard.find_by(user_id:current_user.id,room_id:room_id)
+    end
     @room = Room.find(room_id)
 
     if @community == nil || @room == nil
@@ -58,7 +62,7 @@ class RoomsController < ApplicationController
     end
 
     if !isCommunityMember(community.id)
-      render :text => "このコミュニティのメンバーではありません"
+      CommunityUserList.create(community_id: community_id, user_id: current_user.id)
     end
 
 
@@ -74,18 +78,28 @@ class RoomsController < ApplicationController
     end
   end
 
+  def result
+    @room = Room.find_by(id:params[:room_id])
+    if !isRoomOrganizer(params[:room_id])
+      remote_ip = request.env["HTTP_X_FORWARDED_FOR"] || request.remote_ip
+      render :text => "主催者ではありません  あなたのＩＰアドレス：　#{remote_ip}"
+    end
+    @bingo_list = BingoUser.joins(:user).where(room_id: params[:room_id]).order("BingoUser.times ASC, BingoUser.seconds ASC")
+
+  end
+
   def add_number
     @room = Room.find(params[:room_id])
     @community = Community.find(params[:community_id])
 
     if params[:number] == nil
-      render :text => "不正なパラメータです" and return
+      render :json => "不正なパラメータです" and return
     end
 
     number = Integer(params[:number])
 
     if @community == nil || @room == nil || number < 1 || 75 < number
-      render :text => "不正なパラメータです" and return
+      render :json => "不正なパラメータです" and return
     end
 
     if isRoomOrganizer(params[:room_id])
@@ -96,15 +110,11 @@ class RoomsController < ApplicationController
       @room.save
       render :json => rates
     else
-      render :text => "ビンゴの主催者では有りません"
+      render :json => "ビンゴの主催者では有りません"
     end
   end
 
   def get_number
-    @room = Room.find(params[:room_id])
-    if @room == nil
-      render :text => "不正なパラメータです" and return
-    end
     numbers = RoomNumber.where(room_id: params[:room_id]).select("number")
     return_nums = []
     numbers.each { |num|
@@ -116,7 +126,7 @@ class RoomsController < ApplicationController
   def get_number_rate
     @room = Room.find_by(id: params[:room_id])
     if @room == nil || !isRoomOrganizer(params[:room_id])
-      render :text => "不正なパラメータです" and return
+      render :json => "不正なパラメータです" and return
     end
     numbers = @room.rates.split(",")
     return_nums = []
@@ -125,6 +135,36 @@ class RoomsController < ApplicationController
     }
     render :json => return_nums
   end
+
+  def check_condition
+    @room = Room.find_by(id: params[:room_id])
+    if @room == nil
+      render :json => "不正なパラメータです" and return
+    end
+
+    if @room.isFinished
+      render :json => 2 and return
+    end
+
+    if @room.isPlaying
+      render :json => 1 and return
+    else
+      render :json => 0 and return
+    end
+    return
+  end
+
+  def start_game
+    @room = Room.find_by(id: params[:room_id])
+    if @room == nil
+      render :json => "不正なパラメータです" and return
+    end
+    @room.isPlaying = true
+    @room.save
+
+    RoomNumber.create(room_id: @room.id, number: -1)
+  end
+
 
   private
 
@@ -143,5 +183,8 @@ class RoomsController < ApplicationController
   end
   def isCommunityMember(community_id)
     return CommunityUserList.exists?(community_id:community_id, user_id: current_user.id)
+  end
+  def isRoomMember(room_id)
+    return RoomUserList.exists?(room_id: room_id, user_id: current_user.id)
   end
 end

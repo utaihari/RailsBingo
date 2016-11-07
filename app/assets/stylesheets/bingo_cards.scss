@@ -5,3 +5,26 @@
 .checked {
 	color: #ff69b4;
 }
+.bingo_char{
+	font-size: 40px;
+}
+#bingo_card{
+	width: 500px;
+	height: 525px;
+	float: left;
+	.bingo_number{
+		background-color: #ccdbff;
+	}
+
+}
+#numbers{
+	width: 30%;
+	float: left;
+	#last_number{
+		color: #ff3000;
+		font-size: 40px;
+	}
+}
+.page_foot{
+	clear: both;
+}

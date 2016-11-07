@@ -1,13 +1,27 @@
+<%= javascript_include_tag "rooms.js" %>
 <h1><% @room.name %></h1>
 <% if @isRoomOrganizer %>
-<p>管理者です</p>
+<p>あなたはこのビンゴの主催者です</p>
 <p>
+
+<% if @room.isPlaying %>
 	<div id="number_display"></div>
-	<button onclick="random_number_add(<%= @room.id %>,<%= @community.id %>)">Click to random number adding.</button>
+	<button id="next_number_button" onclick="random_number_add(<%= @room.id %>,<%= @community.id %>)">次の番号を出力</button>
+<% else %>
+	<button id="start_button" onclick="start_game(<%= @room.id %>)">ビンゴゲームを始める</button>
+<% end %>
+
 </p>
+<br>
+<button onclick="game_close(<%= @room.id %>)">ゲーム終了</button>
+
 
 <% else %>
-<%= link_to "このビンゴに参加する", community_room_bingo_cards_path(@community.id,@room.id) %>
+	<% if @isRoomMember %>
+		<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) %>
+	<% else %>
+		<%= link_to "このビンゴに参加する", community_room_bingo_cards_path(@community.id,@room.id) %>
+	<% end %>
 <% end %>
 
 <p>参加者一覧</p>

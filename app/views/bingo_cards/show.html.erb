@@ -1,8 +1,12 @@
-<button onclick="number_update(<%= @room.id %>)">UpdateNumbers</button>
-<div id="bingo_card">
-	<table boder = "3" height="600" width="500" style="font-size: 40px">
+<%= javascript_include_tag "bingo_cards.js" %>
+<div id="data" data-room_id=<%= @room.id %>></div>
+<button onclick="onPageLoad()">UpdateNumbers</button>
+<div id="notice"></div>
+<div id="bingo_button" style="display: none;"><button>BINGO!!!!!</button></div>
+<div>
+	<table boder = "3" height="600" width="500" id="bingo_card"　style="font-size: 40px">
 		<thead>
-			<tr>
+			<tr class="bingo_char">
 				<th>B</th>
 				<th>I</th>
 				<th>N</th>
@@ -11,11 +15,11 @@
 			</tr>
 		</thead>
 		<tr height = "10px">
-			<td style="font-size: 5px" align="center">1-15</td>
-			<td style="font-size: 5px" align="center">16-30</td>
-			<td style="font-size: 5px" align="center">31-45</td>
-			<td style="font-size: 5px" align="center">46-60</td>
-			<td style="font-size: 5px" align="center">61-75</td>
+			<td style="font-size: 15px" align="center">1-15</td>
+			<td style="font-size: 15px" align="center">16-30</td>
+			<td style="font-size: 15px" align="center">31-45</td>
+			<td style="font-size: 15px" align="center">46-60</td>
+			<td style="font-size: 15px" align="center">61-75</td>
 		</tr>
 		<%i=0%>
 		<% @numbers.each do |num|%>
@@ -23,9 +27,9 @@
 		<tr>
 			<%end%>
 			<% if num > 0 %>
-			<td style="font-size: 40px" align="center" class="bingo_number" data-number=<%= num %> onclick="check_number(@room.id, i)"><%= num%></td>
+			<td style="font-size: 40px" align="center"  data-number=<%= num %> class="bingo_number" onclick="number_click(this, <%= @room.id %>, <%= i %>)"><%= num%></td>
 			<% else %>
-			<td style="font-size: 20px" align="center" class="bingo_number" data-number=-1 onclick="check_number(@room.id, i)">FREE</td>
+			<td style="font-size: 20px" align="center" class="bingo_number" data-number=-1 onclick="number_click(this, <%= @room.id %>, <%= i %>)">FREE</td>
 			<% end %>
 			<%i += 1%>
 			<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>
@@ -34,6 +38,11 @@
 		<%end%>
 	</table>
 </div>
-<div class="numbers">
-	<ul id="number_list"></ul>
+<div id="numbers">
+	<p>次のナンバー　↓<div id="last_number"></div></p>
+	<p id="past_numbers" onclick="display_past_number()">過去の番号(クリックで表示)</p>
+	<div id="number_list_wrapper" style="display: none;">
+		<ul id="number_list"></ul>
+	</div>
 </div>
+<div class="page_foot"></div>

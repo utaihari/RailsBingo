@@ -10,18 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161031184722) do
-
-  create_table "Rooms", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "community_id"
-    t.boolean  "isPlaing",     default: false, null: false
-    t.boolean  "isFinished",   default: false, null: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.boolean  "canUseItem"
-    t.string   "rates"
-  end
+ActiveRecord::Schema.define(version: 20161105161721) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -30,6 +19,15 @@ ActiveRecord::Schema.define(version: 20161031184722) do
     t.datetime "updated_at",              null: false
     t.string   "numbers",    default: ""
     t.string   "checks"
+  end
+
+  create_table "bingo_users", force: :cascade do |t|
+    t.integer  "room_id"
+    t.integer  "user_id"
+    t.integer  "times"
+    t.integer  "seconds"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "card_numbers", force: :cascade do |t|
@@ -72,6 +70,17 @@ ActiveRecord::Schema.define(version: 20161031184722) do
     t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "rooms", force: :cascade do |t|
+    t.string   "name"
+    t.integer  "community_id"
+    t.boolean  "isPlaying",    default: false, null: false
+    t.boolean  "isFinished",   default: false, null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.boolean  "canUseItem"
+    t.string   "rates"
   end
 
   create_table "user_item_lists", force: :cascade do |t|

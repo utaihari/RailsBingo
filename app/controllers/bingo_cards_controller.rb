@@ -1,4 +1,5 @@
 # coding: utf-8
+
 class BingoCardsController < ApplicationController
 	def show
 		@room = Room.find(params[:room_id])
@@ -12,6 +13,7 @@ class BingoCardsController < ApplicationController
 		numbers.each{|n|
 			@numbers << n.to_i
 		}
+		@checks = numberlist.checks.split(",")
 	end
 
 	def create
@@ -20,13 +22,16 @@ class BingoCardsController < ApplicationController
 			redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@bingo_card.id) and return
 		end
 
-		numbers = make_bingo_num()
-		checks =[]
+
+
+		@numbers = make_bingo_num()
+		@checks =[]
 		25.times { |n|
-			checks << "f"
+			@checks << "f"
 		}
 
-		@bingo_card = BingoCard.create!(room_id:params[:room_id],user_id:current_user.id,numbers: numbers.join(","),checks: checks.join(","))
+		@bingo_card = BingoCard.create!(room_id:params[:room_id],user_id:current_user.id,numbers: @numbers.join(","),checks: @checks.join(","))
+		RoomUserList.create(room_id:params[:room_id],user_id: current_user.id)
 		redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@bingo_card.id)
 	end
 
@@ -92,8 +97,8 @@ class BingoCardsController < ApplicationController
 	end
 
 	def check_number
-		card = BingoCard.find_by(user_id:current_user.id,room_id:params[:room_id]).select("checks")
-		if card == nil || params[:index] = nil
+		card = BingoCard.find_by(user_id:current_user.id,room_id:params[:room_id])
+		if card == nil || params[:index] == nil
 			return
 		end
 		index = Integer(params[:index])
@@ -103,16 +108,29 @@ class BingoCardsController < ApplicationController
 		end
 
 		checks = card.checks.split(",")
+
 		if checks[index] == "t"
-			checks[index] == "f"
+			checks[index] = "f"
 		else
-			checks[index] == "t"
+			checks[index] = "t"
 		end
-		
+
 		card.checks = checks.join(",")
 		card.save
 
 		render :json => checks
 	end
 
+	def get_checked_number
+		if params[:room_id] == nil
+			render :json =>[] and return
+		end
+		card = BingoCard.find_by(user_id:current_user.id,room_id:params[:room_id])
+		if card == nil
+			return
+		end
+		checks = card.checks.split(",")
+
+		render :json => checks
+	end
 end

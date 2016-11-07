@@ -33,3 +33,10 @@ rate = []
 	@add_number(room_id,community_id,number)
 	$('#number_display').text(number)
 	return
+
+@start_game = (room_id) ->
+	$.post('/API/start_game', {room_id: room_id}, (data) ->
+		return
+		)
+	location.reload();
+	return
