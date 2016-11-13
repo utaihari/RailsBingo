@@ -48,13 +48,13 @@ ja:
   errors:
     messages:
       already_confirmed: "は既に登録済みです。ログインしてください"
-      confirmation_period_expired: "%{period}以内に確認する必要がありますので、新しくリクエストしてください。"
+      confirmation_period_expired: "%{period}以内に確認する必要があります。"
       expired: "有効期限切れです。新規登録してください。"
       not_found: "は見つかりませんでした。"
       not_locked: "ロックされていません。"
       not_saved:
-        one: "エラーにより、この %{resource} を保存できません："
-        other: "%{count} 個のエラーにより、この %{resource} を保存できません："
+        one: "エラー："
+        other: "%{count} 個のエラーにより保存できません："
       taken: "は既に使用されています。"
       blank: "が入力されていません。"
       too_short: "は%{count}文字以上に設定して下さい。"

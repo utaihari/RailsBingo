@@ -1,8 +1,8 @@
 # coding: utf-8
 
 class CommunitiesController < ApplicationController
-  before_action :set_community, only: [:show, :edit, :update, :destroy,:join]
-  before_action :community_params, only: [:edit, :update]
+  before_action :set_community, only: [:show, :edit, :update, :destroy, :join]
+  before_action :community_params, only: [:new, :update]
 
   def index
     @communities = Community.joins(:user).all
@@ -26,9 +26,10 @@ class CommunitiesController < ApplicationController
   end
 
   def create
-    @community = Community.new(name: params[:community][:name],user_id: current_user.id)
+    @community = Community.new(community_params)
     if @community.save
       CommunityUserList.create(community_id: @community.id,user_id: current_user.id)
+      CommunityAdministrator.create(community_id: @community.id,user_id: current_user.id)
       # @userはuser_path(@user) に自動変換される
       redirect_to action: "show", id: @community.id, notice:"作成しました" and return
     else
@@ -65,6 +66,8 @@ class CommunitiesController < ApplicationController
   end
 
   def update
+    @community.update(community_params)
+    redirect_to controller: 'communities', action: 'show', id: params[:id]
   end
 
   def destroy
@@ -88,7 +91,7 @@ class CommunitiesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def community_params
-    params.require(:community).permit(:name, :user_id)
+    params.require(:community).permit(:name, :user_id, :detail)
   end
 
   def isCommunityOrganizer(community_id)

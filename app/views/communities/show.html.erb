@@ -1,31 +1,21 @@
 <%= javascript_include_tag "communities.js" %>
 <h1 onclick="show_detail()"><%= @community.name %><span class="note">(クリックして詳細表示)</span></h1>
 <div id="community_detail" style="display: none;">
-	<p>コミュニティID <%= @community.id %></p>
-	<p>作成者 <%= @organizer.name %> ,ID <%= @organizer.id %></p>
+	<p>コミュニティID: <%= @community.id %></p>
+	<p>作成者: <%= @organizer.name %>, ID: <%= @organizer.id %></p>
 </div>
+<% if @isOrganizer %>
+<p><%= link_to "このコミュニティでビンゴを開催する", new_community_room_path(@community.id) , class: "btn btn-primary btn-lg" %></p>
+<% end %>
+<div><%= raw @community.detail %></div>
 
-<h2 onclick="show_members()">参加者一覧 <span class="note">(クリックして表示)</span></h2>
-<div id="community_members" style="display: none;">
-	<% @members.each do |member| %>
-	<div class="member">
-		<% if member.user.id == @community.user_id %>
-		<p class="organizer">・管理者 <%= member.user.name %></p>
-		<% elsif current_user.id == member.user.id%>
-		<p class="my_self"><%= member.user.name %></p>
-		<% else %>
-		<p class="other"><%= member.user.name %></p>
-		<% end %>
-	</div>
-	<% end %>
-</div>
 
 <% if !@opened_rooms.blank? %>
 <div id="opend_rooms">
 	<h2>現在開催中のビンゴ</h2>
 	<% @opened_rooms.each do |room| %>
 	<div class="room">
-		<%= link_to room.name, community_room_path(@community.id, room.id) %>
+		<%= link_to room.name, community_room_path(@community.id, room.id), class: "btn btn-default btn-sm" %>
 	</div>
 	<% end %>
 	<% end %>
@@ -36,18 +26,32 @@
 	<h2>終了したビンゴ <span class="note">（部屋作成後１週間で自動的に削除されます）</span></h2>
 	<% @closed_rooms.each do |room| %>
 	<div class="room">
-		<%= link_to room.name, community_room_result_path(@community.id, room.id) %>
+		<%= link_to room.name, community_room_result_path(@community.id, room.id), class: "btn btn-default btn-sm" %>
 	</div>
 	<% end %>
 </div>
 <% end %>
-
-
+<br>
+<h2 onclick="show_members()">参加者一覧 <span class="note">(クリックして表示)</span></h2>
+<div id="community_members" style="display: none;">
+	<% @members.each do |member| %>
+	<div class="member">
+		<% if member.user.id == @community.user_id %>
+		<p class="organizer"><%= member.user.name %><span class="note">(管理者)</span></p>
+		<% elsif current_user.id == member.user.id%>
+		<p class="my_self"><%= member.user.name %></p>
+		<% else %>
+		<p class="other"><%= member.user.name %></p>
+		<% end %>
+	</div>
+	<% end %>
+</div>
 <% if @isOrganizer %>
 <div id="manage">
-	<p><%= link_to "このコミュニティでビンゴを開催する", new_community_room_path(@community.id) %></p>
-	<p><%= link_to 'このコミュニティを削除', community_path, method: :delete, data: { confirm: '本当に削除してもよろしいですか?' } %></p>
+	<p>
+		<%= link_to "コミュニティ情報を修正する", edit_community_path(@community.id) , class: "btn btn-info btn-sm" %>
+		<%= link_to 'このコミュニティを削除', community_path, method: :delete, class: "btn btn-danger btn-sm" ,data: { confirm: '本当に削除してもよろしいですか?' } %>
+	</p>
 </div>
 <% end %>
 
-<br>

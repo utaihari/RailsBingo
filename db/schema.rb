@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161113141233) do
+ActiveRecord::Schema.define(version: 20161113143924) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -28,6 +28,20 @@ ActiveRecord::Schema.define(version: 20161113141233) do
     t.integer  "seconds"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "bootsy_image_galleries", force: :cascade do |t|
+    t.string   "bootsy_resource_type"
+    t.integer  "bootsy_resource_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "bootsy_images", force: :cascade do |t|
+    t.string   "image_file"
+    t.integer  "image_gallery_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "card_numbers", force: :cascade do |t|

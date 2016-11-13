@@ -1,3 +1,11 @@
+<%= javascript_include_tag "Squire-UI.js" %>
+<%= javascript_include_tag "squire-raw.js" %>
+<%= javascript_include_tag "users" %>
+
+<%= javascript_tag do %>
+var $user_detail = '<%= raw @user.detail.gsub("'", "\\\\'") %>';
+<% end %>
+
 <h2>ユーザー情報変更</h2>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
@@ -30,6 +38,12 @@
   <%= f.label :password_confirmation %><br />
   <%= f.password_field :password_confirmation, autocomplete: "off" %>
 </div>
+<br>
+<div>
+<p>プロフィール</p>
+<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
+<%= f.text_area :detail, :id=>"seditor" %>
+</div>
 
 <div class="field">
   <%= f.label :current_password %> <i>(変更を保存する場合は、現在のパスワードを入力してください)</i><br />
@@ -37,7 +51,7 @@
 </div>
 
 <div class="actions">
-  <%= f.submit "Update" %>
+  <%= f.submit "更新" %>
 </div>
 <% end %>
 

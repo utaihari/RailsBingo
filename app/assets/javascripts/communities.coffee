@@ -9,3 +9,16 @@
 @show_members = ->
 	$('#community_members').toggle('slow')
 	return
+
+$(document).on 'ready page:load', ->
+	UI = new SquireUI(
+		replace: 'textarea#seditor'
+		buildPath: "/"
+		height: 300)
+
+	if typeof $community_detail != 'undefined'
+		UI.setHTML $community_detail
+	$('form').submit ->
+		$('#community_detail').val(UI.getHTML()).change()
+		return
+	return

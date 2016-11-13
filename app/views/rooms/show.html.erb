@@ -1,33 +1,38 @@
 <%= javascript_include_tag "rooms.js" %>
 <h1><% @room.name %></h1>
 <% if @isRoomOrganizer %>
-<p>あなたはこのビンゴの主催者です</p>
 <div id="primary" data-mercury="full">
-  default content
 </div>
 <% if @room.isPlaying %>
-	<div id="number_display"></div>
-	<button id="next_number_button" onclick="random_number_add(<%= @room.id %>,<%= @community.id %>)">次の番号を出力</button>
-	<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) %>
+<div id="number_display"></div>
+<button id="next_number_button" onclick="random_number_add(<%= @room.id %>,<%= @community.id %>)">次の番号を出力</button>
+<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) %>
 <% else %>
-	<button id="start_button" onclick="start_game(<%= @room.id %>)">ビンゴゲームを始める</button>
+<button id="start_button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
 <% end %>
 <br>
-<div id="qr_code">
-<p>招待用QRコード</p>
-<%= raw @svg %>
-<p>招待用URL</p>
-<%= @url %>
+<br>
+<div id="qr_code" class="container-fluid" >
+	<div class="row" >
+		<div class="col-lg-3 col-md-3">
+			<p>招待用QRコード</p>
+			<%= raw @svg %>
+		</div>
+		<div class="col-lg-3 col-md-3">
+			<p>招待用URL</p>
+			<%= @url %>
+		</div>
+	</div>
 </div>
 
 <% else %>
-	<% if @isRoomMember %>
-		<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) %>
-	<% else %>
-		<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id) %>
-	<% end %>
+<% if @isRoomMember %>
+<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) %>
+<% else %>
+<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id) %>
 <% end %>
-
+<% end %>
+<div><%= raw @room.detail %></div>
 <p>参加者一覧</p>
 <% @members.each do |member| %>
 <div>

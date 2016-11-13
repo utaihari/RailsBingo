@@ -54,5 +54,4 @@ gem "compass-rails"
 gem 'rqrcode'
 
 # html_editer
-# gem 'mercury-rails'
-# gem 'aws-sdk' ,'>= 2.0'
+# gem 'bootsy'
