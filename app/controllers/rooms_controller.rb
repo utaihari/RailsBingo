@@ -32,7 +32,7 @@ class RoomsController < ApplicationController
   def show
     room_id = params[:id]
     @isRoomOrganizer =  isRoomOrganizer(room_id)
-    @isRoomMember = isRoomMember(room_id)
+    @isRoomMember = isRoomMember(room_id, current_user.id)
     if @isRoomMember
       @card = BingoCard.find_by(user_id:current_user.id,room_id:room_id)
     end
@@ -42,6 +42,12 @@ class RoomsController < ApplicationController
       redirect_to 'pages_index_path'
     end
     @members = User.joins(:room_user_list).where(:room_user_lists => {room_id: room_id})
+
+    @url = request.host+pre_join_room_path(@community.id,@room.id)
+    qrcode = RQRCode::QRCode.new(@url)
+    @svg = qrcode.as_svg(offset: 0, color: '000',
+                    shape_rendering: 'crispEdges',
+                    module_size: 3)
   end
 
   def edit
@@ -53,7 +59,19 @@ class RoomsController < ApplicationController
   def destroy
   end
 
+  def pre_join
+    @community = Community.find_by(id:params[:community_id])
+    @room = Room.find_by(id:params[:room_id])
+    @user_signed_in = user_signed_in?
+    if @community == nil || @room == nil
+      redirect_to controller: 'communities', action: 'index'
+    end
+  end
+
   def join
+    if !user_signed_in?
+      render 'pre_join'
+    end
     @community = Community.find_by(id:params[:community_id])
     @room = Room.find_by(id:params[:room_id])
 
@@ -61,7 +79,7 @@ class RoomsController < ApplicationController
       redirect_to controller: 'communities', action: 'index'
     end
 
-    if !isCommunityMember(community.id)
+    if !isCommunityMember(@community.id)
       CommunityUserList.create(community_id: community_id, user_id: current_user.id)
     end
 
@@ -81,11 +99,11 @@ class RoomsController < ApplicationController
   def result
     @room = Room.find_by(id:params[:room_id])
     if !isRoomOrganizer(params[:room_id])
-      remote_ip = request.env["HTTP_X_FORWARDED_FOR"] || request.remote_ip
-      render :text => "主催者ではありません  あなたのＩＰアドレス：　#{remote_ip}"
+      render :text => "主催者ではありません"
     end
-    @bingo_list = BingoUser.joins(:user).where(room_id: params[:room_id]).order("BingoUser.times ASC, BingoUser.seconds ASC")
-
+    @bingo_list = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("seconds","times","name","email")
+    @room.isFinished = true
+    @room.save
   end
 
   def add_number
@@ -165,6 +183,31 @@ class RoomsController < ApplicationController
     RoomNumber.create(room_id: @room.id, number: -1)
   end
 
+  def check_rank
+    if params[:room_id] == nil
+      render :json => "不正なパラメータです" and return
+    end
+    bingo_users = BingoUser.where(params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC")
+    ranking = 0
+    bingo_users.each_with_index do |user, i|
+      if user.id == current_user.index
+        ranking = i+1
+      end
+    end
+    render :json => ranking
+    return
+  end
+
+  def view_mail_address
+    if !isRoomOrganizer(params[:room_id]) || !isRoomMember(params[:room_id],params[:user_id])
+      render :json => "不正なパラメータです" and return
+    end
+    user = User.find_by(params[:user_id])
+    if user == nil
+      render :json => "不正なパラメータです" and return
+    end
+    render :json => user.email
+  end
 
   private
 
@@ -186,5 +229,8 @@ class RoomsController < ApplicationController
   end
   def isRoomMember(room_id)
     return RoomUserList.exists?(room_id: room_id, user_id: current_user.id)
+  end
+  def isRoomMember(room_id,user_id)
+    return RoomUserList.exists?(room_id: room_id, user_id: user_id)
   end
 end

@@ -1,4 +1,21 @@
 <h1><%= current_user.name %>さんのマイページ</h1>
+<% if !@opened_communities.blank? || false %>
+<h2>開催中のビンゴ</h2>
+<% @opened_communities.each do |community| %>
+<div class="opened_community">
+	<p><%= link_to community.name + "     ("+community.community_name+")", community_path(community.id),class:"community_name" %></p>
+</div>
+<% end %>
+<% end %>
+
+<% if !@own_communities.blank? %>
+<h2>あなたのコミュニティ一覧</h2>
+<% @own_communities.each do |community| %>
+<div class="own_communities" >
+	<p><%= link_to community.name, community_path(community.id),class:"community_name" %></p>
+</div>
+<% end %>
+<% end %>
 
 
 <% if !@joined_communities.blank? %>
@@ -11,15 +28,7 @@
 <% end %>
 
 
-<% if !@own_communities.blank? %>
-<h2>あなたのコミュニティ一覧</h2>
-<% @own_communities.each do |community| %>
-<div class="own_communities" >
-	<p><%= link_to community.name, community_path(community.id),class:"community_name" %></p>
-</div>
-<% end %>
-<% end %>
 
 <p>
-	<%= link_to 'コミュニティ一覧ページ', communities_path %>
+	<%= link_to 'コミュニティを探す', communities_path %>
 </p>

@@ -9,5 +9,7 @@ class User < ApplicationRecord
   has_many :room_user_list, dependent: :destroy
   has_many :bingo_card, dependent: :destroy
   has_many :user_item_list, dependent: :destroy
+  has_many :bingo_user, dependent: :destroy
+  has_many :community_administrator, dependent: :destroy
 
 end

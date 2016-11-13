@@ -35,8 +35,15 @@ rate = []
 	return
 
 @start_game = (room_id) ->
+	$.ajaxSetup({async: false});
 	$.post('/API/start_game', {room_id: room_id}, (data) ->
 		return
 		)
-	location.reload();
+	setTimeout(->
+        location.reload();
+    ,1000);
+	return
+
+@view_mail_address =(obj) ->
+	$(obj).children('.view_mail_addess').toggle()
 	return

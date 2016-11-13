@@ -49,3 +49,10 @@ gem 'devise'
 gem 'twitter-bootstrap-rails'
 gem 'jquery-turbolinks'
 gem "compass-rails"
+
+#create_qr-code
+gem 'rqrcode'
+
+# html_editer
+# gem 'mercury-rails'
+# gem 'aws-sdk' ,'>= 2.0'

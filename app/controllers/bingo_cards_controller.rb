@@ -14,6 +14,7 @@ class BingoCardsController < ApplicationController
 			@numbers << n.to_i
 		}
 		@checks = numberlist.checks.split(",")
+		@card = BingoCard.find(params[:id])
 	end
 
 	def create
@@ -33,6 +34,16 @@ class BingoCardsController < ApplicationController
 		@bingo_card = BingoCard.create!(room_id:params[:room_id],user_id:current_user.id,numbers: @numbers.join(","),checks: @checks.join(","))
 		RoomUserList.create(room_id:params[:room_id],user_id: current_user.id)
 		redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@bingo_card.id)
+	end
+
+	def result
+		bingo_users = BingoUser.where(params[:room_id]).order("BingoUser.times ASC, BingoUser.seconds ASC")
+		@ranking = 0
+		bingo_users.each_with_index do |user, i|
+			if user.id == current_user.index
+				@ranking = i+1
+			end
+		end
 	end
 
 
@@ -116,9 +127,11 @@ class BingoCardsController < ApplicationController
 		end
 
 		card.checks = checks.join(",")
-		card.save
-
-		render :json => checks
+		if card.save
+			render :json => checks
+		else
+			render :json => 0
+		end
 	end
 
 	def get_checked_number
@@ -132,5 +145,59 @@ class BingoCardsController < ApplicationController
 		checks = card.checks.split(",")
 
 		render :json => checks
+	end
+
+	def done_bingo
+		if params[:room_id] == nil || times = params[:times] == nil || seconds = params[:seconds] == nil || card_id = params[:card_id] == nil
+			render :json => false and return
+		end
+		room_id = params[:room_id]
+		times = params[:times]
+		seconds = params[:seconds]
+		card_id = params[:card_id]
+
+		if check_bingo(card_id) || BingoUser.exists?(room_id: room_id, user_id: current_user.id)
+			render :json => false and return
+		end
+
+		BingoUser.create(room_id: room_id, user_id: current_user.id, times: times, seconds: seconds)
+		render :json => true and return
+	end
+	private
+
+	def check_bingo(card_id)
+		card = BingoCard.find_by(id:card_id)
+		if card == nil
+			return false
+		end
+		checks = card.checks.split(",")
+
+		# Alignment bingocard sequence
+		# 0  1  2  3  4
+		# 5  6  7  8  9
+		# 10 11 12 13 14
+		# 15 16 17 18 19
+		# 20 21 22 23 24
+
+		#check horizontal line
+		for i in 0..4
+			if checks[i*5+0] && checks[i*5+1] && checks[i*5+2] && checks[i*5+3] && checks[i*5+4]
+				return true
+			end
+		end
+		#check vertical line
+		for i in 0..4
+			if checks[i+0] && checks[i+5] && checks[i+10] && checks[i+15] && checks[i+20]
+				return true
+			end
+		end
+		#check diagonal line
+		if checks[0] && checks[6] && checks[12] && checks[18] && checks[24]
+			return true
+		end
+		if checks[4] && checks[8] && checks[12] && checks[16] && checks[20]
+			return true
+		end
+		return false
 	end
 end

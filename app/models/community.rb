@@ -3,6 +3,7 @@ class Community < ApplicationRecord
 	has_many :community_user_lists, dependent: :destroy
 	has_many :rooms, dependent: :destroy
 	has_many :user_item_lists, dependent: :destroy
+	has_many :community_administrators, dependent: :destroy
 
 	def self.search(search)
     	if search

@@ -1,9 +1,24 @@
 <%= javascript_include_tag "bingo_cards.js" %>
-<div id="data" data-room_id=<%= @room.id %>></div>
+<div id="data" data-room_id=<%= @room.id %> data-card_number=<%= @card.id %>></div>
 <button onclick="onPageLoad()">UpdateNumbers</button>
-<div id="notice"></div>
-<div id="bingo_button" style="display: none;"><button>BINGO!!!!!</button></div>
-<div>
+<div id="notice" onclick="show_notice_list()"></div>
+<div id="notice_list" style="display: none;"></div>
+<div id="result" style="display: none;">
+	<h1>結果発表</h1>
+	<div id="ranking" style="display: none;">
+		<p>おめでとう！<span id="rank_number"></span>位！</p>
+	</div>
+	<div id="bingo_result_detail">
+		<div>BINGO <span id="number_of_bingo"></span>ライン</div>
+		<div>リーチ　<span id="number_of_one_left_line">ライン</span></div>
+		<div>穴 <span id="number_of_hole"></span>個</div>
+	</div>
+</div>
+
+
+
+<div id="bingo_button" style="display: none;"><button onclick="bingo()">BINGO!!!!!</button></div>
+<div id="card_area" class="pre_game">
 	<table boder = "3" height="600" width="500" id="bingo_card"　style="font-size: 40px">
 		<thead>
 			<tr class="bingo_char">
@@ -27,9 +42,9 @@
 		<tr>
 			<%end%>
 			<% if num > 0 %>
-			<td style="font-size: 40px" align="center"  data-number=<%= num %> class="bingo_number" onclick="number_click(this, <%= @room.id %>, <%= i %>)"><%= num%></td>
+			<td style="font-size: 40px" align="center"  data-number=<%= num %> class="bingo_number" onclick="number_click(this, <%= i %>)"><%= num%></td>
 			<% else %>
-			<td style="font-size: 20px" align="center" class="bingo_number" data-number=-1 onclick="number_click(this, <%= @room.id %>, <%= i %>)">FREE</td>
+			<td style="font-size: 20px" align="center" class="bingo_number" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
 			<% end %>
 			<%i += 1%>
 			<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>

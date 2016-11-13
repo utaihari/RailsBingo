@@ -53,4 +53,6 @@ Rails.application.configure do
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   config.assets.compress = false
+
+  config.i18n.default_locale = :ja
 end

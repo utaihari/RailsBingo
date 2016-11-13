@@ -2,25 +2,29 @@
 <h1><% @room.name %></h1>
 <% if @isRoomOrganizer %>
 <p>あなたはこのビンゴの主催者です</p>
-<p>
-
+<div id="primary" data-mercury="full">
+  default content
+</div>
 <% if @room.isPlaying %>
 	<div id="number_display"></div>
 	<button id="next_number_button" onclick="random_number_add(<%= @room.id %>,<%= @community.id %>)">次の番号を出力</button>
+	<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) %>
 <% else %>
 	<button id="start_button" onclick="start_game(<%= @room.id %>)">ビンゴゲームを始める</button>
 <% end %>
-
-</p>
 <br>
-<button onclick="game_close(<%= @room.id %>)">ゲーム終了</button>
-
+<div id="qr_code">
+<p>招待用QRコード</p>
+<%= raw @svg %>
+<p>招待用URL</p>
+<%= @url %>
+</div>
 
 <% else %>
 	<% if @isRoomMember %>
 		<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) %>
 	<% else %>
-		<%= link_to "このビンゴに参加する", community_room_bingo_cards_path(@community.id,@room.id) %>
+		<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id) %>
 	<% end %>
 <% end %>
 
@@ -30,5 +34,3 @@
 	<p><%= member.name %></p>
 </div>
 <% end %>
-<form>
-</form>

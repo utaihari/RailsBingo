@@ -1,33 +1,94 @@
-<h2>Sign up</h2>
+<h2>新規登録</h2>
 
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+<%= #ゲストとしてビンゴに参加 %>
+<% if @isGuest %>
+<%= devise_error_messages! %>
+<%= form_for(@user, url: user_session_direct_game_path(@community_id,@room_i,1))  do |f| %>
+<div class="field">
+  <%= f.hidden_field :email, @email_address %>
+</div>
+<div class="field">
+ <%= f.label :name, "ニックネーム" %><br />
+ <%= f.text_field :name %>
+</div>
+<div class="field">
+  <%= f.hidden_field :password, @password %>
+</div>
+
+<div class="field">
+  <%= f.hidden_field :password_confirmation, @password %>
+</div>
+
+<div class="actions">
+  <%= f.submit "ビンゴに参加" %>
+</div>
+<% end %>
+
+<%= #ユーザー登録してビンゴに参加 %>
+<% elsif @isDirect %>
+<%= form_for(@user, url: user_session_direct_game_path(@community_id,@room_i,0))  do |f| %>
 <%= devise_error_messages! %>
 
 <div class="field">
-  <%= f.label :email %><br />
+  <%= f.label :email, "メールアドレス" %>
+  <em>(賞品発送等のため、ビンゴ主催者に通知される可能性があります)</em><br />
   <%= f.email_field :email, autofocus: true %>
 </div>
 <div class="field">
- <%= f.label :name %><br />
+ <%= f.label :name, "ニックネーム" %><br />
  <%= f.text_field :name %>
 </div>
 
 <div class="field">
-  <%= f.label :password %>
+  <%= f.label :password, "パスワード" %>
   <% if @minimum_password_length %>
-  <em>(<%= @minimum_password_length %> characters minimum)</em>
+  <em>(<%= @minimum_password_length %> 文字以上)</em>
   <% end %><br />
   <%= f.password_field :password, autocomplete: "off" %>
 </div>
 
 <div class="field">
-  <%= f.label :password_confirmation %><br />
+  <%= f.label :password_confirmation, "もう一度パスワードを入力してください" %><br />
   <%= f.password_field :password_confirmation, autocomplete: "off" %>
 </div>
 
 <div class="actions">
-  <%= f.submit "Sign up" %>
+  <%= f.submit "新規登録" %>
+</div>
+<% end %>
+
+<%= #ユーザー登録してマイページに戻る %>
+<% else %>
+<%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+<%= devise_error_messages! %>
+
+<div class="field">
+  <%= f.label :email, "メールアドレス" %>
+  <em>(賞品発送等のため、ビンゴ主催者に通知される可能性があります)</em><br />
+  <%= f.email_field :email, autofocus: true %>
+</div>
+<div class="field">
+ <%= f.label :name, "ニックネーム" %><br />
+ <%= f.text_field :name %>
+</div>
+
+<div class="field">
+  <%= f.label :password, "パスワード" %>
+  <% if @minimum_password_length %>
+  <em>(<%= @minimum_password_length %> 文字以上)</em>
+  <% end %><br />
+  <%= f.password_field :password, autocomplete: "off" %>
+</div>
+
+<div class="field">
+  <%= f.label :password_confirmation, "もう一度パスワードを入力してください" %><br />
+  <%= f.password_field :password_confirmation, autocomplete: "off" %>
+</div>
+
+<div class="actions">
+  <%= f.submit "新規登録" %>
 </div>
 <% end %>
 
 <%= render "devise/shared/links" %>
+<% end %>

@@ -1,16 +1,41 @@
+require "securerandom"
+
 class Users::RegistrationsController < Devise::RegistrationsController
-before_action :configure_sign_up_params, only: [:create]
-before_action :configure_account_update_params, only: [:update]
+  before_action :configure_sign_up_params, only: [:create]
+  before_action :configure_account_update_params, only: [:update]
 
   # GET /resource/sign_up
-  # def new
-  #   super
-  # end
+  def new
+    super
+    @community_id = nil
+    @room_id = nil
+    @isGuest = false
+    @isDirectGame = false
+
+    if params[:community_id] != nil || params[:room_id] != nil || params[:isGuest] != nil
+      @community_id = params[:community_id]
+      @room_id = params[:room_id]
+      @isGuest = params[:isGuest] == 1
+      @mail_address = SecureRandom.hex(4) + "@guest.com"
+      @password = "GuestPassword"
+      @isDirectGame = true
+    end
+  end
 
   # POST /resource
-  # def create
-  #   super
-  # end
+  def create
+    super
+    if params[:community_id] != nil || params[:room_id] != nil
+      if params[:isGuest] != nil
+        if params[:isGuest] == 1
+          guest = User.find_by(id:current_user.id)
+          guest.isGuest = true
+          guest.save
+        end
+      end
+      redirect_to controller: 'rooms', action: 'join', community_id: params[:community_id], room_id: params[:room_id] and return
+    end
+  end
 
   # GET /resource/edit
   # def edit
