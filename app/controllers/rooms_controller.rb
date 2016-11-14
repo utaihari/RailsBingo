@@ -43,7 +43,7 @@ class RoomsController < ApplicationController
     end
     @members = User.joins(:room_user_list).where(:room_user_lists => {room_id: room_id})
 
-    @url = request.host+pre_join_room_path(@community.id,@room.id)
+    @url = "http://"+request.domain+pre_join_room_path(@community.id,@room.id)
     qrcode = RQRCode::QRCode.new(@url)
     @svg = qrcode.as_svg(offset: 0, color: '000',
                     shape_rendering: 'crispEdges',

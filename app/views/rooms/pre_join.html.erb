@@ -18,7 +18,7 @@
 <div>
 	<p>ゲームに参加するにはログインが必要です</p>
 
-	<%= link_to "ログイン", new_user_session_direct_game(@community.id, @room.id) %>
+	<%= link_to "ログイン", new_user_session_direct_game_path(@community.id, @room.id) %>
 	<% if @room.AllowGuest %>
 	<%= link_to "ゲストとして参加", new_user_registrations_direct_game_path(@community.id, @room.id, 1) %>
 	<% end %>

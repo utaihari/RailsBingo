@@ -31,7 +31,7 @@
   <% end %>
 </div>
 
-<% elsif @isDirect %>
+<% elsif @isDirectGame %>
 <%= form_for(@user, url: user_session_direct_game_path(@community_id,@room_i,0))  do |f| %>
 <%= devise_error_messages! %>
 

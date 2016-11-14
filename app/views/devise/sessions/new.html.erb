@@ -1,6 +1,6 @@
 <h2>ログイン</h2>
-
-<% if @isDirect %>
+<% if @isDirectGame %>
+<%= devise_error_messages! %>
   <%= form_for(@user, url: user_session_direct_game_path(@community_id,@room_id))  do |f| %>
     <div class="field">
       <%= f.label :email, "メールアドレス" %><br />
@@ -18,12 +18,12 @@
         <%= f.label :remember_me, "次回以降自動でログイン" %>
       </div>
     <% end -%>
-
     <div class="actions">
-      <%= f.submit "ログイン" %>
+      <%= f.submit "ログインしてビンゴに参加" %>
     </div>
   <% end %>
 <% else %>
+<%= devise_error_messages! %>
   <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
     <div class="field">
       <%= f.label :email, "メールアドレス" %><br />

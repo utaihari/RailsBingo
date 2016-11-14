@@ -6,7 +6,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # GET /resource/sign_up
   def new
-    super
+
     @community_id = nil
     @room_id = nil
     @isGuest = false
@@ -20,11 +20,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
       @password = "GuestPassword"
       @isDirectGame = true
     end
+    super
   end
 
   # POST /resource
   def create
-    super
+
     if params[:community_id] != nil || params[:room_id] != nil
       if params[:isGuest] != nil
         if params[:isGuest] == 1
@@ -35,6 +36,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       end
       redirect_to controller: 'rooms', action: 'join', community_id: params[:community_id], room_id: params[:room_id] and return
     end
+    super
   end
 
   # GET /resource/edit
