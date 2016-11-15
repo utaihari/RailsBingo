@@ -1,5 +1,9 @@
 <%= javascript_include_tag "rooms.js" %>
-<h1><% @room.name %></h1>
+<h1><%= @room.name %></h1>
+<% if @room.AllowGuest %>
+<p>ゲスト許可</p>
+<% end %>
+<p></p>
 <% if @isRoomOrganizer %>
 <div id="primary" data-mercury="full">
 </div>

@@ -1,6 +1,8 @@
 class Users::SessionsController < Devise::SessionsController
   before_action :configure_sign_in_params, only: [:create]
 
+  skip_before_filter :store_location
+
   # GET /resource/sign_in
   def new
     @community_id = nil
@@ -16,20 +18,22 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   # POST /resource/sign_in
-  def create
-    if params[:community_id] != nil || params[:room_id] != nil
-      redirect_to controller: 'rooms', action: 'join', community_id: params[:community_id], room_id: params[:room_id] and return
-    else
-      super
-    end
-  end
+  # def create
+  #   super
+  # end
 
   # DELETE /resource/sign_out
   # def destroy
   #   super
   # end
-
-  # protected
+  # def after_sign_in_path_for(resource)
+  #   if (session[:previous_url] == root_path)
+  #     super
+  #   else
+  #     session[:previous_url] || root_path
+  #   end
+  # end
+  protected
 
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_in_params

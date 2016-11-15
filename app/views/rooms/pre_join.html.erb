@@ -22,6 +22,6 @@
 	<% if @room.AllowGuest %>
 	<%= link_to "ゲストとして参加", new_user_registrations_direct_game_path(@community.id, @room.id, 1) %>
 	<% end %>
-	<%= link_to "新規登録", new_user_registrations_direct_game_path(@community.id, @room.id, 0) %>
+	<%= link_to "新規登録", new_user_registration_path %>
 </div>
 <% end %>

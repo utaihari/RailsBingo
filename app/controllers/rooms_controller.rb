@@ -19,10 +19,9 @@ class RoomsController < ApplicationController
     end
 
     number_rate = Array.new(75,10)
-    @room = @community.rooms.build(community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], rates:number_rate.join(","))
+    @room = @community.rooms.build(community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], detail: params[:room][:detail], rates:number_rate.join(","))
 
     if @room.save
-      RoomNumber.create(room_id:params[:room_id],number:-1)
       redirect_to controller: 'rooms', action: 'show', id: @room.id
     else
       redirect_to controller: 'communities', action: 'index', notice: "エラー"
@@ -80,7 +79,7 @@ class RoomsController < ApplicationController
     end
 
     if !isCommunityMember(@community.id)
-      CommunityUserList.create(community_id: community_id, user_id: current_user.id)
+      CommunityUserList.create(community_id: @community.id, user_id: current_user.id)
     end
 
 
@@ -218,7 +217,7 @@ class RoomsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def room_params
-    params.require(:room).permit(:name, :canUseItem)
+    params.require(:room).permit(:name, :canUseItem, :AllowGuest, :detail)
   end
 
   def isRoomOrganizer(room_id)

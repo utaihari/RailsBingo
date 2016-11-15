@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161113143924) do
+ActiveRecord::Schema.define(version: 20161115115628) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -55,9 +55,9 @@ ActiveRecord::Schema.define(version: 20161113143924) do
   create_table "communities", force: :cascade do |t|
     t.string   "name"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.text     "detail"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.text     "detail",     default: ""
   end
 
   create_table "community_administrators", force: :cascade do |t|
@@ -104,7 +104,7 @@ ActiveRecord::Schema.define(version: 20161113143924) do
     t.boolean  "canUseItem"
     t.string   "rates"
     t.boolean  "AllowGuest",   default: false
-    t.text     "detail"
+    t.text     "detail",       default: ""
   end
 
   create_table "user_item_lists", force: :cascade do |t|
@@ -134,7 +134,7 @@ ActiveRecord::Schema.define(version: 20161113143924) do
     t.datetime "updated_at",                                   null: false
     t.string   "name",                   default: "anonymous"
     t.boolean  "isGuest",                default: false
-    t.text     "detail"
+    t.text     "detail",                 default: ""
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

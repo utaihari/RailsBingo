@@ -4,6 +4,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
   before_action :configure_sign_up_params, only: [:create]
   before_action :configure_account_update_params, only: [:update]
 
+  skip_before_filter :store_location
+
   # GET /resource/sign_up
   def new
 
@@ -11,11 +13,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @room_id = nil
     @isGuest = false
     @isDirectGame = false
+    @previous_url = session[:previous_url]
 
     if params[:community_id] != nil || params[:room_id] != nil || params[:isGuest] != nil
       @community_id = params[:community_id]
       @room_id = params[:room_id]
-      @isGuest = params[:isGuest] == 1
+      @isGuest = Integer(params[:isGuest]) == 1
       @mail_address = SecureRandom.hex(4) + "@guest.com"
       @password = "GuestPassword"
       @isDirectGame = true
@@ -25,18 +28,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
-
-    if params[:community_id] != nil || params[:room_id] != nil
-      if params[:isGuest] != nil
-        if params[:isGuest] == 1
+    super
+      if params[:user][:isGuest] == 't'
           guest = User.find_by(id:current_user.id)
           guest.isGuest = true
           guest.save
-        end
       end
-      redirect_to controller: 'rooms', action: 'join', community_id: params[:community_id], room_id: params[:room_id] and return
-    end
-    super
   end
 
   # GET /resource/edit
@@ -45,9 +42,12 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # PUT /resource
-  # def update
-  #   super
-  # end
+  def update
+    super
+    user = User.find(current_user.id)
+    user.isGuest = false
+    user.save
+  end
 
   # DELETE /resource
   # def destroy
