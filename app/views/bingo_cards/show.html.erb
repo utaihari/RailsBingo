@@ -1,6 +1,5 @@
 <%= javascript_include_tag "bingo_cards.js" %>
-<div id="data" data-room_id=<%= @room.id %> data-card_number=<%= @card.id %>></div>
-<button onclick="onPageLoad()">UpdateNumbers</button>
+<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %>></div>
 <div id="notice" onclick="show_notice_list()"></div>
 <div id="notice_list" style="display: none;"></div>
 <div id="result" style="display: none;">
@@ -14,12 +13,8 @@
 		<div>穴 <span id="number_of_hole"></span>個</div>
 	</div>
 </div>
-
-
-
-<div id="bingo_button" style="display: none;"><button onclick="bingo()">BINGO!!!!!</button></div>
-<div id="card_area" class="pre_game">
-	<table boder = "3" height="600" width="500" id="bingo_card"　style="font-size: 40px">
+<div id="card_area" class="pre_game col-xs-12 col-sm-8 col-md-8 col-lg-4">
+	<table boder = "3" id="bingo_card" class="table">
 		<thead>
 			<tr class="bingo_char">
 				<th>B</th>
@@ -29,12 +24,12 @@
 				<th>O</th>
 			</tr>
 		</thead>
-		<tr height = "10px">
-			<td style="font-size: 15px" align="center">1-15</td>
-			<td style="font-size: 15px" align="center">16-30</td>
-			<td style="font-size: 15px" align="center">31-45</td>
-			<td style="font-size: 15px" align="center">46-60</td>
-			<td style="font-size: 15px" align="center">61-75</td>
+		<tr>
+			<td class="num-range" align="center">1-15</td>
+			<td class="num-range" align="center">16-30</td>
+			<td class="num-range" align="center">31-45</td>
+			<td class="num-range" align="center">46-60</td>
+			<td class="num-range" align="center">61-75</td>
 		</tr>
 		<%i=0%>
 		<% @numbers.each do |num|%>
@@ -42,9 +37,9 @@
 		<tr>
 			<%end%>
 			<% if num > 0 %>
-			<td style="font-size: 40px" align="center"  data-number=<%= num %> class="bingo_number" onclick="number_click(this, <%= i %>)"><%= num%></td>
+			<td align="center" data-number=<%= num %> class="bingo_number col-xs-1" onclick="number_click(this, <%= i %>)"><%= num%></td>
 			<% else %>
-			<td style="font-size: 20px" align="center" class="bingo_number" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
+			<td align="center" class="bingo_number free" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
 			<% end %>
 			<%i += 1%>
 			<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>
@@ -53,7 +48,8 @@
 		<%end%>
 	</table>
 </div>
-<div id="numbers">
+<div id="bingo_button" style="display: none;"><button onclick="bingo()">BINGO!!!!!</button></div>
+<div id="numbers" class="pull-left col-md-4 col-sm-4 col-xs-12">
 	<p>次のナンバー　↓<div id="last_number"></div></p>
 	<p id="past_numbers" onclick="display_past_number()">過去の番号(クリックで表示)</p>
 	<div id="number_list_wrapper" style="display: none;">

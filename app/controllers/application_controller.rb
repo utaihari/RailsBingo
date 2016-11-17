@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
 	protect_from_forgery with: :exception
 
-	before_filter :store_location
+	before_action :store_location
 
 	def store_location
     	if (request.fullpath != "/users/sign_in" && request.fullpath != "/users/sign_up" && request.fullpath !~ Regexp.new("\\A/users/password.*\\z") && !request.xhr?) # don't store ajax calls

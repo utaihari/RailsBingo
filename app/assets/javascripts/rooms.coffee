@@ -3,6 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 rate = []
+bingo_users = []
 @rate_update =(room_id,community_id) ->
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/get_number_rate', {room_id: room_id,community_id: community_id}, (json) ->
@@ -39,9 +40,28 @@ rate = []
 	$.post('/API/start_game', {room_id: room_id}, (data) ->
 		return
 		)
+	$('#notice').text("ゲームを開始中です。３秒以内に画面が切り替わらない場合は、ブラウザを更新してください。")
 	setTimeout(->
         location.reload();
+        $('#notice').text("")
+        @check_bingo = setInterval(->
+        	check_bingo_users(room_id)
+        ,5000)
     ,1000);
+	return
+
+bingo_users_length = 0
+check_bingo_users  = (room_id) ->
+	$.ajaxSetup({async: false});
+	$.getJSON('/API/check_bingo_users',{room_id: room_id},(json)->
+		bingo_users = json
+	)
+
+	if bingo_users_length isnt bingo_users.length
+		bingo_users_length = bingo_users.length
+		$('ul#bingo_user_list').empty()
+		for user, index in bingo_users
+			$('ul#bingo_user_list').prepend("<li> #{user.name}, #{user.times}回目, #{user.seconds}ms </li>")
 	return
 
 @view_mail_address =(obj) ->

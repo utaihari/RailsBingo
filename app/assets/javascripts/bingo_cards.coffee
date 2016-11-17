@@ -23,6 +23,10 @@ $(->
 	@start_check = setInterval(->
 		game_start_check(room_id)
 	,5000)
+	if check_bingo()
+		$('#bingo_button').show()
+	else
+		$('#bingo_button').hide()
 	return
 )
 
@@ -45,7 +49,6 @@ game_start_check =  ->
 	return
 game_end_check =  ->
 	@check_condition()
-	console.log(condition)
 	if condition == 2
 		notice.push("ゲームが終了しました。")
 		display_notice()
@@ -124,9 +127,7 @@ update_list = ->
 @check_number = (index) ->
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/check_number',{room_id: @room_id, index: index},(json)->
-		console.log(json[index])
 		checks[index] = (json[index] == 't')
-		console.log(checks[index])
 	)
 	return
 @number_click = (obj, index) ->
@@ -161,6 +162,7 @@ update_list = ->
 	if !check_bingo
 		return
 	$.post('/API/done_bingo', {card_id: @card_id, room_id: @room_id, times: numbers.length, seconds: current_time-number_arrive_time}, (data) ->
+		console.log(data)
 		done_bingo = data
 		return
 		)
@@ -206,39 +208,41 @@ number_of_one_left_line = 0
 number_of_hole = 0
 calc_number_of_bingos = ->
 	holes = []
-	for check of checks
-		if check
+	number_of_bingo = 0
+	number_of_one_left_line = 0
+	number_of_hole = 0
+	for check in checks
+		if check == true
 			holes.push(1)
 			number_of_hole++
 		else
 			holes.push(0)
-
 #check_number_of_bingo
 	for i in[0..4]
-		if holes[i*5+0]+holes[i*5+1]+holes[i*5+2]+holes[i*5+3]+holes[i*5+4] == 5
-			number_of_one_left_line++
+		if (holes[i*5+0]+holes[i*5+1]+holes[i*5+2]+holes[i*5+3]+holes[i*5+4]) == 5
+			number_of_bingo++
 #check vertical line
 	for i in[0..4]
-		if holes[i+0]+holes[i+5]+holes[i+10]+holes[i+15]+holes[i+20] == 5
-			number_of_one_left_line++
+		if (holes[i+0]+holes[i+5]+holes[i+10]+holes[i+15]+holes[i+20]) == 5
+			number_of_bingo++
 #check diagonal line
-	if holes[0]+holes[6]+holes[12]+holes[18]+holes[24] == 5
-		number_of_one_left_line++
-	if holes[4]+holes[8]+holes[12]+holes[16]+holes[20] == 5
-		number_of_one_left_line++
+	if (holes[0]+holes[6]+holes[12]+holes[18]+holes[24]) == 5
+		number_of_bingo++
+	if (holes[4]+holes[8]+holes[12]+holes[16]+holes[20]) == 5
+		number_of_bingo++
 
 #check_number_of_one_left_line
 	for i in[0..4]
-		if holes[i*5+0]+holes[i*5+1]+holes[i*5+2]+holes[i*5+3]+holes[i*5+4] == 4
+		if (holes[i*5+0]+holes[i*5+1]+holes[i*5+2]+holes[i*5+3]+holes[i*5+4]) == 4
 			number_of_one_left_line++
 #check vertical line
 	for i in[0..4]
-		if holes[i+0]+holes[i+5]+holes[i+10]+holes[i+15]+holes[i+20] == 4
+		if (holes[i+0]+holes[i+5]+holes[i+10]+holes[i+15]+holes[i+20]) == 4
 			number_of_one_left_line++
 #check diagonal line
-	if holes[0]+holes[6]+holes[12]+holes[18]+holes[24] == 4
+	if (holes[0]+holes[6]+holes[12]+holes[18]+holes[24]) == 4
 		number_of_one_left_line++
-	if holes[4]+holes[8]+holes[12]+holes[16]+holes[20] == 4
+	if (holes[4]+holes[8]+holes[12]+holes[16]+holes[20]) == 4
 		number_of_one_left_line++
 	return
 

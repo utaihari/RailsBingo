@@ -14,12 +14,13 @@
  *= require_self
  */
  body{
-/* 	background-color:#fff3ff;
- 	color : #001200;*/
- 	margin-right: auto;
+ 	width:100%;
+}
+ #container{
+	width: 70%;
+	margin-right: auto;
  	margin-left : auto;
- 	width:70%;
- }
+}
  .note{
  	color:#330;
  	font-size: 50%;

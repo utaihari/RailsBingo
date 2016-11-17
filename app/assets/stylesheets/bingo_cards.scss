@@ -2,9 +2,6 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
-#card_area{
-	margin: auto;
-}
 .checked {
 	color: #ff69b4;
 }
@@ -12,22 +9,35 @@
 	font-size: 40px;
 }
 #bingo_card{
-	width: 500px;
-	height: 525px;
-	float: left;
+	// width: 500px;
+	// height: 525px;
+	// float: left;
+	table{
+		table-layout: fixed;
+		td{
+			width: 30px;
+			height: 30px;
+		}
+	}
 	.bingo_number{
 		background-color: #ccdbff;
+		font-size: 40px;
+	}
+
+	.free{
+		font-size: 20px;
 	}
 
 }
+.num-range{
+	font-size: 10px;
+}
+
 #numbers{
-	width: 30%;
-	float: left;
+	// width: 30%;
+	// float: left;
 	#last_number{
 		color: #ff3000;
 		font-size: 40px;
 	}
-}
-.page_foot{
-	clear: both;
 }

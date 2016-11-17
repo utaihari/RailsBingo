@@ -45,6 +45,7 @@ Rails.application.routes.draw do
 	get 'API/get_checked_number', to: 'bingo_cards#get_checked_number',as:'get_checked_number'
 	post '/API/done_bingo', to: 'bingo_cards#done_bingo', as: 'done_bingo'
 	get '/API/check_rank', to: 'rooms#check_rank'
+	get '/API/check_bingo_users', to: 'rooms#check_bingo_users'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

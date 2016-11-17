@@ -23,8 +23,6 @@ class BingoCardsController < ApplicationController
 			redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@bingo_card.id) and return
 		end
 
-
-
 		@numbers = make_bingo_num()
 		@checks =[]
 		25.times { |n|
@@ -32,7 +30,6 @@ class BingoCardsController < ApplicationController
 		}
 
 		@bingo_card = BingoCard.create!(room_id:params[:room_id],user_id:current_user.id,numbers: @numbers.join(","),checks: @checks.join(","))
-		RoomUserList.create(room_id:params[:room_id],user_id: current_user.id)
 		redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@bingo_card.id)
 	end
 
@@ -40,7 +37,7 @@ class BingoCardsController < ApplicationController
 		bingo_users = BingoUser.where(params[:room_id]).order("BingoUser.times ASC, BingoUser.seconds ASC")
 		@ranking = 0
 		bingo_users.each_with_index do |user, i|
-			if user.id == current_user.index
+			if user.id == current_user.id
 				@ranking = i+1
 			end
 		end

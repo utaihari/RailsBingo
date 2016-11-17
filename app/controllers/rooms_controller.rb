@@ -8,7 +8,7 @@ class RoomsController < ApplicationController
 
   def new
     @community = Community.find_by(id:params[:community_id])
-    @room = @community.rooms.build
+    @room = @community.room.build
   end
 
   def create
@@ -19,7 +19,7 @@ class RoomsController < ApplicationController
     end
 
     number_rate = Array.new(75,10)
-    @room = @community.rooms.build(community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], detail: params[:room][:detail], rates:number_rate.join(","))
+    @room = @community.room.build(community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], detail: params[:room][:detail], rates:number_rate.join(","))
 
     if @room.save
       redirect_to controller: 'rooms', action: 'show', id: @room.id
@@ -45,8 +45,8 @@ class RoomsController < ApplicationController
     @url = "http://"+request.domain+pre_join_room_path(@community.id,@room.id)
     qrcode = RQRCode::QRCode.new(@url)
     @svg = qrcode.as_svg(offset: 0, color: '000',
-                    shape_rendering: 'crispEdges',
-                    module_size: 3)
+      shape_rendering: 'crispEdges',
+      module_size: 3)
   end
 
   def edit
@@ -189,7 +189,7 @@ class RoomsController < ApplicationController
     bingo_users = BingoUser.where(params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC")
     ranking = 0
     bingo_users.each_with_index do |user, i|
-      if user.id == current_user.index
+      if user.id == current_user.id
         ranking = i+1
       end
     end
@@ -206,6 +206,14 @@ class RoomsController < ApplicationController
       render :json => "不正なパラメータです" and return
     end
     render :json => user.email
+  end
+
+  def check_bingo_users
+    if !isRoomOrganizer(params[:room_id])
+      render :json => "不正なパラメータです" and return
+    end
+    users = BingoUser.where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC")
+    render :json => users and return
   end
 
   private
