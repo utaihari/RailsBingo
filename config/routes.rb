@@ -32,6 +32,11 @@ Rails.application.routes.draw do
 	get 'communities/:community_id/rooms/:room_id/pre-join', to: 'rooms#pre_join', as:'pre_join_room'
 	get 'communities/:community_id/rooms/:room_id/join', to: 'rooms#join', as:'join_room'
 
+	#TOOLS
+	get 'TOOLS/number-generator/:room_id', to: 'rooms#tool_number-generator', as:'tool_number-generator'
+	get 'TOOLS/qr-code/:room_id', to: 'rooms#tool_qr-code', as:'tool_qr-code'
+	get 'TOOLS/bingo-users/:room_id', to: 'rooms#tool_bingo-users', as:'tool_bingo-users'
+	get 'TOOLS/bingo-card/:card_id', to: 'bingo_cards#tool_bingo-card', as:'tool_bingo-card'
 
 	#API
 
