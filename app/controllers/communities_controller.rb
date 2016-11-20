@@ -5,12 +5,12 @@ class CommunitiesController < ApplicationController
   before_action :community_params, only: [:new, :update]
 
   def index
-    @communities = Community.joins(:user).all
+    @communities = Community.joins(:user).all.includes(:user)
     @belong_communities = CommunityUserList.where(user_id: current_user.id)
   end
 
   def show
-    @members = CommunityUserList.joins(:user).where(community_id: params[:id])
+    @members = CommunityUserList.joins(:user).where(community_id: params[:id]).includes(:user)
     @isOrganizer = isCommunityOrganizer(params[:id])
     @isMember = CommunityUserList.exists?(community_id:params[:id], user_id: current_user)
     @opened_rooms = Room.where(community_id:params[:id], isFinished: false)

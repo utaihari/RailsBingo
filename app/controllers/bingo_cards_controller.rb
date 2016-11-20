@@ -145,7 +145,7 @@ class BingoCardsController < ApplicationController
 	end
 
 	def done_bingo
-		if params[:room_id] == nil || times = params[:times] == nil || seconds = params[:seconds] == nil || card_id = params[:card_id] == nil
+		if params[:room_id] == nil || params[:times] == nil || params[:seconds] == nil || params[:card_id] == nil
 			render :json => false and return
 		end
 		room_id = params[:room_id]
@@ -153,7 +153,7 @@ class BingoCardsController < ApplicationController
 		seconds = params[:seconds]
 		card_id = params[:card_id]
 
-		if check_bingo(card_id) || BingoUser.exists?(room_id: room_id, user_id: current_user.id)
+		if !check_bingo(card_id) || BingoUser.exists?(room_id: room_id, user_id: current_user.id)
 			render :json => false and return
 		end
 

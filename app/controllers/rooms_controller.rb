@@ -212,7 +212,7 @@ class RoomsController < ApplicationController
     if !isRoomOrganizer(params[:room_id])
       render :json => "不正なパラメータです" and return
     end
-    users = BingoUser.where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC")
+    users = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("Users.name","times","seconds")
     render :json => users and return
   end
 

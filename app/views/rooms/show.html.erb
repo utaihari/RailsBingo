@@ -1,4 +1,5 @@
 <%= javascript_include_tag "rooms.js" %>
+<div id="data" data-room_id=<%= @room.id %> data-condition=<%= @room.isPlaying %>></div>
 <h1><%= @room.name %></h1>
 <% if @room.AllowGuest %>
 <p>ゲスト許可</p>
@@ -9,8 +10,9 @@
 </div>
 <% if @room.isPlaying %>
 <div id="number_display"></div>
-<button id="next_number_button" onclick="random_number_add(<%= @room.id %>,<%= @community.id %>)">次の番号を出力</button>
-<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) %>
+<button id="next_number_button" class="btn btn-info" onclick="random_number_add(<%= @room.id %>,<%= @community.id %>)">次の番号を出力</button>
+<div>ビンゴしたユーザー一覧<div id="bingo_user_list"></div></div>
+
 <% else %>
 <button id="start_button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
 <% end %>
@@ -28,6 +30,9 @@
 		</div>
 	</div>
 </div>
+<% if @room.isPlaying %>
+	<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) ,class:"btn btn-info"%>
+<% end %>
 
 <% else %>
 <% if @isRoomMember %>

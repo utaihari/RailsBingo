@@ -4,6 +4,18 @@
 
 rate = []
 bingo_users = []
+
+$(->
+	@room_id = $("#data").data("room_id")
+	@condition = $("#data").data("condition")
+	console.log(@condition)
+	if @condition == true
+        @check_bingo = setInterval(->
+        	check_bingo_users(room_id)
+        ,5000)
+)
+
+
 @rate_update =(room_id,community_id) ->
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/get_number_rate', {room_id: room_id,community_id: community_id}, (json) ->
@@ -48,6 +60,7 @@ bingo_users = []
         	check_bingo_users(room_id)
         ,5000)
     ,1000);
+    condition = 1
 	return
 
 bingo_users_length = 0
@@ -59,25 +72,11 @@ check_bingo_users  = (room_id) ->
 
 	if bingo_users_length isnt bingo_users.length
 		bingo_users_length = bingo_users.length
-		$('ul#bingo_user_list').empty()
+		$('#bingo_user_list').empty()
 		for user, index in bingo_users
-			$('ul#bingo_user_list').prepend("<li> #{user.name}, #{user.times}回目, #{user.seconds}ms </li>")
+			$('#bingo_user_list').prepend("<div> #{user.name}, #{user.times}回目, #{user.seconds}ms </div>")
 	return
 
 @view_mail_address =(obj) ->
 	$(obj).children('.view_mail_addess').toggle()
-	return
-
-
-$(document).on 'ready page:load', ->
-	UI = new SquireUI(
-		replace: 'textarea#seditor'
-		buildPath: "/"
-		height: 300)
-
-	if typeof $room_detail != 'undefined'
-		UI.setHTML $room_detail
-	$('form').submit ->
-		$('#room_detail').val(UI.getHTML()).change()
-		return
 	return

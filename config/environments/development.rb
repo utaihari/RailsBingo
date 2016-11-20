@@ -55,4 +55,10 @@ Rails.application.configure do
   config.assets.compress = false
 
   config.i18n.default_locale = :ja
+
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.rails_logger = true
+    Bullet.add_footer = true
+  end
 end
