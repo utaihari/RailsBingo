@@ -105,7 +105,10 @@ class BingoCardsController < ApplicationController
 	end
 
 	def check_number
-		card = BingoCard.find_by(user_id:current_user.id,room_id:params[:room_id])
+		if params[:card_id] == nil
+			return
+		end
+		card = BingoCard.find_by(id:params[:card_id])
 		if card == nil || params[:index] == nil
 			return
 		end
@@ -154,7 +157,7 @@ class BingoCardsController < ApplicationController
 		card_id = params[:card_id]
 
 		if !check_bingo(card_id) || BingoUser.exists?(room_id: room_id, user_id: current_user.id)
-			render :json => false and return
+			render :json => true and return
 		end
 
 		BingoUser.create(room_id: room_id, user_id: current_user.id, times: times, seconds: seconds)

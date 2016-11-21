@@ -107,7 +107,6 @@ class RoomsController < ApplicationController
 
   def add_number
     @room = Room.find(params[:room_id])
-    @community = Community.find(params[:community_id])
 
     if params[:number] == nil
       render :json => "不正なパラメータです" and return
@@ -115,7 +114,7 @@ class RoomsController < ApplicationController
 
     number = Integer(params[:number])
 
-    if @community == nil || @room == nil || number < 1 || 75 < number
+    if @room == nil || number < 1 || 75 < number
       render :json => "不正なパラメータです" and return
     end
 
@@ -214,6 +213,26 @@ class RoomsController < ApplicationController
     end
     users = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("Users.name","times","seconds")
     render :json => users and return
+  end
+
+  #TOOLS
+  def tool_number_generator
+    @room = Room.find(params[:room_id])
+    render "_number-generator", :locals => { room: @room },:layout => false and return
+  end
+  def tool_qr_code
+    @room = Room.find(params[:room_id])
+    @community = Community.find(params[:community_id])
+    @url = "http://"+request.domain+pre_join_room_path(@community.id,@room.id)
+    qrcode = RQRCode::QRCode.new(@url)
+    @svg = qrcode.as_svg(offset: 0, color: '000',
+      shape_rendering: 'crispEdges',
+      module_size: 3)
+    render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url }, :layout => false and return
+  end
+  def tool_bingo_users
+    @room = Room.find(params[:room_id])
+    render :partial => "bingo-users", :layout => false and return
   end
 
   private

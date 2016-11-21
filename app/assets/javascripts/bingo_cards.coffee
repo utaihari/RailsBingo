@@ -126,7 +126,7 @@ update_list = ->
 
 @check_number = (index) ->
 	$.ajaxSetup({async: false});
-	$.getJSON('/API/check_number',{room_id: @room_id, index: index},(json)->
+	$.getJSON('/API/check_number',{card_id: @card_id, index: index},(json)->
 		checks[index] = (json[index] == 't')
 	)
 	return
@@ -159,10 +159,9 @@ update_list = ->
 
 @bingo = ->
 	current_time = new Date()
-	if !check_bingo
+	if !check_bingo || done_bingo
 		return
 	$.post('/API/done_bingo', {card_id: @card_id, room_id: @room_id, times: numbers.length, seconds: current_time-number_arrive_time}, (data) ->
-		console.log(data)
 		done_bingo = data
 		return
 		)

@@ -10,3 +10,7 @@ $(document).on 'ready page:load', ->
 		$('#room_detail').val(UI.getHTML()).change()
 		return
 	return
+@show_room_detail = ->
+	console.log("show")
+	$('#item-setting').toggle()
+	return

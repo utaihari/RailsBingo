@@ -1,37 +1,35 @@
 <%= javascript_include_tag "rooms.js" %>
 <div id="data" data-room_id=<%= @room.id %> data-condition=<%= @room.isPlaying %>></div>
-<h1><%= @room.name %></h1>
-<% if @room.AllowGuest %>
-<p>ゲスト許可</p>
-<% end %>
-<p></p>
+<h1 <% if @room.AllowGuest %> class="allow-guest" <% end %>><%= @room.name %></h1>
 <% if @isRoomOrganizer %>
 <div id="primary" data-mercury="full">
 </div>
 <% if @room.isPlaying %>
-<div id="number_display"></div>
-<button id="next_number_button" class="btn btn-info" onclick="random_number_add(<%= @room.id %>,<%= @community.id %>)">次の番号を出力</button>
-<div>ビンゴしたユーザー一覧<div id="bingo_user_list"></div></div>
+
+<div>
+	<%= render :partial => "number-generator", :locals => { room: @room } %>
+	<%= link_to '別ウィンドウで開く',tool_number_generator_path(@community.id,@room.id),
+	:onclick=>"window.open(this.href,'番号選出', 'height=400, width=300');return false;" %>
+</div>
+<div>
+	<%= render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url } %>
+	<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(@community.id, @room.id),
+	:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
+</div>
+<div>
+	<%= render :partial => "bingo-users" %>
+	<%= link_to '別ウィンドウで開く',tool_bingo_users_path(@room.id),
+	:onclick=>"open_bingo_users_window(this);return false;" %>
+</div>
 
 <% else %>
-<button id="start_button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
+<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
 <% end %>
 <br>
 <br>
-<div id="qr_code" class="container-fluid" >
-	<div class="row" >
-		<div class="col-lg-3 col-md-3">
-			<p>招待用QRコード</p>
-			<%= raw @svg %>
-		</div>
-		<div class="col-lg-3 col-md-3">
-			<p>招待用URL</p>
-			<%= @url %>
-		</div>
-	</div>
-</div>
+
 <% if @room.isPlaying %>
-	<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) ,class:"btn btn-info"%>
+<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) ,class:"btn btn-info"%>
 <% end %>
 
 <% else %>

@@ -10,19 +10,36 @@
 </div>
 
 <div　class="form-group">
-<p>部屋の説明</p>
-<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
-<%= f.text_area :detail, :id=>"seditor" %>
+	<p>部屋の説明</p>
+	<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
+	<%= f.text_area :detail, :id=>"seditor" %>
 </div>
 
-<div class="form-group">
+<div class="form-group" >
 	<%= f.label :canUseItem, "アイテム使用許可" %>
-	<%= f.check_box :canUseItem ,{},"true","false" %>
+	<span onclick="show_room_detail()"><%= f.check_box :canUseItem ,{},"true","false" %></span>
 </div>
 <div class="form-group">
 	<%= f.label :AllowGuest, "ゲスト許可" %>
 	<%= f.check_box :AllowGuest ,{},"true","false" %>
 	<p>(許可の場合、参加者のメールアドレスは通知されません)</p>
 </div>
+
+<div id="item-setting" style="display:none;">
+	<p>このゲームでは終了時に、参加者の成績に応じてアイテムをプレゼントします。</p>
+	<div class="form-group">
+		<%= f.label :bingo_score, "ビンゴ１列につきアイテム？個" %>
+		<%= f.text_field :bingo_score %>
+	</div>
+	<div class="form-group">
+		<%= f.label :riichi_score, "リーチ１列につきアイテム？個" %>
+		<%= f.text_field :riichi_score %>
+	</div>
+	<div class="form-group">
+		<%= f.label :hole_score, "穴一つにつきアイテム？個" %>
+		<%= f.text_field :hole_score %>
+	</div>
+</div>
+
 <%= f.submit "作成", class: "btn btn-info" %>
 <% end %>
