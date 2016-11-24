@@ -1,29 +1,22 @@
-<table boder = "3" id="bingo_card" class="table">
+<table boder = "3" id="bingo_card" align="center">
 	<thead>
 		<tr class="bingo_char">
-			<th>B</th>
-			<th>I</th>
-			<th>N</th>
-			<th>G</th>
-			<th>O</th>
+			<th class="text-center">B</th>
+			<th class="text-center">I</th>
+			<th class="text-center">N</th>
+			<th class="text-center">G</th>
+			<th class="text-center">O</th>
 		</tr>
 	</thead>
-	<tr>
-		<td class="num-range" align="center">1-15</td>
-		<td class="num-range" align="center">16-30</td>
-		<td class="num-range" align="center">31-45</td>
-		<td class="num-range" align="center">46-60</td>
-		<td class="num-range" align="center">61-75</td>
-	</tr>
 	<%i=0%>
 	<% numbers.each do |num|%>
 	<% if i == 0 || i == 5 || i == 10 || i == 15  || i == 20 then %>
 	<tr>
 		<%end%>
 		<% if num > 0 %>
-		<td align="center" data-number=<%= num %> class="bingo_number col-xs-1" onclick="number_click(this, <%= i %>)"><%= num %></td>
+		<td data-number=<%= num %> class="bingo_number text-center" onclick="number_click(this, <%= i %>)"><%= num %></td>
 		<% else %>
-		<td align="center" class="bingo_number free" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
+		<td class="bingo_number free text-center" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
 		<% end %>
 		<%i += 1%>
 		<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>

@@ -1,46 +1,56 @@
-<h1><%= current_user.name %>さんのマイページ</h1>
+<div class="center70">
+	<h1><%= current_user.name %>さんのマイページ</h1>
 
-<% if !@joind_rooms.blank? %>
-<h2>現在参加中のビンゴ</h2>
-<% for room in @joind_rooms %>
-<div class="joind_rooms">
-	<p><%= link_to room.name , join_room_path(room.community_id,room.id), class: "btn btn-default" %></p>
+	<% if !@joind_rooms.blank? %>
+	<div class="white-box">
+		<h2>現在参加中のビンゴ</h2>
+		<% for room in @joind_rooms %>
+		<div class="joind_rooms">
+			<p><%= link_to room.name , join_room_path(room.community_id,room.id), class: "btn btn-default" %></p>
+		</div>
+		<% end %>
+	</div>
+	<% end %>
+
+	<% if !current_user.isGuest %>
+
+	<% if !@opened_communities.blank? %>
+	<div class="white-box">
+		<h2>現在ビンゴ開催中のコミュニティ</h2>
+		<% @opened_communities.each do |community| %>
+		<div class="opened_community">
+			<p><%= link_to community.name + "\t("+community.community_name+")", community_path(community.id),class: "btn btn-default" %></p>
+		</div>
+		<% end %>
+	</div>
+	<% end %>
+
+	<% if !@own_communities.blank? %>
+	<div class="white-box">
+		<h2>あなたのコミュニティ一覧</h2>
+		<% @own_communities.each do |community| %>
+		<div class="own_communities" >
+			<p><%= link_to community.name, community_path(community.id),class: "btn btn-default" %></p>
+		</div>
+		<% end %>
+	</div>
+	<% end %>
+
+
+	<% if !@joined_communities.blank? %>
+	<div class="white-box">
+		<h2>参加中のコミュニティ一覧</h2>
+		<% @joined_communities.each do |community| %>
+		<div class="joined_communities" >
+			<p><%= link_to community.name, community_path(community.id),class: "btn btn-default" %></p>
+		</div>
+		<% end %>
+	</div>
+	<% end %>
+
+	<p>
+		<%= link_to 'コミュニティを探す', communities_path, class: "btn btn-primary btn-lg" %>
+	</p>
+
+	<% end %>
 </div>
-<% end %>
-<% end %>
-
-<% if !current_user.isGuest %>
-
-<% if !@opened_communities.blank? %>
-<h2>現在ビンゴ開催中のコミュニティ</h2>
-<% @opened_communities.each do |community| %>
-<div class="opened_community">
-	<p><%= link_to community.name + "\t("+community.community_name+")", community_path(community.id),class: "btn btn-default" %></p>
-</div>
-<% end %>
-<% end %>
-
-<% if !@own_communities.blank? %>
-<h2>あなたのコミュニティ一覧</h2>
-<% @own_communities.each do |community| %>
-<div class="own_communities" >
-	<p><%= link_to community.name, community_path(community.id),class: "btn btn-default" %></p>
-</div>
-<% end %>
-<% end %>
-
-
-<% if !@joined_communities.blank? %>
-<h2>参加中のコミュニティ一覧</h2>
-<% @joined_communities.each do |community| %>
-<div class="joined_communities" >
-	<p><%= link_to community.name, community_path(community.id),class: "btn btn-default" %></p>
-</div>
-<% end %>
-<% end %>
-
-<p>
-	<%= link_to 'コミュニティを探す', communities_path, class: "btn btn-primary btn-lg" %>
-</p>
-
-<% end %>

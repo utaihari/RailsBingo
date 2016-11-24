@@ -185,10 +185,10 @@ class RoomsController < ApplicationController
     if params[:room_id] == nil
       render :json => "不正なパラメータです" and return
     end
-    bingo_users = BingoUser.where(params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC")
+    bingo_users = BingoUser.where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC")
     ranking = 0
     bingo_users.each_with_index do |user, i|
-      if user.id == current_user.id
+      if user.user_id == current_user.id
         ranking = i+1
       end
     end
@@ -215,6 +215,11 @@ class RoomsController < ApplicationController
     render :json => users and return
   end
 
+  def joined_users
+    @members = User.joins(:room_user_list).where(:room_user_lists => {room_id: params[:room_id]})
+    render :json => @members and return
+  end
+
   #TOOLS
   def tool_number_generator
     @room = Room.find(params[:room_id])
@@ -234,6 +239,7 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:room_id])
     render :partial => "bingo-users", :layout => false and return
   end
+
 
   private
 

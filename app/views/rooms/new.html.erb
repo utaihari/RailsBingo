@@ -1,7 +1,7 @@
 <%= javascript_include_tag "Squire-UI.js" %>
 <%= javascript_include_tag "squire-raw.js" %>
 <%= javascript_include_tag "rooms-new" %>
-
+<div class="center70">
 <h1>ビンゴ部屋作成</h1>
 <%= form_for([@community,@room]) do |f|%>
 <div class="form-group">
@@ -14,16 +14,20 @@
 	<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
 	<%= f.text_area :detail, :id=>"seditor" %>
 </div>
-
-<div class="form-group" >
-	<%= f.label :canUseItem, "アイテム使用許可" %>
-	<span onclick="show_room_detail()"><%= f.check_box :canUseItem ,{},"true","false" %></span>
+<div class="form-group">
+	<%= f.label :AllowGuest, "途中参加許可" %>
+	<%= f.check_box :AllowGuest ,{},"true","false" %>
 </div>
 <div class="form-group">
 	<%= f.label :AllowGuest, "ゲスト許可" %>
 	<%= f.check_box :AllowGuest ,{},"true","false" %>
 	<p>(許可の場合、参加者のメールアドレスは通知されません)</p>
 </div>
+<div class="form-group" >
+	<%= f.label :canUseItem, "アイテム使用許可" %>
+	<span onclick="show_room_detail()"><%= f.check_box :canUseItem ,{},"true","false" %></span>
+</div>
+
 
 <div id="item-setting" style="display:none;">
 	<p>このゲームでは終了時に、参加者の成績に応じてアイテムをプレゼントします。</p>
@@ -43,3 +47,4 @@
 
 <%= f.submit "作成", class: "btn btn-info" %>
 <% end %>
+</div　class="form-group">

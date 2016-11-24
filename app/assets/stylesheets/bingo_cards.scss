@@ -8,20 +8,27 @@
 .bingo_char{
 	font-size: 40px;
 }
+
+table{
+	table-layout: fixed;
+}
+td{
+	width: 80px;
+	height: 80px;
+	padding: 0px;
+	margin: 0px;
+}
+#card_area{
+	width:400px;
+}
 #bingo_card{
-	// width: 500px;
-	// height: 525px;
-	// float: left;
-	table{
-		table-layout: fixed;
-		td{
-			width: 30px;
-			height: 30px;
-		}
-	}
+	table-layout: fixed;
+	width:400px;
+	margin-right : auto;
+	margin-left : auto;
 	.bingo_number{
-		background-color: #ccdbff;
-		font-size: 40px;
+		background-color: rgba(204, 255, 255, 0.7);
+		font-size: 30px;
 	}
 
 	.free{
@@ -40,4 +47,29 @@
 		color: #ff3000;
 		font-size: 40px;
 	}
+}
+
+ul.foo {
+	display:table;
+	table-layout:fixed;
+	width:100%;
+	padding-bottom: 2px;
+	padding-left: 0px;
+}
+ul.foo li {
+	display:table-cell;
+	vertical-align:middle;
+	text-align:center;
+	background-color:#FFAAFF;
+	border-left:1px solid white;
+	height: 35px;
+}
+ul.foo li:first-child {
+	border:none;
+}
+ul.foo li a {
+	display:block;
+	text-decoration:none;
+	color:dimgrey;
+	font-size: 20px;
 }

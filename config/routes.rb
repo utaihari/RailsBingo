@@ -53,6 +53,7 @@ Rails.application.routes.draw do
 	post '/API/done_bingo', to: 'bingo_cards#done_bingo', as: 'done_bingo'
 	get '/API/check_rank', to: 'rooms#check_rank'
 	get '/API/check_bingo_users', to: 'rooms#check_bingo_users'
+	get '/API/joined_users', to: 'rooms#joined_users'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

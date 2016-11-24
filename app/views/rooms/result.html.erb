@@ -1,16 +1,21 @@
 <%= javascript_include_tag "rooms.js" %>
-<h1><%= @room.name %></h1>
-<h2>ビンゴ結果発表</h2>
+<div class="center70">
+	<h1><%= @room.name %></h1>
+	<h2>ビンゴ結果発表</h2>
 
-<p>ビンゴしたユーザー一覧</p>
-<% if !@bingo_list.blank? %>
-<% for user in @bingo_list %>
-<div class="bingo_user">
-	<div onclick="view_mail_address(this)"> <%= user.name %> メールアドレス表示 <span class="note">放送中は表示しないように注意してください</span> <div class="view_mail_addess" style="display: none;"><%= user.email %></div></div>
-	<div><%= user.times %>回目 <%= user.seconds %>ms</div>
+	<div class="white-box">
+		<h3>ビンゴしたユーザー一覧</h3>
+		<% if !@bingo_list.blank? %>
+		<% for user in @bingo_list %>
+		<div class="bingo_user">
+			<div onclick="view_mail_address(this)"> <%= user.name %> メールアドレス表示 <span class="note">放送中は表示しないように注意してください</span> <div class="view_mail_addess" style="display: none;"><%= user.email %></div></div>
+			<div><%= user.times %>回目 <%= user.seconds %>ms</div>
+		</div>
+		<% end %>
+		<% end %>
+	</div>
+	<p>このページは部屋作成後、１週間で削除されます。</p>
+	<%= link_to "マイページに戻る", pages_user_index_path %>
+	<br>
+
 </div>
-<% end %>
-<% end %>
-<p>このページは部屋作成後、１週間で削除されます。</p>
-<%= link_to "マイページに戻る", pages_user_index_path %>
-<br>

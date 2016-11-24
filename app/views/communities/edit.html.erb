@@ -6,6 +6,7 @@
 var $community_detail = '<%= raw @community.detail.gsub("'", "\\\\'") %>';
 <% end %>
 
+<div class="center70">
 <h2>コミュニティ情報変更</h2>
 
 <%= form_for(@community, url: community_path(@community.id), html: { method: :put }) do |f| %>
@@ -29,4 +30,4 @@ var $community_detail = '<%= raw @community.detail.gsub("'", "\\\\'") %>';
 <h3>このコミュニティを削除</h3>
 
 <p> <%= button_to "削除", community_path(@community.id),class: "btn btn-danger" ,data: { confirm: "本当に削除しますか?" }, method: :delete %></p>
-
+</div>

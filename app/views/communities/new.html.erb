@@ -1,22 +1,23 @@
 <%= javascript_include_tag "Squire-UI.js" %>
 <%= javascript_include_tag "squire-raw.js" %>
 <%= javascript_include_tag "communities" %>
+<div class="center70">
+	<h2>コミュニティ作成</h2>
+	<%= form_for @community do |f| %>
 
-<h2>コミュニティ作成</h2>
-<%= form_for @community do |f| %>
+	<div class="field">
+		<%= f.label :name,"名前" %><br />
+		<%= f.text_field :name %>
+	</div>
 
-<div class="field">
- <%= f.label :name,"名前" %><br />
- <%= f.text_field :name %>
+	<div>
+		<p>コミュニティの説明</p>
+		<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
+		<%= f.text_area :detail, :id=>"seditor" %>
+	</div>
+
+	<div class="actions">
+		<%= f.submit "作成" %>
+	</div>
+	<% end %>
 </div>
-
-<div>
-<p>コミュニティの説明</p>
-<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
-<%= f.text_area :detail, :id=>"seditor" %>
-</div>
-
-<div class="actions">
-  <%= f.submit "作成" %>
-</div>
-<% end %>

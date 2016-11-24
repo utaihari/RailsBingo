@@ -1,48 +1,71 @@
 <%= javascript_include_tag "rooms.js" %>
-<div id="data" data-room_id=<%= @room.id %> data-condition=<%= @room.isPlaying %>></div>
-<h1 <% if @room.AllowGuest %> class="allow-guest" <% end %>><%= @room.name %></h1>
-<% if @isRoomOrganizer %>
-<div id="primary" data-mercury="full">
-</div>
-<% if @room.isPlaying %>
+<%= javascript_include_tag "velocity.min.js" %>
+<%= javascript_include_tag "tabtab.min.js" %>
+<script>
+	$('.tabs').tabtab();
+</script>
 
-<div>
-	<%= render :partial => "number-generator", :locals => { room: @room } %>
-	<%= link_to '別ウィンドウで開く',tool_number_generator_path(@community.id,@room.id),
-	:onclick=>"window.open(this.href,'番号選出', 'height=400, width=300');return false;" %>
-</div>
-<div>
-	<%= render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url } %>
-	<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(@community.id, @room.id),
-	:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
-</div>
-<div>
-	<%= render :partial => "bingo-users" %>
-	<%= link_to '別ウィンドウで開く',tool_bingo_users_path(@room.id),
-	:onclick=>"open_bingo_users_window(this);return false;" %>
-</div>
+<div class="center70">
+	<div id="data" data-room_id=<%= @room.id %> data-condition=<%= @room.isPlaying %>></div>
+	<h1><%= @room.name %></h1>
+	<div id="notice"></div>
+	<% if true %>
+	<%= image_tag 'allow-guest.png', :size => '90x30'%>
+	<% end %>
+	<% if @room.canUseItem %>
+	<%= image_tag 'allow-item.png', :size => '90x30'%>
+	<% end %>
 
-<% else %>
-<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
-<% end %>
-<br>
-<br>
+	<% if @isRoomOrganizer %>
+	<div id="primary" data-mercury="full">
+	</div>
+	<% if @room.isPlaying %>
 
-<% if @room.isPlaying %>
-<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) ,class:"btn btn-info"%>
-<% end %>
+	<div class="white-box">
+		<%= render :partial => "number-generator", :locals => { room: @room } %>
+		<%= link_to '別ウィンドウで開く',tool_number_generator_path(@community.id,@room.id),
+		:onclick=>"window.open(this.href,'番号選出', 'height=400, width=300');return false;" %>
+	</div>
+	<div class="white-box">
+		<%= render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url } %>
+		<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(@community.id, @room.id),
+		:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
+	</div>
+	<div class="white-box">
+		<%= render :partial => "bingo-users" %>
+		<%= link_to '別ウィンドウで開く',tool_bingo_users_path(@room.id),
+		:onclick=>"open_bingo_users_window(this);return false;" %>
+	</div>
 
-<% else %>
-<% if @isRoomMember %>
-<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) %>
-<% else %>
-<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id) %>
-<% end %>
-<% end %>
-<div><%= raw @room.detail %></div>
-<p>参加者一覧</p>
-<% @members.each do |member| %>
-<div>
-	<p><%= member.name %></p>
+	<% else %>
+	<div class="white-box">
+		<%= render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url } %>
+		<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(@community.id, @room.id),
+		:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
+	</div>
+	<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
+	<% end %>
+	<br>
+	<br>
+
+	<% if @room.isPlaying %>
+	<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) ,class:"btn btn-info"%>
+	<% end %>
+
+	<% else %>
+	<% if @isRoomMember %>
+	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) %>
+	<% else %>
+	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id) %>
+	<% end %>
+	<% end %>
+	<div><%= raw @room.detail %></div>
+	<div class="white-box">
+		<h3>参加者一覧<button type="button" class="btn btn-primary btn-xs" onclick="joined_user_update()">更新</button></h3>
+		<div id="members">
+			<% @members.each do |member| %>
+			<p><%= member.name %></p>
+			<% end %>
+		</div>
+	</div>
 </div>
-<% end %>

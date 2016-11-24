@@ -21,3 +21,15 @@
 	td.black { border-color: #000; }
 	td.white { border-color: #fff; }
 }
+.allow-item{
+	background-image: image-url("allow-item.png");
+	top: 10px;
+	left: 14px;
+	background-size: 8px 9px;
+}
+.bingo_user{
+	background-color: #FFEEFF;
+	border-radius: 10px;
+	padding: 0px 10px 10px 10px;
+	box-shadow: -3px -3px #a9a9a9;
+}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161121161202) do
+ActiveRecord::Schema.define(version: 20161123072819) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -76,10 +76,10 @@ ActiveRecord::Schema.define(version: 20161121161202) do
 
   create_table "items", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
     t.integer  "rarity"
-    t.boolean  "AllowUseInGaming"
+    t.boolean  "AllowUseDuringGame"
   end
 
   create_table "room_numbers", force: :cascade do |t|
@@ -99,17 +99,18 @@ ActiveRecord::Schema.define(version: 20161121161202) do
   create_table "rooms", force: :cascade do |t|
     t.string   "name"
     t.integer  "community_id"
-    t.boolean  "isPlaying",    default: false, null: false
-    t.boolean  "isFinished",   default: false, null: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.boolean  "canUseItem"
+    t.boolean  "isPlaying",           default: false, null: false
+    t.boolean  "isFinished",          default: false, null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.boolean  "canUseItem",          default: false
     t.string   "rates"
-    t.boolean  "AllowGuest",   default: false
-    t.text     "detail",       default: ""
-    t.float    "bingo_score",  default: 0.2
-    t.float    "riichi_score"
-    t.float    "hole_score"
+    t.boolean  "AllowGuest",          default: false
+    t.text     "detail",              default: ""
+    t.         "bingo_score",         default: "0.0"
+    t.         "riichi_score",        default: "0.5"
+    t.         "hole_score",          default: "0.2"
+    t.boolean  "AllowJoinDuringGame", default: true
   end
 
   create_table "user_item_lists", force: :cascade do |t|

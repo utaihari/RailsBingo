@@ -12,6 +12,33 @@ number_arrive_time = new Date()
 done_bingo = false
 
 $(->
+	$('.tabs').tabtab({
+		tabMenu: '.tabs__menu',
+		tabContent: '.tabs__content',
+		next: '.tabs-controls__next',
+		prev: '.tabs-controls__prev',
+
+		startSlide: 1,
+		arrows: true,
+		dynamicHeight: true,
+		useAnimations: true,
+
+		easing: 'ease',
+		speed: 350,
+		slideDelay: 0,
+		perspective: 1200,
+		transformOrigin: 'center top',
+		perspectiveOrigin: '50% 50%',
+
+		translateY: 0,
+		translateX: 0,
+		scale: 1,
+		rotateX: 90,
+		rotateY: 0,
+		skewY: 0,
+		skewX: 0
+	});
+
 	@room_id = $("#data").data("room_id")
 	@card_id = $("#data").data("card_id")
 	for i in [0..24]
@@ -116,7 +143,7 @@ update_list = ->
 
 		number_length = numbers.length
 		$('ul#number_list').empty()
-		for number, index in numbers when number isnt -1 and index isnt number_length-1
+		for number, index in numbers when number isnt -1
 			$('ul#number_list').prepend("<li> #{number} </li>")
 		$('#last_number').empty()
 		if numbers[number_length-1] isnt -1
@@ -165,7 +192,6 @@ update_list = ->
 		done_bingo = data
 		return
 		)
-	$('#bingo_button').prop("disabled", true);
 	return
 
 check_rank = ->

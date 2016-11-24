@@ -89,3 +89,16 @@ check_bingo_users  = (room_id) ->
 @open_bingo_users_window = (obj)->
 	@bingo_users_window = window.open(obj.href, "ビンゴリスト", 'height=300, width=400')
 	return
+
+
+@joined_user_update = () ->
+	members = []
+	$.ajaxSetup({async: false});
+	$.getJSON('/API/joined_users',{room_id: @room_id},(json)->
+		members = json
+	)
+	list = $('#members')
+	$(list).empty()
+	for user, index in members
+		$(list).prepend("<div class=\"member\">#{user.name}</div>")
+	return
