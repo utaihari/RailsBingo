@@ -6,14 +6,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   skip_before_filter :store_location
 
+  def direct_create_room
+    
+
+
   # GET /resource/sign_up
   def new
-
     @community_id = nil
     @room_id = nil
     @isGuest = false
     @isDirectGame = false
-    @previous_url = session[:previous_url]
 
     if params[:community_id] != nil || params[:room_id] != nil || params[:isGuest] != nil
       @community_id = params[:community_id]
@@ -22,6 +24,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       @mail_address = SecureRandom.hex(4) + "@guest.com"
       @password = "GuestPassword"
       @isDirectGame = true
+      session[:dest_url] = join_room_path(@community_id, @room_id)
     end
     super
   end
