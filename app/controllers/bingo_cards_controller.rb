@@ -15,6 +15,7 @@ class BingoCardsController < ApplicationController
 		}
 		@checks = numberlist.checks.split(",")
 		@card = BingoCard.find(params[:id])
+		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id]).select("items.name, items.AllowUseDuringGame, items.id, quantity")
 	end
 
 	def create

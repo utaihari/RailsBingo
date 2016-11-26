@@ -1,7 +1,7 @@
 class Users::SessionsController < Devise::SessionsController
   before_action :configure_sign_in_params, only: [:create]
 
-  skip_before_filter :store_location
+  # skip_before_filter :store_location
 
   # GET /resource/sign_in
   def new

@@ -1,27 +1,29 @@
-<h1><%= @room.name %></h1>
-<div id="room_detail">
-	<p>部屋ＩＤ <%= @room.id %></p>
-</div>
+<div class="center70">
+	<h1><%= @room.name %></h1>
+	<div id="room_detail">
+		<p>部屋ＩＤ <%= @room.id %></p>
+	</div>
 
 
-<% if @user_signed_in %>
-<div>
-	<% if @room.AllowGuest %>
-	<p>このゲームでは主催者にあなたのメールアドレスは通知されません</p>
+	<% if @user_signed_in %>
+	<div>
+		<% if @room.AllowGuest %>
+		<p>このゲームでは主催者にあなたのメールアドレスは通知されません</p>
+		<% else %>
+		<p>このゲームではビンゴした際に主催者にあなたのメールアドレスが通知されます</p>
+		<p>部屋ＩＤをもう一度確認し、信頼できない場合は参加しないでください</p>
+		<% end %>
+		<%= link_to "ゲームに参加", join_room_path(@community.id, @room.id) %>
+	</div>
 	<% else %>
-	<p>このゲームではビンゴした際に主催者にあなたのメールアドレスが通知されます</p>
-	<p>部屋ＩＤをもう一度確認し、信頼できない場合は参加しないでください</p>
-	<% end %>
-	<%= link_to "ゲームに参加", join_room_path(@community.id, @room.id) %>
-</div>
-<% else %>
-<div>
-	<p>ゲームに参加するにはログインが必要です</p>
+	<div>
+		<p>ゲームに参加するにはログインが必要です</p>
 
-	<%= link_to "ログイン", new_user_session_direct_game_path(@community.id, @room.id) %>
-	<% if @room.AllowGuest %>
-	<%= link_to "ゲストとして参加", new_user_registrations_direct_game_path(@community.id, @room.id, 1) %>
+		<%= link_to "ログイン", new_user_session_direct_game_path(@community.id, @room.id) %>
+		<% if @room.AllowGuest %>
+		<%= link_to "ゲストとして参加", new_user_registrations_direct_game_path(@community.id, @room.id, 1) %>
+		<% end %>
+		<%= link_to "新規登録", new_user_registration_path %>
+	</div>
 	<% end %>
-	<%= link_to "新規登録", new_user_registration_path %>
 </div>
-<% end %>

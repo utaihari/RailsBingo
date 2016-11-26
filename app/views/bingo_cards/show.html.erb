@@ -23,8 +23,11 @@
 			<!-- <p>次のナンバー　→<span id="last_number"></span></p> -->
 		</div>
 		<ul class="tabs__menu foo">
-			<li class="col-xs-6"><a href="#">カード</a></li>
-			<li class="col-xs-6"><a href="#">過去の番号</a></li>
+			<li><a href="#">カード</a></li>
+			<li><a href="#">過去の番号</a></li>
+			<% if @room.canUseItem %>
+			<li><a href="#">アイテム</a></li>
+			<% end %>
 		</ul>
 		<div class="tabs__content">
 			<div id="card_area" class="center-block tabs-item">
@@ -38,6 +41,11 @@
 					</div>
 				</div>
 			</div>
+			<% if @room.canUseItem %>
+				<div class="tabs-item">
+					<%= render :partial => "items", :locals => { items: @items, room: @room } %>
+				</div>
+			<% end %>
 		</div>
 	</div>
 </div>

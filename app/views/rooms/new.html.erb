@@ -9,14 +9,14 @@
 	<%= f.text_field :name %>
 </div>
 
-<div　class="form-group">
+<div class="form-group">
 	<p>部屋の説明</p>
 	<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
 	<%= f.text_area :detail, :id=>"seditor" %>
 </div>
 <div class="form-group">
-	<%= f.label :AllowGuest, "途中参加許可" %>
-	<%= f.check_box :AllowGuest ,{},"true","false" %>
+	<%= f.label :AllowJoinDuringGame, "途中参加許可" %>
+	<%= f.check_box :AllowJoinDuringGame ,{},"true","false" %>
 </div>
 <div class="form-group">
 	<%= f.label :AllowGuest, "ゲスト許可" %>

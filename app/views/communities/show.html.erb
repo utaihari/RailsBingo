@@ -19,9 +19,9 @@
 			<%= link_to room.name, community_room_path(@community.id, room.id), class: "btn btn-default btn-sm" %>
 		</div>
 		<% end %>
-		<% end %>
 	</div>
-
+	<% end %>
+	
 	<% if @isOrganizer %>
 	<div id="closed_rooms" class="white-box">
 		<h2>終了したビンゴ <span class="note">（部屋作成後１週間で自動的に削除されます）</span></h2>

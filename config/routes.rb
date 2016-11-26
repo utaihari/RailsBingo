@@ -21,10 +21,10 @@ Rails.application.routes.draw do
 		registrations: 'users/registrations'
 	}
 	devise_scope :user do
-		post '/users/direct/:community_id/:room_id', to: 'devise/registrations#create', as:'user_registrations_direct_game'
-		get '/users/direct/sign_up/:community_id/:room_id/:isGuest', to: 'users/registrations#new', as:'new_user_registrations_direct_game'
-		post '/users/direct/sign_in/:community_id/:room_id', to: 'devise/sessions#create', as:'user_session_direct_game'
-		get '/users/direct/sign_in/:community_id/:room_id/', to: 'users/sessions#new', as:'new_user_session_direct_game'
+		post '/users/direct/:source/:community_id/:room_id', to: 'devise/registrations#create', as:'user_registrations_direct_game'
+		get '/users/direct/:source/sign_up/:community_id/:room_id/:isGuest', to: 'users/registrations#new', as:'new_user_registrations_direct_game'
+		post '/users/direct/:source/sign_in/:community_id/:room_id', to: 'devise/sessions#create', as:'user_session_direct_game'
+		get '/users/direct/:source/sign_in/:community_id/:room_id/', to: 'users/sessions#new', as:'new_user_session_direct_game'
 	end
 
 	get 'communities/:id/join', to: 'communities#join', as:'join_community'

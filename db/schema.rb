@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161123072819) do
+ActiveRecord::Schema.define(version: 20161124150809) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -117,8 +117,9 @@ ActiveRecord::Schema.define(version: 20161123072819) do
     t.integer  "user_id"
     t.integer  "community_id"
     t.integer  "item_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.integer  "quantity",     default: 0
   end
 
   create_table "users", force: :cascade do |t|
