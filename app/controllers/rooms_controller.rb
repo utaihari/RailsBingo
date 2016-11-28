@@ -37,7 +37,8 @@ class RoomsController < ApplicationController
   end
 
   def direct_create
-    redirect_to controller: 'rooms', action: 'new', community_id: params[:community_id]
+    params.require(:community).permit(:id)
+    redirect_to controller: 'rooms', action: 'new', community_id: params[:community][:id]
   end
 
   def show
@@ -52,7 +53,7 @@ class RoomsController < ApplicationController
     if @community == nil || @room == nil
       redirect_to 'pages_index_path'
     end
-    @members = User.joins(:room_user_list).where(:room_user_lists => {room_id: room_id})
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).select("users.id AS id, users.name, bingo_cards.id AS card_id")
 
     @url = "http://"+request.domain+pre_join_room_path(@community.id,@room.id)
     qrcode = RQRCode::QRCode.new(@url)
@@ -251,7 +252,11 @@ class RoomsController < ApplicationController
     @room = Room.find(params[:room_id])
     render :partial => "bingo-users", :layout => false and return
   end
-
+  def tool_members
+    @room = Room.find(params[:room_id])
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id")
+    render :partial => "members", :locals => {members: @members, room_id: @room.id }, :layout => false and return
+  end
 
   private
 

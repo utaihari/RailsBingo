@@ -1,5 +1,5 @@
-<%= javascript_include_tag "Squire-UI.js" %>
-<%= javascript_include_tag "squire-raw.js" %>
+<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+<script type="text/javascript">bkLib.onDomLoaded('community-detail');</script>
 <%= javascript_include_tag "communities" %>
 <div class="center70">
 	<h2>コミュニティ作成</h2>
@@ -10,10 +10,9 @@
 		<%= f.text_field :name %>
 	</div>
 
-	<div>
+	<div class=”controls”>
 		<p>コミュニティの説明</p>
-		<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
-		<%= f.text_area :detail, :id=>"seditor" %>
+		<%= f.text_area :detail, rows: 10, cols: 40, :style => 'width: 100%', :id => 'community-detail' %>
 	</div>
 
 	<div class="actions">

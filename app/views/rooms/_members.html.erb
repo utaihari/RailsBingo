@@ -1,0 +1,11 @@
+<%= javascript_include_tag "rooms-members.js" %>
+<%= stylesheet_link_tag "application", :media => "all" %>
+<h3>参加者一覧<button type="button" class="btn btn-primary btn-xs" onclick="joined_user_update()">更新</button></h3>
+<div id="members">
+	<% members.each do |member| %>
+	<p>
+		<%= link_to member.name, tool_others_card_path(member.id, room_id, member.card_id),
+		:onclick=>"window.open(this.href,'QRコード', 'height=600, width=500');return false;" %>
+	</p>
+	<% end %>
+</div>

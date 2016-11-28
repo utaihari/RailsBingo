@@ -5,8 +5,8 @@
 	<% if @communities.length > 1 %>
 	<p>ビンゴを開催するコミュニティを選択</p>
 	<%= form_tag rooms_direct_create_path do %>
-	<%= collection_select(:community, :id, @communities, :community_id, :name) %>
-	<%= submit "OK", class: "btn btn-info" %>
+	<%= collection_select :community, :id, @communities, :id, :name %>
+	<%= submit_tag "OK", class: "btn btn-info" %>
 	<% end %>
 	<% else %>
 	<h1>ビンゴ部屋作成</h1>

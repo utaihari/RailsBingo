@@ -1,5 +1,6 @@
-<%= javascript_include_tag "Squire-UI.js" %>
-<%= javascript_include_tag "squire-raw.js" %>
+<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+<script type="text/javascript">bkLib.onDomLoaded('room-detail');</script>
+
 <%= javascript_include_tag "rooms-new" %>
 <div class="center70">
 <h1>ビンゴ部屋作成</h1>
@@ -9,10 +10,9 @@
 	<%= f.text_field :name %>
 </div>
 
-<div class="form-group">
-	<p>部屋の説明</p>
-	<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
-	<%= f.text_area :detail, :id=>"seditor" %>
+<div class=”controls”>
+<p>部屋の説明</p>
+<%= f.text_area :detail, rows: 10, cols: 40, :style => 'width: 100%', :id => 'room-detail' %>
 </div>
 <div class="form-group">
 	<%= f.label :AllowJoinDuringGame, "途中参加許可" %>

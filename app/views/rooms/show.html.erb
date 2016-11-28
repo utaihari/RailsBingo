@@ -9,12 +9,17 @@
 	<div id="data" data-room_id=<%= @room.id %> data-condition=<%= @room.isPlaying %>></div>
 	<h1><%= @room.name %></h1>
 	<div id="notice"></div>
-	<% if true %>
+	<% if @room.AllowGuest %>
 	<%= image_tag 'allow-guest.png', :size => '90x30'%>
 	<% end %>
 	<% if @room.canUseItem %>
 	<%= image_tag 'allow-item.png', :size => '90x30'%>
 	<% end %>
+	<% if @room.AllowJoinDuringGame %>
+	<%= image_tag 'allow-join-during-game.png', :size => '90x30'%>
+	<% end %>
+
+	<div><%= raw @room.detail %></div>
 
 	<% if @isRoomOrganizer %>
 	<div id="primary" data-mercury="full">
@@ -38,16 +43,15 @@
 	</div>
 
 	<% else %>
+	<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
+	<br>
 	<div class="white-box">
 		<%= render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url } %>
 		<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(@community.id, @room.id),
 		:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
 	</div>
-	<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
-	<% end %>
-	<br>
-	<br>
 
+	<% end %>
 	<% if @room.isPlaying %>
 	<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) ,class:"btn btn-info"%>
 	<% end %>
@@ -59,13 +63,9 @@
 	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id) %>
 	<% end %>
 	<% end %>
-	<div><%= raw @room.detail %></div>
 	<div class="white-box">
-		<h3>参加者一覧<button type="button" class="btn btn-primary btn-xs" onclick="joined_user_update()">更新</button></h3>
-		<div id="members">
-			<% @members.each do |member| %>
-			<p><%= member.name %></p>
-			<% end %>
-		</div>
+	<%= render :partial => "members", :locals => {members: @members, room_id: @room.id } %>
+	<%= link_to '別ウィンドウで開く',tool_members_path(@community.id, @room.id),
+		:onclick=>"window.open(this.href,'QRコード', 'height=600, width=400');return false;" %>
 	</div>
 </div>

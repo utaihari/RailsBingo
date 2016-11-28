@@ -1,0 +1,36 @@
+<%= stylesheet_link_tag "application", :media => "all" %>
+<h2><%= user_name %>さんのカード</h2>
+<div id="data" data-room_id=<%= room.id %> data-card_id=<%= card.id %>></div>
+<table boder = "3" id="bingo_card" align="center">
+	<thead>
+		<tr class="bingo_char">
+			<th class="text-center">B</th>
+			<th class="text-center">I</th>
+			<th class="text-center">N</th>
+			<th class="text-center">G</th>
+			<th class="text-center">O</th>
+		</tr>
+	</thead>
+	<%i=0%>
+	<% numbers.each do |num|%>
+	<% if i == 0 || i == 5 || i == 10 || i == 15  || i == 20 then %>
+	<tr>
+		<%end%>
+		<div style="display: none">
+			<%= c="bingo_number text-center" %>
+			<% if checks[i] == 't' %>
+			<%= c+=" checked" %>
+			<% end %>
+		</div>
+		<% if num > 0 %>
+		<td data-number=<%= num %> class="<%= c %>" onclick="number_click(this, <%= i %>)"><%= num %></td>
+		<% else %>
+		<td class="<%= c +" free" %>" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
+		<% end %>
+		<%i += 1%>
+		<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>
+	</tr>
+	<%end%>
+	<%end%>
+</table>
+<%= link_to "戻る", :back %>

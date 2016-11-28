@@ -44,6 +44,20 @@ class BingoCardsController < ApplicationController
 		end
 	end
 
+	def tool_others_card
+		@room = Room.find(params[:room_id])
+		numberlist = BingoCard.find_by(id: params[:card_id])
+
+		@numbers = []
+		numbers = numberlist.numbers.split(",")
+		numbers.each{|n|
+			@numbers << n.to_i
+		}
+		@checks = numberlist.checks.split(",")
+		@card = BingoCard.find(params[:card_id])
+		user_name = User.find(params[:user_id]).name
+		render :partial => "others-card", :locals => {user_name: user_name,  room: @room, card: @card, numbers: @numbers, checks: @checks }, :layout => false and return
+	end
 
 	def make_bingo_num
 		numbers =[]

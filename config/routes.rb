@@ -40,11 +40,13 @@ Rails.application.routes.draw do
 
 	#TOOLS
 	# get 'TOOLS/number-generator/:room_id', to: 'rooms#tool_number_generator', as:'tool_number-generator'
-	get 'TOOLS/qr-code/:community_id/:room_id', to: 'rooms#tool_qr_code', as:'tool_qr-code'
-	get 'TOOLS/bingo-users/:room_id', to: 'rooms#tool_bingo_users', as:'tool_bingo-users'
-	get 'TOOLS/bingo-card/:card_id', to: 'bingo_cards#tool_bingo_card', as:'tool_bingo-card'
+	get 'TOOLS/qr-code/:community_id/:room_id', to: 'rooms#tool_qr_code', as:'tool_qr_code'
+	get 'TOOLS/bingo-users/:room_id', to: 'rooms#tool_bingo_users', as:'tool_bingo_users'
+	get 'TOOLS/bingo-card/:card_id', to: 'bingo_cards#tool_bingo_card', as:'tool_bingo_card'
+	get 'TOOLS/others-card/:user_id/:room_id/:card_id', to: 'bingo_cards#tool_others_card', as:'tool_others_card'
 
 	get 'communities/:community_id/rooms/:room_id/number-generator', to:'rooms#tool_number_generator', as:'tool_number-generator'
+	get 'communities/:community_id/rooms/:room_id/members', to:'rooms#tool_members', as:'tool_members'
 
 	#API
 

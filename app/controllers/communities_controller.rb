@@ -16,6 +16,7 @@ class CommunitiesController < ApplicationController
     @opened_rooms = Room.where(community_id:params[:id], isFinished: false)
     @closed_rooms = Room.where(community_id:params[:id], isFinished: true)
     @organizer = User.find_by(id:@community.user_id)
+
   end
 
   def new
@@ -103,6 +104,6 @@ class CommunitiesController < ApplicationController
   end
 
   def isCommunityOrganizer(community_id)
-    return current_user.id == Community.find_by(id:community_id).user_id
+    return CommunityAdministrator.exists?(community_id: community_id,user_id: current_user.id)
   end
 end
