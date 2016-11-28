@@ -1,0 +1,44 @@
+<%= javascript_include_tag "Squire-UI.js" %>
+<%= javascript_include_tag "squire-raw.js" %>
+<%= javascript_include_tag "rooms-new" %>
+<div class="center70">
+	<% if @communities.length > 1 %>
+	<p>ビンゴを開催するコミュニティを選択</p>
+	<%= form_tag rooms_direct_create_path do %>
+	<%= collection_select(:community, :id, @communities, :community_id, :name) %>
+	<%= submit "OK", class: "btn btn-info" %>
+	<% end %>
+	<% else %>
+	<h1>ビンゴ部屋作成</h1>
+	<div>コミュニティを作成するとより多くの機能が利用できます</div>
+	<%= link_to "コミュニティ作成", new_community_path %>
+
+	<%= form_for([@community,@room]) do |f|%>
+	<div class="form-group">
+		<%= f.label :name, "部屋の名前" %>
+		<%= f.text_field :name %>
+	</div>
+
+	<div class="form-group">
+		<p>部屋の説明</p>
+		<%= f.text_field :detail, :class => 'form-control',:style =>'display:none' %>
+		<%= f.text_area :detail, :id=>"seditor" %>
+	</div>
+	<div class="form-group">
+		<%= f.label :AllowJoinDuringGame, "途中参加許可" %>
+		<%= f.check_box :AllowJoinDuringGame ,{},"true","false" %>
+	</div>
+	<div class="form-group">
+		<%= f.label :AllowGuest, "ゲスト許可" %>
+		<%= f.check_box :AllowGuest ,{},"true","false" %>
+		<p>(許可の場合、参加者のメールアドレスは通知されません)</p>
+	</div>
+	<div class="form-group" >
+		<%= f.label :canUseItem, "アイテム使用許可" %>
+		<span onclick="show_room_detail()"><%= f.check_box :canUseItem, :disabled => true %></span>
+		<p>この機能はコミュニティを作成すると利用できます</p>
+	</div>
+	<%= f.submit "作成", class: "btn btn-info" %>
+	<% end %>
+	<% end %>
+</div>

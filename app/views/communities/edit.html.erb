@@ -9,7 +9,7 @@ var $community_detail = '<%= raw @community.detail.gsub("'", "\\\\'") %>';
 <div class="center70">
 <h2>コミュニティ情報変更</h2>
 
-<%= form_for(@community, url: community_path(@community.id), html: { method: :put }) do |f| %>
+<%= form_for(@community, url: community_path(@community.id)) do |f| %>
 
 <div class="form-group">
  <%= f.label :name,"名前" %><br />

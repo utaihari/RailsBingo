@@ -10,7 +10,15 @@ class RoomsController < ApplicationController
     @community = Community.find_by(id:params[:community_id])
     @room = @community.room.build
   end
+  def direct_new
+    @community = Community.find(0)
+    @communities = Community.joins(:community_administrator).where('community_administrators.user_id = ?', current_user.id)
+    @room = @community.room.build
 
+    if @communities.length == 1
+      redirect_to controller: 'rooms', action: 'new'
+    end
+  end
   def create
     @community = Community.find_by(id:params[:community_id])
 
@@ -19,7 +27,7 @@ class RoomsController < ApplicationController
     end
 
     number_rate = Array.new(75,10)
-    @room = @community.room.build(community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], detail: params[:room][:detail], rates:number_rate.join(","))
+    @room = @community.room.build(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], detail: params[:room][:detail], rates:number_rate.join(","))
 
     if @room.save
       redirect_to controller: 'rooms', action: 'show', id: @room.id
@@ -28,12 +36,16 @@ class RoomsController < ApplicationController
     end
   end
 
+  def direct_create
+    redirect_to controller: 'rooms', action: 'new', community_id: params[:community_id]
+  end
+
   def show
     room_id = params[:id]
     @isRoomOrganizer =  isRoomOrganizer(room_id)
     @isRoomMember = isRoomMember(room_id, current_user.id)
     if @isRoomMember
-      @card = BingoCard.find_by(user_id:current_user.id,room_id:room_id)
+      @card = BingoCard.find_by(user_id:current_user.id, room_id:room_id)
     end
     @room = Room.find(room_id)
 
@@ -254,7 +266,7 @@ class RoomsController < ApplicationController
   end
 
   def isRoomOrganizer(room_id)
-    return current_user.id == Room.joins(:community).find_by(id: room_id).community.user_id
+    return current_user.id == Room.find_by(id:room_id).user_id
   end
   def isCommunityMember(community_id)
     return CommunityUserList.exists?(community_id:community_id, user_id: current_user.id)

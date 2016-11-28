@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161124150809) do
+ActiveRecord::Schema.define(version: 20161128103105) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -111,6 +111,7 @@ ActiveRecord::Schema.define(version: 20161124150809) do
     t.         "riichi_score",        default: "0.5"
     t.         "hole_score",          default: "0.2"
     t.boolean  "AllowJoinDuringGame", default: true
+    t.integer  "user_id"
   end
 
   create_table "user_item_lists", force: :cascade do |t|

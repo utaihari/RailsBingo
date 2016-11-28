@@ -2,7 +2,7 @@
 
 class CommunitiesController < ApplicationController
   before_action :set_community, only: [:show, :edit, :update, :destroy, :join]
-  before_action :community_params, only: [:new, :update]
+  before_action :community_params, only: [:create, :update]
 
   def index
     @communities = Community.joins(:user).all.includes(:user)
@@ -26,8 +26,8 @@ class CommunitiesController < ApplicationController
   end
 
   def create
-    @community = Community.new(community_params)
-    if @community.save
+    @community = Community.new(user_id: current_user.id, name: params[:community][:name], detail: params[:community][:detail])
+    if @community.save!
       CommunityUserList.create(community_id: @community.id,user_id: current_user.id)
       CommunityAdministrator.create(community_id: @community.id,user_id: current_user.id)
       # @userはuser_path(@user) に自動変換される
@@ -83,6 +83,14 @@ class CommunitiesController < ApplicationController
     @communities = Community.where(user_id: current_user.id)
   end
 
+  def add_administrators
+    administrators = params[:administrators]
+    room_id = params[:room_id]
+    administrators.each do |administrator|
+      CommunityAdministrator.create(room_id: room_id, user_id: Integer(administrator))
+    end
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_community
@@ -91,7 +99,7 @@ class CommunitiesController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def community_params
-    params.require(:community).permit(:name, :user_id, :detail)
+    params.require(:community).permit(:name, :detail)
   end
 
   def isCommunityOrganizer(community_id)

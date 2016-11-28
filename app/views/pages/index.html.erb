@@ -1,4 +1,11 @@
 <div class="center70">
 	<h1>BingoLive!</h1>
 	<p>生放送で使いやすい、機能豊富なＷＥＢビンゴ</p>
+
+	<% if user_signed_in? %>
+	<%= link_to "ビンゴを開催する", rooms_direct_new_path %>
+	<% else %>
+	<%= link_to "ビンゴを開催する", new_user_registrations_from_top_path(Users::RegistrationsController::FROM_TOP_PAGE) %>
+	<%= link_to "新規登録", new_user_registration_path %>
+	<% end %>
 </div>

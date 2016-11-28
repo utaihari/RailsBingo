@@ -14,37 +14,45 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @community_id = nil
     @room_id = nil
     @isGuest = false
-    @isDirectGame = false
+    @source = -1
 
+    if Integer(params[:source]) == FROM_TOP_PAGE
+      @source = FROM_TOP_PAGE
+      @isGuest = true
+      @mail_address = SecureRandom.hex(4) + "@guest.com"
+      @password = "GuestPassword"
+    end
 
-    if params[:community_id] != nil || params[:room_id] != nil || params[:isGuest] != nil
+    if Integer(params[:source]) == FROM_JOIN_ROOM
+      @source = FROM_JOIN_ROOM
       @community_id = params[:community_id]
       @room_id = params[:room_id]
       @isGuest = Integer(params[:isGuest]) == 1
       @mail_address = SecureRandom.hex(4) + "@guest.com"
       @password = "GuestPassword"
-      @isDirectGame = true
-      if params[:source] == FROM_JOIN_ROOM
-        session[:dest_url] = join_room_path(@community_id, @room_id)
-      end
+      session[:dest_url] = join_room_path(@community_id, @room_id)
     end
     super
   end
 
   # POST /resource
   def create
+    if params[:room][:direct] != nil && params[:room][:direct] == 't'
+      @community = Community.find(0)
+      number_rate = Array.new(75,10)
+      @room = @community.room.build(user_id: 0, community_id: 0, name: params[:room][:name], AllowGuest: true, rates:number_rate.join(","))
+      @room.save
+      session[:dest_url] = community_room_path(0, @room.id)
+    end
     super
     if params[:user][:isGuest] == 't'
       guest = User.find_by(id:current_user.id)
       guest.isGuest = true
       guest.save
     end
-    if params[:source] == FROM_TOP_PAGE
-      @community = Community.find(0)
-      number_rate = Array.new(75,10)
-      @room = @community.room.build(community_id: 0, name: params[:room][:name], AllowGuest: true, rates:number_rate.join(","))
+    if params[:room][:direct] != nil && params[:room][:direct] == 't'
+      @room.user_id = current_user.id
       @room.save
-      session[:dest_url] = community_room(0, @room.id)
     end
   end
 
@@ -81,6 +89,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def configure_sign_up_params
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :detail])
     params.require(:room).permit(:name)
+    params.require(:room).permit(:direct)
   end
 
   # If you have extra params to permit, append them to the sanitizer.

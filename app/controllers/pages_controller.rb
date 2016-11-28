@@ -3,7 +3,7 @@ class PagesController < ApplicationController
 	end
 
 	def user_index
-		@own_communities = Community.where(user_id: current_user.id)
+		@own_communities = Community.joins(:community_administrator).where('community_administrators.user_id = ?', current_user.id)
 		@joined_communities = Community.joins(:community_user_list).where(:community_user_lists => {user_id: current_user.id})
 		@opened_communities = []
 
@@ -15,6 +15,7 @@ class PagesController < ApplicationController
 
 		end
 		@joind_rooms = Room.joins(:room_user_list).where(:room_user_lists =>{user_id: current_user.id})
+		@opened_rooms = Room.where(user_id: current_user.id, isFinished: 'f')
 	end
 end
 

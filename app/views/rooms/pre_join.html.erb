@@ -3,9 +3,7 @@
 	<div id="room_detail">
 		<p>部屋ＩＤ <%= @room.id %></p>
 	</div>
-
-
-	<% if @user_signed_in %>
+	<% if user_signed_in? %>
 	<div>
 		<% if @room.AllowGuest %>
 		<p>このゲームでは主催者にあなたのメールアドレスは通知されません</p>
@@ -19,9 +17,9 @@
 	<div>
 		<p>ゲームに参加するにはログインが必要です</p>
 
-		<%= link_to "ログイン", new_user_session_direct_game_path(@community.id, @room.id) %>
+		<%= link_to "ログイン", new_user_session_direct_game_path(Users::RegistrationsController::FROM_JOIN_ROOM, @community.id, @room.id) %>
 		<% if @room.AllowGuest %>
-		<%= link_to "ゲストとして参加", new_user_registrations_direct_game_path(@community.id, @room.id, 1) %>
+		<%= link_to "ゲストとして参加", new_user_registrations_direct_game_path(Users::RegistrationsController::FROM_JOIN_ROOM, @community.id, @room.id, 1) %>
 		<% end %>
 		<%= link_to "新規登録", new_user_registration_path %>
 	</div>

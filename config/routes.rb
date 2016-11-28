@@ -9,6 +9,9 @@ Rails.application.routes.draw do
 	get 'communities/:community_id/rooms/:room_id/card_create', to: 'bingo_cards#create', as:'community_room_bingo_cards'
 	get 'communities/:community_id/rooms/:room_id/result', to: 'rooms#result', as:'community_room_result'
 	get 'communities/:community_id/rooms/:room_id/bingo_cards/:bingo_card_id/result', to: 'bingo_cards#result', as:'community_room_bingo_card_result'
+	get 'rooms/new', to: 'rooms#direct_new', as: 'rooms_direct_new'
+	post 'rooms/create', to: 'rooms#direct_create', as: 'rooms_direct_create'
+
 
 	resources :communities do
 		resources :rooms do
@@ -25,6 +28,9 @@ Rails.application.routes.draw do
 		get '/users/direct/:source/sign_up/:community_id/:room_id/:isGuest', to: 'users/registrations#new', as:'new_user_registrations_direct_game'
 		post '/users/direct/:source/sign_in/:community_id/:room_id', to: 'devise/sessions#create', as:'user_session_direct_game'
 		get '/users/direct/:source/sign_in/:community_id/:room_id/', to: 'users/sessions#new', as:'new_user_session_direct_game'
+
+		get '/users/direct/:source', to: 'users/registrations#new', as:'new_user_registrations_from_top'
+
 	end
 
 	get 'communities/:id/join', to: 'communities#join', as:'join_community'

@@ -1,0 +1,36 @@
+<h2>ビンゴを開催</h2>
+<div>
+  <%= devise_error_messages! %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+  <div>
+    <div class="field">
+      <p>部屋の名前</p>
+      <%= text_field :room, :name %>
+    </div>
+    <div class="field">
+      <%= hidden_field :room, :direct, :value => 't' %>
+    </div>
+    <div class="field">
+      <%= f.hidden_field :email, :value => @mail_address %>
+    </div>
+    <div class="field">
+      <%= f.hidden_field :name, :value => "Guest" %>
+    </div>
+    <div class="field">
+      <%= f.hidden_field :password, :value => @password %>
+    </div>
+
+    <div class="field">
+      <%= f.hidden_field :password_confirmation, :value => @password %>
+    </div>
+
+    <div class="field">
+      <%= f.hidden_field :isGuest, :value => 't' %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit "ビンゴを開催する" %>
+    </div>
+  </div>
+  <% end %>
+</div>
