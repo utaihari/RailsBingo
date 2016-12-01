@@ -1,0 +1,19 @@
+<div style="display: none">
+	<%= sh="#modal-"+item.id.to_s %>
+	<%= h="modal-"+item.id.to_s %>
+	<%= c_q="quantity-"+item.id.to_s %>
+</div>
+<td><a href=<%= sh %>><%= item.name %></a></td>
+<td class=<%= c_q %>><%= item.quantity %></td>
+<td><%= item.AllowUseDuringGame %></td>
+<div class="remodal" data-remodal-id=<%= h %>>
+	<button data-remodal-action="close" class="remodal-close"></button>
+	<%= render :partial => "item-template", :locals => {item: item}%>
+	<% if item.AllowUseDuringGame != 't' && room_isPlaying %>
+	<p>このアイテムはゲーム中に使用できません</p>
+	<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
+	<% else %>
+	<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(item.id)">使用する</button>
+	<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
+	<% end %>
+</div>

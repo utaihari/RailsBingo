@@ -3,6 +3,9 @@
 	<div id="room_detail">
 		<p>部屋ＩＤ <%= @room.id %></p>
 	</div>
+	<% if !@room.AllowJoinDuringGame && @room.isPlaying  %>
+		このゲームは途中参加できません。
+	<% else %>
 	<% if user_signed_in? %>
 	<div>
 		<% if @room.AllowGuest %>
@@ -23,5 +26,6 @@
 		<% end %>
 		<%= link_to "新規登録", new_user_registration_path %>
 	</div>
+	<% end %>
 	<% end %>
 </div>

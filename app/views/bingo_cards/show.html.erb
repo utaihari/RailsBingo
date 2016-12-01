@@ -4,7 +4,7 @@
 <%= javascript_include_tag "bingo_cards.js" %>
 <div class="remodal-bg">
 	<div class="tabs">
-		<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %>></div>
+		<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %> data-community_id=<%= @community.id %>></div>
 
 		<div class="center70">
 			<div class="yellow-filter">
@@ -26,7 +26,7 @@
 			<li><a href="#">カード</a></li>
 			<li><a href="#">過去の番号</a></li>
 			<% if @room.canUseItem %>
-			<li><a href="#">アイテム</a></li>
+			<li><a href="#" onclick="update_items()">アイテム</a></li>
 			<% end %>
 		</ul>
 		<div class="tabs__content">
@@ -42,8 +42,7 @@
 				</div>
 			</div>
 			<% if @room.canUseItem %>
-				<div class="tabs-item">
-					<%= render :partial => "items", :locals => { items: @items, room: @room } %>
+				<div class="tabs-item" id="items">
 				</div>
 			<% end %>
 		</div>

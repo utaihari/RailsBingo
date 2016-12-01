@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161128103105) do
+ActiveRecord::Schema.define(version: 20161130170705) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -76,10 +76,13 @@ ActiveRecord::Schema.define(version: 20161128103105) do
 
   create_table "items", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
     t.integer  "rarity"
     t.boolean  "AllowUseDuringGame"
+    t.float    "effect",             default: 0.0
+    t.boolean  "is_select_number",   default: false
+    t.integer  "type",               default: 0
   end
 
   create_table "room_numbers", force: :cascade do |t|
@@ -92,8 +95,10 @@ ActiveRecord::Schema.define(version: 20161128103105) do
   create_table "room_user_lists", force: :cascade do |t|
     t.integer  "room_id"
     t.integer  "user_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.boolean  "got_item_pre_game",   default: false
+    t.boolean  "got_item_after_game", default: false
   end
 
   create_table "rooms", force: :cascade do |t|
@@ -112,6 +117,7 @@ ActiveRecord::Schema.define(version: 20161128103105) do
     t.         "hole_score",          default: "0.2"
     t.boolean  "AllowJoinDuringGame", default: true
     t.integer  "user_id"
+    t.integer  "profit",              default: 0
   end
 
   create_table "user_item_lists", force: :cascade do |t|

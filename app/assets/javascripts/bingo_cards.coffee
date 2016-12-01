@@ -41,6 +41,7 @@ $(->
 
 	@room_id = $("#data").data("room_id")
 	@card_id = $("#data").data("card_id")
+	@community_id = $("#data").data("community_id")
 	for i in [0..24]
 		checks.push(false)
 	@onPageLoad()
@@ -107,6 +108,11 @@ update_notice_list = ->
 	$('#notice_list').empty()
 	for n, index in notice_list
 		$('#notice_list').prepend("<p> #{n} </p>")
+	return
+
+items = []
+@update_items = ->
+	$.get("/API/#{@community_id}/#{@room_id}/items")
 	return
 @show_notice_list = ->
 	$('#notice_list').toggle('slow')

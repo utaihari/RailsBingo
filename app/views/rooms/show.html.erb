@@ -58,9 +58,9 @@
 
 	<% else %>
 	<% if @isRoomMember %>
-	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) %>
+	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) ,class:"btn btn-info"%>
 	<% else %>
-	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id) %>
+	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id),　class:"btn btn-info" %>
 	<% end %>
 	<% end %>
 	<div class="white-box">

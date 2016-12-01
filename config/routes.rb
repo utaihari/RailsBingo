@@ -56,9 +56,15 @@ Rails.application.routes.draw do
 	get 'API/check_condition', to: 'rooms#check_condition',as:'check_condition'
 	post 'API/start_game', to: 'rooms#start_game',as:'start_game'
 	post 'API/game_close', to: 'rooms#game_close',as:'game_close'
+
 	get 'API/check_number', to: 'bingo_cards#check_number',as:'check_number'
 	get 'API/get_checked_number', to: 'bingo_cards#get_checked_number',as:'get_checked_number'
 	post '/API/done_bingo', to: 'bingo_cards#done_bingo', as: 'done_bingo'
+	get '/API/check_items', to: 'bingo_cards#check_items', as: 'check_items'
+	get '/API/:community_id/:room_id/items', to: 'bingo_cards#items', as: 'items'
+	get '/API/use_item/:community_id/:room_id/:item_id', to: 'bingo_cards#use_item'
+	get '/API/use_item/:community_id/:room_id/:item_id/:number', to: 'bingo_cards#use_item'
+
 	get '/API/check_rank', to: 'rooms#check_rank'
 	get '/API/check_bingo_users', to: 'rooms#check_bingo_users'
 	get '/API/joined_users', to: 'rooms#joined_users'
