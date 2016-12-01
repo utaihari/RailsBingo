@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161130170705) do
+ActiveRecord::Schema.define(version: 20161201163546) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -82,7 +82,7 @@ ActiveRecord::Schema.define(version: 20161130170705) do
     t.boolean  "AllowUseDuringGame"
     t.float    "effect",             default: 0.0
     t.boolean  "is_select_number",   default: false
-    t.integer  "type",               default: 0
+    t.integer  "item_type",          default: 0
   end
 
   create_table "room_numbers", force: :cascade do |t|

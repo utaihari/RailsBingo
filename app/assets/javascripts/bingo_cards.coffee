@@ -114,6 +114,9 @@ items = []
 @update_items = ->
 	$.get("/API/#{@community_id}/#{@room_id}/items")
 	return
+@update_bingo_card = ->
+	$.get("/API/#{@community_id}/#{@room_id}/bingo_card")
+	return
 @show_notice_list = ->
 	$('#notice_list').toggle('slow')
 	return
@@ -173,6 +176,11 @@ update_list = ->
 			$('#bingo_button').show()
 		else
 			$('#bingo_button').hide()
+		return
+	if choosing_number
+		choosing_number = false
+		use_item_select_number(using_item_id, $(obj).data('number'))
+
 	return
 
 @onPageLoad = ->
@@ -185,6 +193,7 @@ update_list = ->
 		return
 	)
 	update_list()
+	@update_items()
 	return
 @display_past_number = ->
 	$('#number_list_wrapper').toggle('slow')
@@ -198,6 +207,40 @@ update_list = ->
 		done_bingo = data
 		return
 		)
+	return
+
+@use_item = (item_id, update_card) ->
+	$.ajaxSetup({async: false});
+	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id},(json)->
+		console.log(json)
+		notice.push(json)
+		return
+		)
+	@update_items()
+	if update_card
+		@update_card()
+	return
+use_item_select_number = (item_id, number) ->
+	$.ajaxSetup({async: false});
+	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, number: number},(json)->
+		console.log(json)
+		notice.push(json)
+		return
+		)
+	@update_items()
+	if update_card
+		@update_card()
+	return
+
+choosing_number = false
+using_item_id = 0
+@select_number = (item_id) ->
+	choosing_number = true
+	using_item_id = item_id
+	console.log($('.tabs').tabtab())
+	# .tabSwitch($('#card_area'), $('#items'))
+
+	notice.push("アイテムを使う数字を選んでください")
 	return
 
 check_rank = ->

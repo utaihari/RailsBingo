@@ -26,24 +26,22 @@
 			<li><a href="#">カード</a></li>
 			<li><a href="#">過去の番号</a></li>
 			<% if @room.canUseItem %>
-			<li><a href="#" onclick="update_items()">アイテム</a></li>
+			<li><a href="#">アイテム</a></li>
 			<% end %>
 		</ul>
 		<div class="tabs__content">
 			<div id="card_area" class="center-block tabs-item">
 				<%= render :partial => "bingo-card", :locals => { numbers: @numbers } %>
 			</div>
-			<div class="tabs-item">
-				<div id="numbers">
-					<p id="past_numbers">過去の番号</p>
-					<div id="number_list_wrapper">
-						<ul id="number_list"></ul>
-					</div>
+			<div id="past_numbers" class="tabs-item">
+				<p>過去の番号</p>
+				<div id="number_list_wrapper">
+					<ul id="number_list"></ul>
 				</div>
 			</div>
 			<% if @room.canUseItem %>
-				<div class="tabs-item" id="items">
-				</div>
+			<div class="tabs-item" id="items">
+			</div>
 			<% end %>
 		</div>
 	</div>

@@ -62,8 +62,8 @@ Rails.application.routes.draw do
 	post '/API/done_bingo', to: 'bingo_cards#done_bingo', as: 'done_bingo'
 	get '/API/check_items', to: 'bingo_cards#check_items', as: 'check_items'
 	get '/API/:community_id/:room_id/items', to: 'bingo_cards#items', as: 'items'
-	get '/API/use_item/:community_id/:room_id/:item_id', to: 'bingo_cards#use_item'
-	get '/API/use_item/:community_id/:room_id/:item_id/:number', to: 'bingo_cards#use_item'
+	get '/API/:community_id/:room_id/bingo_card', to: 'bingo_cards#bingo_card', as: 'bingo_cards'
+	get '/API/use_item', to: 'bingo_cards#use_item'
 
 	get '/API/check_rank', to: 'rooms#check_rank'
 	get '/API/check_bingo_users', to: 'rooms#check_bingo_users'

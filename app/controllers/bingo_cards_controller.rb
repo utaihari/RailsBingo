@@ -16,7 +16,7 @@ class BingoCardsController < ApplicationController
 		}
 		@checks = numberlist.checks.split(",")
 		@card = BingoCard.find(params[:id])
-		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id]).select("items.name, items.AllowUseDuringGame, items.id, quantity")
+		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id]).select("items.name, items.AllowUseDuringGame, items.id, quantity, items.item_type")
 	end
 
 	def create
@@ -61,9 +61,18 @@ class BingoCardsController < ApplicationController
 	end
 
 	def items
-		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id]).select("items.name, items.AllowUseDuringGame, items.id, quantity")
+		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id]).select("items.name, items.AllowUseDuringGame, items.id, quantity, items.item_type")
 		@room = Room.find(params[:room_id])
 	end
+	def bingo_card
+		numberlist = BingoCard.find_by(user_id: current_user.id, room_id: params[:room_id])
+		@numbers = []
+		numbers = numberlist.numbers.split(",")
+		numbers.each{|n|
+			@numbers << n.to_i
+		}
+	end
+
 
 	def make_bingo_num
 		numbers =[]
@@ -162,16 +171,16 @@ class BingoCardsController < ApplicationController
 
 	def use_item
 		community = Community.find(params[:community_id])
+		room = Room.find(params[:room_id])
 		item = Item.find(params[:item_id])
 
 		user_item = UserItemList.find_by(user_id: current_user.id, community_id: community.id, item_id: item.id)
-
-		if room.isPlaying && item.AllowUseDuringGame != 't'
-			render :json => "error"
+		if room.isPlaying && !item.AllowUseDuringGame
+			render :json => "error1" and return
 		end
 
 		if user_item == nil
-			render :json => "error"
+			render :json => "error2" and return
 		end
 
 		quantity = user_item.quantity
@@ -182,54 +191,67 @@ class BingoCardsController < ApplicationController
 			user_item.save
 		end
 
-		case item.type
+		selected_num = -1
+
+		case Integer(item.item_type)
 		when 0
-			increase_rate_random_num(room_id, card.effect)
+			selected_num = increase_rate_random_num(room.id, item.effect)
+			render :json => "#{selected_num} の確率が上昇しました".to_json and return
 		when 1
-			increase_rate(room_id, card.effect, params[:number])
+			if params[:number] == nil
+				render :json => "error3" and return
+			end
+			increase_rate(room.id, item.effect, params[:number])
+			render :json => "#{params[:number]} の確率が上昇しました".to_json and return
 		when 2
-			add_free(room_id)
+			add_free(room.id)
+			render :json => "FREEが追加されました".to_json and return
 		end
 	end
 
 	def increase_rate_random_num(room_id, effect)
 		card = BingoCard.find_by(user_id:current_user.id, room_id:room_id)
+		room = Room.find(room_id)
+		room_numbers_rate = room.rates.split(',')
 		numbers = card.numbers.split(',')
 		checks = card.checks.split(',')
 		numbers_unchecked = []
 
 		numbers.each_with_index do |number, index|
-			if checks[index] == 'f'
+			if checks[index] == 'f' && room_numbers_rate[number.to_i + 1].to_i != 0
 				numbers_unchecked.push(number)
 			end
 		end
 
 		selected_num = numbers_unchecked[rand(numbers_unchecked.length())]
 		increase_rate(room_id, effect, selected_num)
+		return selected_num
 	end
 	def increase_rate(room_id, effect, number)
 		room = Room.find(room_id)
 		rates = room.rates.split(',')
 
-		rate_size = 0.0
+		rate_size = 0
 		rates.each do |rate|
-			rate_size += Integer(rate)
+			rate_size += rate.to_i
 		end
 
-		increase = rate_size.to_f * Float(effect)
-		rates[Integer(number)-1] = Integer(rates[Integer(number)-1]) + increase
+		increase = rate_size.to_f * effect.to_f
+		rates[number.to_i-1] = rates[number.to_i-1].to_i + increase
 
 		room.rates = rates.join(',')
 		room.save
 	end
 	def add_free(room_id)
 		card = BingoCard.find_by(user_id:current_user.id, room_id:room_id)
+		room = Room.find(room_id)
+		room_numbers_rate = room.rates.split(',')
 		numbers = card.numbers.split(',')
 		checks = card.checks.split(',')
 		numbers_unchecked = []
 
 		numbers.each_with_index do |number, index|
-			if checks[index] == 'f'
+			if checks[index] == 'f' && room_numbers_rate[number.to_i + 1].to_i != 0
 				numbers_unchecked.push(number)
 			end
 		end

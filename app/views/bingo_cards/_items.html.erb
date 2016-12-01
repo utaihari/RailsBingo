@@ -12,7 +12,32 @@
 			<% if !items.blank? %>
 			<% for item in items %>
 			<tr id="item-rows">
-				<%= render :partial => "item-row", :locals => { room_isPlaying: room.isPlaying, item: item } %>
+				<div style="display: none">
+					<%= sh="#modal-"+item.id.to_s %>
+					<%= h="modal-"+item.id.to_s %>
+					<%= c_q="quantity-"+item.id.to_s %>
+				</div>
+				<td><a href=<%= sh %>><%= item.name %></a></td>
+				<td class=<%= c_q %>><%= item.quantity %></td>
+				<td><%= item.AllowUseDuringGame %></td>
+				<div class="remodal" data-remodal-id=<%= h %>>
+					<button data-remodal-action="close" class="remodal-close"></button>
+					<h2><%= item.name %></h2>
+					<p>残り<%= item.quantity %>個</p>
+					<% if item.AllowUseDuringGame != 't' && room.isPlaying %>
+					<p>このアイテムはゲーム中に使用できません</p>
+					<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
+					<% else %>
+					<% if item.item_type == 1 %>
+					<button data-remodal-action="confirm" class="remodal-confirm" onclick="select_number(<%= item.id %>, false)">使用する</button>
+					<% elsif item.item_type == 2%>
+					<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, true)">使用する</button>
+					<% else %>
+					<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, false)">使用する</button>
+					<% end %>
+					<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
+					<% end %>
+				</div>
 			</tr>
 			<% end %>
 			<% end %>
