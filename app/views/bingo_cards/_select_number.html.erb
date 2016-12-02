@@ -1,0 +1,26 @@
+<table boder = "3" id="select_number" align="center">
+	<thead>
+		<tr class="bingo_char">
+			<th class="text-center">B</th>
+			<th class="text-center">I</th>
+			<th class="text-center">N</th>
+			<th class="text-center">G</th>
+			<th class="text-center">O</th>
+		</tr>
+	</thead>
+	<%i=0%>
+	<% numbers.each do |num|%>
+	<% if i == 0 || i == 5 || i == 10 || i == 15  || i == 20 then %>
+	<tr>
+		<%end%>
+		<% if num > 0 %>
+		<td data-number=<%= num %> class="bingo_number text-center" onclick="use_item_select_number(<%= item_id %>, <%= num %>)"><%= num %></td>
+		<% else %>
+		<td class="bingo_number free text-center" data-number=-1>FREE</td>
+		<% end %>
+		<%i += 1%>
+		<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>
+	</tr>
+	<%end%>
+	<%end%>
+</table>

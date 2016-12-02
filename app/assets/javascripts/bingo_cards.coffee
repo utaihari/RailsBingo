@@ -220,7 +220,7 @@ update_list = ->
 	if update_card
 		@update_card()
 	return
-use_item_select_number = (item_id, number) ->
+@use_item_select_number = (item_id, number) ->
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, number: number},(json)->
 		console.log(json)

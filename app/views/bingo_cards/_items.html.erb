@@ -29,7 +29,8 @@
 					<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
 					<% else %>
 					<% if item.item_type == 1 %>
-					<button data-remodal-action="confirm" class="remodal-confirm" onclick="select_number(<%= item.id %>, false)">使用する</button>
+					<%= oc="location.href="+ %>
+					<button data-remodal-action="confirm" class="remodal-confirm"  onClick="location.href=">使用する</button>
 					<% elsif item.item_type == 2%>
 					<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, true)">使用する</button>
 					<% else %>
