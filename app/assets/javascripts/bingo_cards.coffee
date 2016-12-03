@@ -42,6 +42,7 @@ $(->
 	@room_id = $("#data").data("room_id")
 	@card_id = $("#data").data("card_id")
 	@community_id = $("#data").data("community_id")
+	@get_item = $("#data").data("get_item")
 	for i in [0..24]
 		checks.push(false)
 	@onPageLoad()
@@ -55,6 +56,9 @@ $(->
 		$('#bingo_button').show()
 	else
 		$('#bingo_button').hide()
+
+	if @get_item
+		$('[data-remodal-id=getitem]').remodal().open()
 	return
 )
 
@@ -112,6 +116,7 @@ update_notice_list = ->
 
 items = []
 @update_items = ->
+	$.ajaxSetup({async: false});
 	$.get("/API/#{@community_id}/#{@room_id}/items")
 	return
 @update_bingo_card = ->
@@ -212,24 +217,30 @@ update_list = ->
 @use_item = (item_id, update_card) ->
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id},(json)->
-		console.log(json)
 		notice.push(json)
 		return
 		)
-	@update_items()
-	if update_card
-		@update_card()
+	quantity = $('.quantity-'+item_id)
+	q = parseInt(quantity.text())-1
+	if q<=0
+		$('.item-rows-'+item_id).hide()
+	quantity.text(q)
+	$('.q-'+item_id).text(q)
 	return
 @use_item_select_number = (item_id, number) ->
 	$.ajaxSetup({async: false});
+	s_notice = ""
 	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, number: number},(json)->
-		console.log(json)
 		notice.push(json)
+		s_notice = json
 		return
 		)
-	@update_items()
-	if update_card
-		@update_card()
+	quantity = $('.quantity-'+item_id)
+	q = parseInt(quantity.text())-1
+	if q<=0
+		$('.item-rows-'+item_id).hide()
+	quantity.text(q)
+	$('.q-'+item_id).text(q)
 	return
 
 choosing_number = false
@@ -241,6 +252,14 @@ using_item_id = 0
 	# .tabSwitch($('#card_area'), $('#items'))
 
 	notice.push("アイテムを使う数字を選んでください")
+	return
+
+@show_select_window = (item_id) ->
+	console.log('[data-remodal-id=modal-select'+item_id+']')
+	modalInstance = $.remodal.lookup[$('[data-remodal-id=modal-select'+item_id+']').data('remodal')]
+	modalInstance.open()
+	$('#select_notice').text("")
+	$('#select_notice').text("アイテムを使う数字を選んでください")
 	return
 
 check_rank = ->

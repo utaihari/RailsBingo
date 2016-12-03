@@ -1,0 +1,25 @@
+<h2>手に入れたアイテム一覧</h2>
+<table class="table">
+	<thead>
+		<tr>
+			<th>アイテム名</th>
+			<th>ゲーム中使用可否</th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if !items.blank? %>
+		<% for item in items %>
+		<tr>
+			<td><%= item.name %></td>
+			<td>
+				<% if item.AllowUseDuringGame == 't' %>
+				可
+				<% else %>
+				不可
+				<% end %>
+			</td>
+		</tr>
+		<% end %>
+		<% end %>
+	</tbody>
+</table>

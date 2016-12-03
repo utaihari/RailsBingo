@@ -27,7 +27,7 @@ class RoomsController < ApplicationController
     end
 
     number_rate = Array.new(75,10)
-    @room = @community.room.build(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], detail: params[:room][:detail], rates:number_rate.join(","))
+    @room = @community.room.build(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail], profit: params[:room][:profit].to_i, bingo_score: params[:room][:bingo_score].to_i, riichi_score: params[:room][:riichi_score].to_i, hole_score: params[:room][:hole_score].to_i, rates:number_rate.join(","))
 
     if @room.save
       redirect_to controller: 'rooms', action: 'show', id: @room.id
@@ -267,7 +267,7 @@ class RoomsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def room_params
-    params.require(:room).permit(:name, :canUseItem, :AllowGuest, :detail)
+    params.require(:room).permit(:name, :canUseItem, :AllowGuest, :AllowJoinDuringGame, :detail, :profit, :bingo_score, :riichi_score, :hole_score)
   end
 
   def isRoomOrganizer(room_id)

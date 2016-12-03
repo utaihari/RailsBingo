@@ -1,10 +1,9 @@
 <%= javascript_include_tag "velocity.min.js" %>
 <%= javascript_include_tag "tabtab.min.js" %>
-<%= javascript_include_tag "remodal.min.js" %>
 <%= javascript_include_tag "bingo_cards.js" %>
 <div class="remodal-bg">
 	<div class="tabs">
-		<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %> data-community_id=<%= @community.id %>></div>
+		<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %> data-community_id=<%= @community.id %> data-get_item=<%= !@get_items.blank? %>></div>
 
 		<div class="center70">
 			<div class="yellow-filter">
@@ -19,6 +18,11 @@
 				<button data-remodal-action="close" class="remodal-close"></button>
 				<%= render :partial => "result" %>
 				<button data-remodal-action="confirm" class="remodal-confirm">OK</button>
+			</div>
+			<div class="remodal" data-remodal-id="getitem">
+				<button data-remodal-action="close" class="remodal-close"></button>
+				<%= render :partial => "get_items", :locals => { items: @get_items } %>
+				<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
 			</div>
 			<!-- <p>次のナンバー　→<span id="last_number"></span></p> -->
 		</div>
@@ -45,4 +49,5 @@
 			<% end %>
 		</div>
 	</div>
+
 </div>

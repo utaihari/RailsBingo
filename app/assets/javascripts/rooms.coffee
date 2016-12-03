@@ -53,7 +53,7 @@ $(->
 		)
 	$('#notice').text("ゲームを開始中です。３秒以内に画面が切り替わらない場合は、ブラウザを更新してください。")
 	setTimeout(->
-        location.reload();
+        location.reload()
         $('#notice').text("")
         @check_bingo = setInterval(->
         	check_bingo_users(room_id)

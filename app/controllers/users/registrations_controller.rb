@@ -16,21 +16,25 @@ class Users::RegistrationsController < Devise::RegistrationsController
     @isGuest = false
     @source = -1
 
-    if Integer(params[:source]) == FROM_TOP_PAGE
-      @source = FROM_TOP_PAGE
-      @isGuest = true
-      @mail_address = SecureRandom.hex(4) + "@guest.com"
-      @password = "GuestPassword"
-    end
+    if params[:source] != nil
+      if params[:source].to_i == FROM_TOP_PAGE
+        @source = FROM_TOP_PAGE
+        @isGuest = true
+        @mail_address = SecureRandom.hex(4) + "@guest.com"
+        @password = "GuestPassword"
+      end
 
-    if Integer(params[:source]) == FROM_JOIN_ROOM
-      @source = FROM_JOIN_ROOM
-      @community_id = params[:community_id]
-      @room_id = params[:room_id]
-      @isGuest = Integer(params[:isGuest]) == 1
-      @mail_address = SecureRandom.hex(4) + "@guest.com"
-      @password = "GuestPassword"
-      session[:dest_url] = join_room_path(@community_id, @room_id)
+      if params[:source].to_i == FROM_JOIN_ROOM
+        @source = FROM_JOIN_ROOM
+        @community_id = params[:community_id]
+        @room_id = params[:room_id]
+        @isGuest = params[:isGuest].to_i == 1
+        @mail_address = SecureRandom.hex(4) + "@guest.com"
+        @password = "GuestPassword"
+        session[:dest_url] = join_room_path(@community_id, @room_id)
+      end
+    else
+      session[:dest_url] = pages_index_path
     end
     super
   end

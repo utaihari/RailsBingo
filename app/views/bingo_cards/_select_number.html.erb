@@ -1,3 +1,4 @@
+<div id="select_notice"></div>
 <table boder = "3" id="select_number" align="center">
 	<thead>
 		<tr class="bingo_char">
@@ -14,7 +15,13 @@
 	<tr>
 		<%end%>
 		<% if num > 0 %>
-		<td data-number=<%= num %> class="bingo_number text-center" onclick="use_item_select_number(<%= item_id %>, <%= num %>)"><%= num %></td>
+		<td data-number=<%= num %> class="bingo_number text-center">
+			<% if checks[i] == 't' %>
+			<%= num %>
+			<% else %>
+			<button data-remodal-action="confirm" onclick="use_item_select_number(<%= item_id %>, <%= num %>)"><%= num %></button>
+			<% end %>
+		</td>
 		<% else %>
 		<td class="bingo_number free text-center" data-number=-1>FREE</td>
 		<% end %>
