@@ -35,6 +35,7 @@ Rails.application.routes.draw do
 
 	get 'communities/:id/join', to: 'communities#join', as:'join_community'
 	get 'communities/:id/leave', to: 'communities#leave', as:'leave_community'
+	get 'communities/:id/member_list', to: 'communities#member_list', as:'community_member_list'
 	get 'communities/:community_id/rooms/:room_id/pre-join', to: 'rooms#pre_join', as:'pre_join_room'
 	get 'communities/:community_id/rooms/:room_id/join', to: 'rooms#join', as:'join_room'
 
@@ -50,6 +51,7 @@ Rails.application.routes.draw do
 
 	#API
 
+	#room
 	get 'API/get_number', to: 'rooms#get_number',as:'get_number'
 	get 'API/get_number_rate', to: 'rooms#get_number_rate',as:'get_number_rate'
 	post 'API/add_number', to: 'rooms#add_number',as:'add_number'
@@ -57,6 +59,7 @@ Rails.application.routes.draw do
 	post 'API/start_game', to: 'rooms#start_game',as:'start_game'
 	post 'API/game_close', to: 'rooms#game_close',as:'game_close'
 
+	#bingo-card
 	get 'API/check_number', to: 'bingo_cards#check_number',as:'check_number'
 	get 'API/get_checked_number', to: 'bingo_cards#get_checked_number',as:'get_checked_number'
 	post 'API/done_bingo', to: 'bingo_cards#done_bingo', as: 'done_bingo'
@@ -69,6 +72,9 @@ Rails.application.routes.draw do
 	get 'API/check_rank', to: 'rooms#check_rank'
 	get 'API/check_bingo_users', to: 'rooms#check_bingo_users'
 	get 'API/joined_users', to: 'rooms#joined_users'
+
+	#community
+	get 'API/toggle_administrator', to:'communities#toggle_administrator'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

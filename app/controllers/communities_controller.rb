@@ -16,7 +16,7 @@ class CommunitiesController < ApplicationController
     @opened_rooms = Room.where(community_id:params[:id], isFinished: false)
     @closed_rooms = Room.where(community_id:params[:id], isFinished: true)
     @organizer = User.find_by(id:@community.user_id)
-
+    @isCreator = Community.exists?(id: params[:id], user_id: current_user.id)
   end
 
   def new
@@ -24,6 +24,16 @@ class CommunitiesController < ApplicationController
   end
 
   def edit
+  end
+
+  def member_list
+    @community = Community.find(params[:id])
+    organizers = CommunityAdministrator.where(community_id: params[:id])
+    @organizers = []
+    organizers.each do |o|
+      @organizers.push(o.user_id)
+    end
+    @members = CommunityUserList.joins(:user).where(community_id: params[:id]).select("users.name, users.id")
   end
 
   def create
@@ -84,11 +94,20 @@ class CommunitiesController < ApplicationController
     @communities = Community.where(user_id: current_user.id)
   end
 
-  def add_administrators
-    administrators = params[:administrators]
-    room_id = params[:room_id]
-    administrators.each do |administrator|
-      CommunityAdministrator.create(room_id: room_id, user_id: Integer(administrator))
+  def toggle_administrator
+    community_id = params[:community_id]
+    user_id = params[:user_id]
+
+    if !Community.exists?(id: community_id, user_id: current_user.id)
+      render :json => "error".to_json
+    end
+
+    if CommunityAdministrator.exists?(community_id: community_id, user_id: user_id)
+      CommunityAdministrator.find_by(community_id: community_id, user_id: user_id).destroy
+      render :json => false.to_json
+    else
+      CommunityAdministrator.create(community_id: community_id, user_id: user_id)
+      render :json => true.to_json
     end
   end
 

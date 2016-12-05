@@ -1,31 +1,28 @@
 <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
-<script type="text/javascript">bkLib.onDomLoaded('user-detail');</script>
+<script type="text/javascript">bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('user-detail');
+});</script>
 <%= javascript_include_tag "users" %>
 
-<%= javascript_tag do %>
-var $user_detail = '<%= raw @user.detail.gsub("'", "\\\\'") %>';
-<% end %>
+<div class="center70">
+  <h2>ユーザー情報変更</h2>
 
-<h2>ユーザー情報変更</h2>
-
-<%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-<%= devise_error_messages! %>
+  <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+  <%= devise_error_messages! %>
 
 
-<div class="field">
-  <%= f.label :email,"メールアドレス" %><br />
-  <%= f.email_field :email, autofocus: true %>
-</div>
-<div class="field">
- <%= f.label :name,"名前" %><br />
- <%= f.text_field :name %>
-</div>
-
-<% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-<div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
-<% end %>
-
-<div class="field">
+  <div class="field">
+    <%= f.label :email,"メールアドレス" %><br />
+    <%= f.email_field :email, autofocus: true %>
+  </div>
+  <div class="field">
+   <%= f.label :name,"名前" %><br />
+   <%= f.text_field :name %>
+ </div>
+ <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+ <div>Currently waiting confirmation for: <%= resource.unconfirmed_email %></div>
+ <% end %>
+ <div class="field">
   <%= f.label :password %> <i>(変更しない場合は何も入力しないでください)</i><br />
   <%= f.password_field :password, autocomplete: "off" %>
   <% if @minimum_password_length %>
@@ -57,3 +54,4 @@ var $user_detail = '<%= raw @user.detail.gsub("'", "\\\\'") %>';
 <h3>アカウントを削除</h3>
 
 <p> <%= button_to "削除", registration_path(resource_name), data: { confirm: "本当に削除しますか?" }, method: :delete %></p>
+</div>

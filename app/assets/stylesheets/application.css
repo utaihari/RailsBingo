@@ -25,11 +25,11 @@
  }
 
  @media screen and (max-width:640px){
- 	img{
+/* 	img{
  		max-width: 100%;
  		height: auto;
- 		width /***/:auto;　
- 	}
+ 		width :auto;　
+ 	}*/
  	#container{
  		width:100%;
  	}

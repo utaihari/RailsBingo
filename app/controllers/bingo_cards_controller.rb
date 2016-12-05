@@ -34,7 +34,7 @@ class BingoCardsController < ApplicationController
 			redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@card.id) and return
 		end
 
-		@numbers = make_bingo_num()
+		@numbers = make_bingo_num(@room.number_of_free.to_i)
 		@checks =[]
 		25.times { |n|
 			@checks << "f"
@@ -202,7 +202,7 @@ class BingoCardsController < ApplicationController
 			@numbers << n.to_i
 		}
 	end
-	def make_bingo_num
+	def make_bingo_num(free_num)
 		numbers =[]
 		random = Random.new
 
@@ -230,11 +230,6 @@ class BingoCardsController < ApplicationController
 				end
 			end
 			while true
-				if n_numbers.length() == 2
-					n_numbers << -1
-					numbers << -1
-					break
-				end
 				i = random.rand(31..45)
 				if !n_numbers.include?(i) then
 					n_numbers << i
@@ -257,6 +252,33 @@ class BingoCardsController < ApplicationController
 					numbers << i
 					break
 				end
+			end
+		end
+
+		if free_num > 25
+			free_num = 25
+		end
+
+		if free_num > 0
+			#Add free to center of card.
+			random_numbers = []
+			random_numbers << 12
+			free_num -= 1
+
+			#Add free in random.
+			if free_num > 0
+				free_num.times{
+					while true
+						i = rand(numbers.length) + 1
+						if !random_numbers.include?(i)
+							random_numbers << i
+							break
+						end
+					end
+				}
+			end
+			random_numbers.each do |num|
+				numbers[num] = -1
 			end
 		end
 		return numbers
@@ -379,12 +401,16 @@ class BingoCardsController < ApplicationController
 		numbers_unchecked = []
 
 		numbers.each_with_index do |number, index|
-			if checks[index] == 'f' && room_numbers_rate[number.to_i + 1].to_i != 0 && number != -1
+			if checks[index] == 'f' && room_numbers_rate[number.to_i-1].to_i != 0 && number.to_i != -1
 				numbers_unchecked.push(number)
 			end
 		end
+		if numbers_unchecked.blank?
+			return
+		end
+		logger.debug("numbers_unchecked"+numbers_unchecked.to_s)
+		selected_num = numbers_unchecked[rand(numbers_unchecked.length()+1)]
 
-		selected_num = numbers_unchecked[rand(numbers_unchecked.length())]
 		numbers.each_with_index do |number,index|
 			if number == selected_num
 				numbers[index] = -1

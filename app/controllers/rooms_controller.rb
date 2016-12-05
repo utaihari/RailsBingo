@@ -99,7 +99,9 @@ class RoomsController < ApplicationController
     if @community == nil || @room == nil
       redirect_to controller: 'communities', action: 'index'
     end
-
+    if !@room.AllowJoinDuringGame && @room.isPlaying
+      render :text => "error"
+    end
     if !isCommunityMember(@community.id)
       CommunityUserList.create(community_id: @community.id, user_id: current_user.id)
     end

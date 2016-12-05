@@ -9,6 +9,7 @@
 	<p><%= link_to "このコミュニティでビンゴを開催する", new_community_room_path(@community.id) , class: "btn btn-primary btn-lg" %></p>
 	<% end %>
 	<div class="white-box">
+	<p>コミュニティの説明</p>
 		<%= raw @community.detail %>
 	</div>
 
@@ -50,12 +51,15 @@
 			<% end %>
 		</div>
 	</div>
-	<% if @isOrganizer %>
+	<% if @isCreator %>
 	<div id="manage">
 		<p>
 			<%= link_to "コミュニティ情報を修正する", edit_community_path(@community.id) , class: "btn btn-info btn-sm" %>
+
+			<%= link_to "メンバーの管理", community_member_list_path(@community.id), class: "btn btn-primary btn-sm" %>
 			<%= link_to 'このコミュニティを削除', community_path, method: :delete, class: "btn btn-danger btn-sm" ,data: { confirm: '本当に削除してもよろしいですか?' } %>
 		</p>
+
 	</div>
 	<% end %>
 </div>

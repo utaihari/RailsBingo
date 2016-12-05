@@ -18,6 +18,9 @@
 	<% if @room.AllowJoinDuringGame %>
 	<%= image_tag 'allow-join-during-game.png', :size => '90x30'%>
 	<% end %>
+	<% if @room.can_bring_item %>
+	<%= image_tag 'can-bring-item.png', :size => '90x30'%>
+	<% end %>
 
 	<div><%= raw @room.detail %></div>
 

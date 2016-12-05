@@ -1,0 +1,27 @@
+<%= javascript_include_tag "communities" %>
+<div class="center70">
+	<div>ビンゴ開催権限を付与するには名前をクリックしてください</div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>名前</th>
+				<th>ビンゴ開催権限</th>
+			</tr>
+		</thead>
+		<tbody>
+			<% @members.each do |member| %>
+			<tr>
+				<td><span onclick="toggle_administrator(<%= @community.id %>,<%= member.id %>)"><%= member.name %></span></td>
+				<td class=<%= "organize-"+member.id.to_s %>>
+					<% if @organizers.include?(member.id) %>
+					有
+					<% else %>
+					無
+					<% end %>
+				</td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+	<%= link_to "戻る", :back %>
+</div>

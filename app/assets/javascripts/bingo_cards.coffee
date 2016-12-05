@@ -195,9 +195,15 @@ update_list = ->
 	return
 
 @use_item = (item_id, update_card) ->
+
+	room_id = @room_id
+	community_id = @community_id
+
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id},(json)->
 		notice.push(json)
+		if update_card
+			$.get("/API/#{community_id}/#{room_id}/bingo_card")
 		return
 		)
 	quantity = $('.quantity-'+item_id)
@@ -207,6 +213,7 @@ update_list = ->
 	quantity.text(q)
 	$('.q-'+item_id).text(q)
 	return
+
 @use_item_select_number = (item_id, number) ->
 	$.ajaxSetup({async: false});
 	s_notice = ""
@@ -225,6 +232,7 @@ update_list = ->
 
 choosing_number = false
 using_item_id = 0
+
 @select_number = (item_id) ->
 	choosing_number = true
 	using_item_id = item_id
