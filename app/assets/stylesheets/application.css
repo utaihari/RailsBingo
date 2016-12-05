@@ -14,7 +14,7 @@
  *= require_self
  */
  body{
- 	/*width:100%;*/
+ 	width:100%;
  	background-color: #FFEEFF;
  	color:#333333;
  }
@@ -23,6 +23,23 @@
  	margin-right: auto;
  	margin-left : auto;
  }
+
+ @media screen and (max-width:640px){
+ 	img{
+ 		max-width: 100%;
+ 		height: auto;
+ 		width /***/:auto;　
+ 	}
+ 	#container{
+ 		width:100%;
+ 	}
+ 	.center70{
+ 		width: 90%;
+ 		margin-right: auto;
+ 		margin-left : auto;
+ 	}
+ }
+
  .note{
  	color:#330;
  	font-size: 50%;

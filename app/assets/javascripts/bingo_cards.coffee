@@ -12,32 +12,7 @@ number_arrive_time = new Date()
 done_bingo = false
 
 $(->
-	$('.tabs').tabtab({
-		tabMenu: '.tabs__menu',
-		tabContent: '.tabs__content',
-		next: '.tabs-controls__next',
-		prev: '.tabs-controls__prev',
-
-		startSlide: 1,
-		arrows: true,
-		dynamicHeight: true,
-		useAnimations: true,
-
-		easing: 'ease',
-		speed: 350,
-		slideDelay: 0,
-		perspective: 1200,
-		transformOrigin: 'center top',
-		perspectiveOrigin: '50% 50%',
-
-		translateY: 0,
-		translateX: 0,
-		scale: 1,
-		rotateX: 90,
-		rotateY: 0,
-		skewY: 0,
-		skewX: 0
-	});
+	$('#tab-container').easytabs()
 
 	@room_id = $("#data").data("room_id")
 	@card_id = $("#data").data("card_id")
@@ -53,9 +28,9 @@ $(->
 		game_start_check(room_id)
 	,5000)
 	if check_bingo()
-		$('#bingo_button').show()
+		$('#bingo-button').show()
 	else
-		$('#bingo_button').hide()
+		$('#bingo-button').hide()
 
 	if @get_item
 		$('[data-remodal-id=getitem]').remodal().open()
@@ -89,6 +64,7 @@ game_end_check =  ->
 		clearInterval(@update_notice)
 		check_rank()
 		set_number_of_bingos()
+		@update_result()
 		$('#result').show('slow')
 	return
 display_notice = ->
@@ -109,21 +85,23 @@ display_notice = ->
 	return
 
 update_notice_list = ->
-	$('#notice_list').empty()
+	$('#notice-list').empty()
 	for n, index in notice_list
-		$('#notice_list').prepend("<p> #{n} </p>")
+		$('#notice-list').prepend("<p> #{n} </p>")
 	return
 
 items = []
 @update_items = ->
-	$.ajaxSetup({async: false});
 	$.get("/API/#{@community_id}/#{@room_id}/items")
+	return
+@update_result = ->
+	$.get("/API/#{@community_id}/#{@room_id}/get_items/#{number_of_bingo}/#{number_of_one_left_line}/#{number_of_hole}")
 	return
 @update_bingo_card = ->
 	$.get("/API/#{@community_id}/#{@room_id}/bingo_card")
 	return
 @show_notice_list = ->
-	$('#notice_list').toggle('slow')
+	$('#notice-list').toggle('slow')
 	return
 @numbers_update =  ->
 	$.ajaxSetup({async: false});
@@ -156,12 +134,12 @@ update_list = ->
 			notice.push("新しいナンバーは "+ numbers[numbers.length-1] + "です")
 
 		number_length = numbers.length
-		$('ul#number_list').empty()
+		$('ul#number-list').empty()
 		for number, index in numbers when number isnt -1
-			$('ul#number_list').prepend("<li> #{number} </li>")
-		$('#last_number').empty()
+			$('ul#number-list').prepend("<li> #{number} </li>")
+		$('#last-number').empty()
 		if numbers[number_length-1] isnt -1
-			$('#last_number').text(numbers[number_length-1])
+			$('#last-number').text(numbers[number_length-1])
 		number_arrive_time = new Date()
 	return
 
@@ -178,9 +156,9 @@ update_list = ->
 		@check_number(index)
 		$(obj).toggleClass("checked", checks[index])
 		if check_bingo()
-			$('#bingo_button').show()
+			$('#bingo-button').show()
 		else
-			$('#bingo_button').hide()
+			$('#bingo-button').hide()
 		return
 	if choosing_number
 		choosing_number = false
@@ -192,7 +170,7 @@ update_list = ->
 	room_id = $("#data").data("room_id")
 	@numbers_update()
 	@checks_update()
-	$('.bingo_number').each( (i,e)->
+	$('.bingo-number').each( (i,e)->
 		if jQuery.inArray(Number($(e).data('number')), numbers) >= 0
 			$(e).toggleClass("checked", checks[i])
 		return
@@ -201,7 +179,7 @@ update_list = ->
 	@update_items()
 	return
 @display_past_number = ->
-	$('#number_list_wrapper').toggle('slow')
+	$('#number-list-wrapper').toggle('slow')
 	return
 
 @bingo = ->
@@ -210,6 +188,8 @@ update_list = ->
 		return
 	$.post('/API/done_bingo', {card_id: @card_id, room_id: @room_id, times: numbers.length, seconds: current_time-number_arrive_time}, (data) ->
 		done_bingo = data
+		if done_bingo
+			$('#bingo-button').hide()
 		return
 		)
 	return
@@ -258,8 +238,8 @@ using_item_id = 0
 	console.log('[data-remodal-id=modal-select'+item_id+']')
 	modalInstance = $.remodal.lookup[$('[data-remodal-id=modal-select'+item_id+']').data('remodal')]
 	modalInstance.open()
-	$('#select_notice').text("")
-	$('#select_notice').text("アイテムを使う数字を選んでください")
+	$('#select-notice').text("")
+	$('#select-notice').text("アイテムを使う数字を選んでください")
 	return
 
 check_rank = ->
@@ -267,7 +247,7 @@ check_rank = ->
 	$.getJSON('/API/check_rank',{room_id: @room_id},(json)->
 		rank = json
 		if rank != 0
-			$('#rank_number').text(rank)
+			$('#rank-number').text(rank)
 			$('#ranking').show()
 		return
 	)
@@ -341,7 +321,7 @@ calc_number_of_bingos = ->
 
 set_number_of_bingos = ->
 	calc_number_of_bingos()
-	$('#number_of_bingo').text(number_of_bingo)
-	$('#number_of_one_left_line').text(number_of_one_left_line)
-	$('#number_of_hole').text(number_of_hole)
+	$('#number-of-bingo').text(number_of_bingo)
+	$('#number-of-one-left-line').text(number_of_one_left_line)
+	$('#number-of-hole').text(number_of_hole)
 	return

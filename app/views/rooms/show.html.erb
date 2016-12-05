@@ -55,12 +55,13 @@
 	<% if @room.isPlaying %>
 	<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) ,class:"btn btn-info"%>
 	<% end %>
-
+	<%= link_to "部屋情報を修正する", edit_community_room_path(@community.id, @room.id) , class: "btn btn-info btn-sm" %>
+	<%= link_to 'この部屋を削除', community_room_path, method: :delete, class: "btn btn-danger btn-sm" ,data: { confirm: '本当に削除してもよろしいですか?' } %>
 	<% else %>
 	<% if @isRoomMember %>
-	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) ,class:"btn btn-info"%>
+	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) ,class: "btn btn-info"%>
 	<% else %>
-	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id),　class:"btn btn-info" %>
+	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id),　class: "btn btn-info btn-sm" %>
 	<% end %>
 	<% end %>
 	<div class="white-box">

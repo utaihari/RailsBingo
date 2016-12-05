@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161201163546) do
+ActiveRecord::Schema.define(version: 20161204173519) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -118,15 +118,19 @@ ActiveRecord::Schema.define(version: 20161201163546) do
     t.boolean  "AllowJoinDuringGame", default: true
     t.integer  "user_id"
     t.integer  "profit",              default: 0
+    t.boolean  "can_bring_item",      default: false
+    t.integer  "number_of_free",      default: 1
   end
 
   create_table "user_item_lists", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "community_id"
     t.integer  "item_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.integer  "quantity",     default: 0
+    t.boolean  "temp",         default: false
+    t.integer  "room_id",      default: 0
   end
 
   create_table "users", force: :cascade do |t|

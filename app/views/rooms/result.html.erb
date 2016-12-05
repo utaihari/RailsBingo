@@ -2,13 +2,21 @@
 <div class="center70">
 	<h1><%= @room.name %></h1>
 	<h2>ビンゴ結果発表</h2>
-
 	<div class="white-box">
 		<h3>ビンゴしたユーザー一覧</h3>
 		<% if !@bingo_list.blank? %>
 		<% for user in @bingo_list %>
-		<div class="bingo_user">
-			<div onclick="view_mail_address(this)"> <%= user.name %> メールアドレス表示 <span class="note">放送中は表示しないように注意してください</span> <div class="view_mail_addess" style="display: none;"><%= user.email %></div></div>
+		<div>
+			<div>
+				<%= user.name %> さん
+				<span onclick="view_mail_address(this)">
+					<a href="#" onclick="">メールアドレス表示</a>
+					<span class="view-mail-addess" style="display: none;">
+						<%= user.email %>
+					</span>
+				</span>
+				<span class="note">放送中は表示しないように注意してください</span>
+			</div>
 			<div><%= user.times %>回目 <%= user.seconds %>ms</div>
 		</div>
 		<% end %>

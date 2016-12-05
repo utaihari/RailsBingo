@@ -1,5 +1,5 @@
 <div id="select_notice"></div>
-<table boder = "3" id="select_number" align="center">
+<table boder = "3" id="select-number" align="center">
 	<thead>
 		<tr class="bingo_char">
 			<th class="text-center">B</th>
@@ -15,7 +15,7 @@
 	<tr>
 		<%end%>
 		<% if num > 0 %>
-		<td data-number=<%= num %> class="bingo_number text-center">
+		<td data-number=<%= num %> class="bingo-number text-center">
 			<% if checks[i] == 't' %>
 			<%= num %>
 			<% else %>
@@ -23,7 +23,7 @@
 			<% end %>
 		</td>
 		<% else %>
-		<td class="bingo_number free text-center" data-number=-1>FREE</td>
+		<td class="bingo-number free text-center" data-number=-1>FREE</td>
 		<% end %>
 		<%i += 1%>
 		<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>

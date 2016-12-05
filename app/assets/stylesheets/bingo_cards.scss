@@ -5,7 +5,7 @@
 .checked {
 	color: #ff69b4;
 }
-.bingo_char{
+.bingo-char{
 	font-size: 40px;
 }
 
@@ -18,15 +18,15 @@ td{
 	padding: 0px;
 	margin: 0px;
 }
-#card_area{
+#card-area{
 	width:400px;
 }
-#bingo_card{
+#bingo-card{
 	table-layout: fixed;
 	width:400px;
 	margin-right : auto;
 	margin-left : auto;
-	.bingo_number{
+	.bingo-number{
 		background-color: rgba(204, 255, 255, 0.7);
 		font-size: 30px;
 	}
@@ -43,9 +43,30 @@ td{
 #numbers{
 	// width: 30%;
 	// float: left;
-	#last_number{
+	#last-number{
 		color: #ff3000;
 		font-size: 40px;
+	}
+}
+
+@media only screen and (max-width: 400px){
+	#card-area{
+		width:100%;
+	}
+	#bingo-card{
+		table-layout: fixed;
+		width:100%;
+		margin-right : auto;
+		margin-left : auto;
+		.bingo-number{
+			background-color: rgba(204, 255, 255, 0.7);
+			font-size: 30px;
+		}
+
+		.free{
+			font-size: 20px;
+		}
+
 	}
 }
 
@@ -72,4 +93,47 @@ ul.foo li a {
 	text-decoration:none;
 	color:dimgrey;
 	font-size: 20px;
+}
+
+.etabs { 
+	margin: 0; 
+	padding: 0; 
+}
+.tab { 
+	display: inline-block; 
+	zoom:1; 
+	*display:inline; 
+	background: #eee;
+	border: solid 1px #999;
+	border-bottom: none; 
+	-moz-border-radius: 4px 4px 0 0; 
+	-webkit-border-radius: 4px 4px 0 0; 
+}
+.tab a { 
+	font-size: 14px;
+	line-height: 2em;
+	display: block; 
+	padding: 0 10px; 
+	outline: none; 
+}
+.tab a:hover { 
+	text-decoration: 
+	underline;
+}
+.tab.active { 
+	background: #fff;
+	padding-top: 6px;
+	position: relative;
+	top: 1px;
+	border-color: #666;
+}
+.tab a.active {
+	font-weight: bold; 
+}
+.tab-container .panel-container {
+	background: #fff; 
+	border: solid #666 1px;
+	padding: 10px; 
+	-moz-border-radius: 0 4px 4px 4px; 
+	-webkit-border-radius: 0 4px 4px 4px;
 }

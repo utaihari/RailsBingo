@@ -1,9 +1,9 @@
 <%= stylesheet_link_tag "application", :media => "all" %>
 <h2><%= user_name %>さんのカード</h2>
 <div id="data" data-room_id=<%= room.id %> data-card_id=<%= card.id %>></div>
-<table boder = "3" id="bingo_card" align="center">
+<table boder = "3" id="bingo-card" align="center">
 	<thead>
-		<tr class="bingo_char">
+		<tr class="bingo-char">
 			<th class="text-center">B</th>
 			<th class="text-center">I</th>
 			<th class="text-center">N</th>
@@ -17,7 +17,7 @@
 	<tr>
 		<%end%>
 		<div style="display: none">
-			<%= c="bingo_number text-center" %>
+			<%= c="bingo-number text-center" %>
 			<% if checks[i] == 't' %>
 			<%= c+=" checked" %>
 			<% end %>

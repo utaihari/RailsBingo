@@ -3,10 +3,10 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 @show_detail = ->
-	$('#community_detail').toggle('fast')
+	$('#community-detail').toggle('fast')
 	return
 
 @show_members = ->
-	$('#community_members').toggle('slow')
+	$('#community-members').toggle('slow')
 	return
 

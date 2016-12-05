@@ -59,15 +59,16 @@ Rails.application.routes.draw do
 
 	get 'API/check_number', to: 'bingo_cards#check_number',as:'check_number'
 	get 'API/get_checked_number', to: 'bingo_cards#get_checked_number',as:'get_checked_number'
-	post '/API/done_bingo', to: 'bingo_cards#done_bingo', as: 'done_bingo'
-	get '/API/check_items', to: 'bingo_cards#check_items', as: 'check_items'
-	get '/API/:community_id/:room_id/items', to: 'bingo_cards#items', as: 'items'
-	get '/API/:community_id/:room_id/bingo_card', to: 'bingo_cards#bingo_card', as: 'bingo_cards'
-	get '/API/use_item', to: 'bingo_cards#use_item'
+	post 'API/done_bingo', to: 'bingo_cards#done_bingo', as: 'done_bingo'
+	get 'API/check_items', to: 'bingo_cards#check_items', as: 'check_items'
+	get 'API/:community_id/:room_id/items', to: 'bingo_cards#items', as: 'items'
+	get 'API/:community_id/:room_id/bingo_card', to: 'bingo_cards#bingo_card', as: 'bingo_cards'
+	get 'API/:community_id/:room_id/get_items/:lines/:riichis/:holes', to: 'bingo_cards#get_items', as: 'get_items'
+	get 'API/use_item', to: 'bingo_cards#use_item'
 
-	get '/API/check_rank', to: 'rooms#check_rank'
-	get '/API/check_bingo_users', to: 'rooms#check_bingo_users'
-	get '/API/joined_users', to: 'rooms#joined_users'
+	get 'API/check_rank', to: 'rooms#check_rank'
+	get 'API/check_bingo_users', to: 'rooms#check_bingo_users'
+	get 'API/joined_users', to: 'rooms#joined_users'
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
 end

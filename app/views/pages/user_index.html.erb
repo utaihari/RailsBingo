@@ -3,9 +3,9 @@
 
 	<% if !@opened_rooms.blank? %>
 	<div class="white-box">
-		<h2>主催しているビンゴ</h2>
+		<h3>主催しているビンゴ</h3>
 		<% for room in @opened_rooms %>
-		<div class="opened_rooms">
+		<div class="opened-rooms">
 			<p><%= link_to room.name, community_room_path(room.community_id, room.id), class: "btn btn-default" %></p>
 		</div>
 		<% end %>
@@ -14,9 +14,9 @@
 
 	<% if !@joind_rooms.blank? %>
 	<div class="white-box">
-		<h2>現在参加中のビンゴ</h2>
+		<h3>現在参加中のビンゴ</h3>
 		<% for room in @joind_rooms %>
-		<div class="joind_rooms">
+		<div class="joind-rooms">
 			<p><%= link_to room.name , join_room_path(room.community_id,room.id), class: "btn btn-default" %></p>
 		</div>
 		<% end %>
@@ -27,10 +27,10 @@
 
 	<% if !@opened_communities.blank? %>
 	<div class="white-box">
-		<h2>現在開催中のビンゴ</h2>
+		<h3>現在開催中のビンゴ</h3>
 		<% @opened_communities.each do |community| %>
-		<div class="opened_community">
-			<p><%= link_to community.name, community_path(community.id),class: "btn btn-default" %></p>
+		<div class="opened-community">
+			<p><%= link_to community.name+"("+community.community_name+")", community_path(community.id),class: "btn btn-default" %></p>
 		</div>
 		<% end %>
 	</div>
@@ -38,9 +38,9 @@
 
 	<% if !@own_communities.blank? %>
 	<div class="white-box">
-		<h2>あなたのコミュニティ一覧</h2>
+		<h3>あなたのコミュニティ一覧</h3>
 		<% @own_communities.each do |community| %>
-		<div class="own_communities" >
+		<div class="own-communities" >
 			<p><%= link_to community.name, community_path(community.id),class: "btn btn-default" %></p>
 		</div>
 		<% end %>
@@ -50,9 +50,9 @@
 
 	<% if !@joined_communities.blank? %>
 	<div class="white-box">
-		<h2>参加中のコミュニティ一覧</h2>
+		<h3>参加中のコミュニティ一覧</h3>
 		<% @joined_communities.each do |community| %>
-		<div class="joined_communities" >
+		<div class="joined-communities" >
 			<p><%= link_to community.name, community_path(community.id),class: "btn btn-default" %></p>
 		</div>
 		<% end %>
@@ -60,7 +60,8 @@
 	<% end %>
 
 	<p>
-		<%= link_to "コミュニティ作成", new_community_path, class: "btn btn-info btn-lg" %>
+		<%= link_to "ビンゴを開催する", rooms_direct_new_path, class: "btn btn-info btn-lg" %>
+		<%= link_to "コミュニティ作成", new_community_path, class: "btn btn-success btn-lg" %>
 		<%= link_to 'コミュニティを探す', communities_path, class: "btn btn-primary btn-lg" %>
 	</p>
 

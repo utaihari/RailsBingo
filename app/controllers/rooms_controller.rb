@@ -1,7 +1,7 @@
 # coding: utf-8
 class RoomsController < ApplicationController
   before_action :set_room, only: [:show, :edit, :update, :destroy]
-  before_action :room_params, only: [:edit, :update, :create]
+  before_action :room_params, only: [:update, :create]
 
   def index
   end
@@ -16,7 +16,7 @@ class RoomsController < ApplicationController
     @room = @community.room.build
 
     if @communities.length == 1
-      redirect_to controller: 'rooms', action: 'new'
+      redirect_to controller: 'rooms', action: 'new', community_id: @communities[0].id
     end
   end
   def create
@@ -27,7 +27,7 @@ class RoomsController < ApplicationController
     end
 
     number_rate = Array.new(75,10)
-    @room = @community.room.build(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail], profit: params[:room][:profit].to_i, bingo_score: params[:room][:bingo_score].to_i, riichi_score: params[:room][:riichi_score].to_i, hole_score: params[:room][:hole_score].to_i, rates:number_rate.join(","))
+    @room = @community.room.build(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail], number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i, bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f, rates:number_rate.join(","))
 
     if @room.save
       redirect_to controller: 'rooms', action: 'show', id: @room.id
@@ -66,9 +66,18 @@ class RoomsController < ApplicationController
   end
 
   def update
+    @room.update(room_params)
+    redirect_to controller: 'rooms', action: 'show', community_id: params[:community_id], id: params[:id]
   end
 
   def destroy
+    @community = Community.find(params[:community_id])
+    @room = Room.find(params[:id])
+    @room.destroy
+    respond_to do |format|
+      format.html { redirect_to community_path(params[:community_id]), notice: '削除しました' }
+      format.json { head :no_content }
+    end
   end
 
   def pre_join
@@ -109,17 +118,20 @@ class RoomsController < ApplicationController
   end
 
   def result
-    @room = Room.find_by(id:params[:room_id])
+    @room = Room.joins(:community).joins(:user).find_by(id:params[:room_id])
     if !isRoomOrganizer(params[:room_id])
       render :text => "主催者ではありません"
     end
     @bingo_list = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("seconds","times","name","email")
     @room.isFinished = true
     @room.save
+    if !@room.can_bring_item
+      UserItemList.destroy_all(room_id: @room.id, temp: true)
+    end
   end
 
   def add_number
-    @room = Room.find(params[:room_id])
+    @room = Room.joins(:community).joins(:user).find(params[:room_id])
 
     if params[:number] == nil
       render :json => "不正なパラメータです" and return
@@ -160,7 +172,7 @@ class RoomsController < ApplicationController
     numbers = @room.rates.split(",")
     return_nums = []
     numbers.each { |num|
-      return_nums << Integer(num)
+      return_nums << num.to_f
     }
     render :json => return_nums
   end
@@ -184,7 +196,7 @@ class RoomsController < ApplicationController
   end
 
   def start_game
-    @room = Room.find_by(id: params[:room_id])
+    @room = Room.joins(:community).joins(:user).find_by(id: params[:room_id])
     if @room == nil
       render :json => "不正なパラメータです" and return
     end
@@ -267,7 +279,7 @@ class RoomsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def room_params
-    params.require(:room).permit(:name, :canUseItem, :AllowGuest, :AllowJoinDuringGame, :detail, :profit, :bingo_score, :riichi_score, :hole_score)
+    params.require(:room).permit(:name, :canUseItem, :AllowGuest, :AllowJoinDuringGame, :detail, :profit, :bingo_score, :riichi_score, :hole_score, :number_of_free, :can_bring_item)
   end
 
   def isRoomOrganizer(room_id)

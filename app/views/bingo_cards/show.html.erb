@@ -1,53 +1,50 @@
-<%= javascript_include_tag "velocity.min.js" %>
-<%= javascript_include_tag "tabtab.min.js" %>
 <%= javascript_include_tag "bingo_cards.js" %>
+<%= javascript_include_tag "jquery.easytabs.min.js" %>
+
+<div class="yellow-filter">
+	<div id="notice" class="text-center" onclick="show_notice_list()"></div>
+	<div id="notice-list" style="display: none;"></div>
+</div>
+<div id="result" style="display: none;">
+	<a href="#modal">結果を表示</a>
+</div>
 <div class="remodal-bg">
-	<div class="tabs">
-		<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %> data-community_id=<%= @community.id %> data-get_item=<%= !@get_items.blank? %>></div>
-
-		<div class="center70">
-			<div class="yellow-filter">
-				<div id="notice" class="text-center" onclick="show_notice_list()"></div>
-				<div id="notice_list" style="display: none;"></div>
-			</div>
-			<div id="result" style="display: none;">
-				<a href="#modal">結果を表示</a>
-			</div>
-
-			<div class="remodal" data-remodal-id="modal">
-				<button data-remodal-action="close" class="remodal-close"></button>
-				<%= render :partial => "result" %>
-				<button data-remodal-action="confirm" class="remodal-confirm">OK</button>
-			</div>
-			<div class="remodal" data-remodal-id="getitem">
-				<button data-remodal-action="close" class="remodal-close"></button>
-				<%= render :partial => "get_items", :locals => { items: @get_items } %>
-				<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
-			</div>
-			<!-- <p>次のナンバー　→<span id="last_number"></span></p> -->
+	<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %> data-community_id=<%= @community.id %> data-get_item=<%= !@get_items.blank? %>></div>
+	<div class="center70">
+		<div class="remodal" data-remodal-id="modal">
+			<button data-remodal-action="close" class="remodal-close"></button>
+			<%= render :partial => "result" %>
+			<div id="get-items"></div>
+			<button data-remodal-action="confirm" class="remodal-confirm">OK</button>
 		</div>
-		<ul class="tabs__menu foo">
-			<li><a href="#">カード</a></li>
-			<li><a href="#">過去の番号</a></li>
-			<% if @room.canUseItem %>
-			<li><a href="#">アイテム</a></li>
-			<% end %>
-		</ul>
-		<div class="tabs__content">
-			<div id="card_area" class="center-block tabs-item">
-				<%= render :partial => "bingo-card", :locals => { numbers: @numbers } %>
-			</div>
-			<div id="past_numbers" class="tabs-item">
-				<p>過去の番号</p>
-				<div id="number_list_wrapper">
-					<ul id="number_list"></ul>
-				</div>
-			</div>
-			<% if @room.canUseItem %>
-			<div class="tabs-item" id="items">
-			</div>
-			<% end %>
+		<div class="remodal" data-remodal-id="getitem">
+			<button data-remodal-action="close" class="remodal-close"></button>
+			<%= render :partial => "get_items", :locals => { items: @get_items } %>
+			<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
 		</div>
+		<!-- <p>次のナンバー　→<span id="last_number"></span></p> -->
 	</div>
 
+	<div id="tab-container" class="tab-container">
+		<ul class='etabs'>
+			<li class='tab'><a href="#card-area">カード</a></li>
+			<li class='tab'><a href="#past-numbers">過去の番号</a></li>
+			<% if @room.canUseItem %>
+			<li class='tab'><a href="#items">アイテム</a></li>
+			<% end %>
+		</ul>
+		<div id="card-area" class="center-block">
+			<%= render :partial => "bingo-card", :locals => { numbers: @numbers } %>
+		</div>
+		<div id="past-numbers">
+			<p>過去の番号</p>
+			<div id="number-list-wrapper">
+				<ul id="number-list"></ul>
+			</div>
+		</div>
+		<% if @room.canUseItem %>
+		<div id="items">
+		</div>
+		<% end %>
+	</div>
 </div>

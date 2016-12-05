@@ -83,7 +83,7 @@ check_bingo_users  = (room_id) ->
 	return
 
 @view_mail_address =(obj) ->
-	$(obj).children('.view_mail_addess').toggle()
+	$(obj).children('.view-mail-addess').toggle()
 	return
 
 @open_bingo_users_window = (obj)->

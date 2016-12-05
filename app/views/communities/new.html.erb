@@ -1,5 +1,7 @@
 <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
-<script type="text/javascript">bkLib.onDomLoaded('community-detail');</script>
+<script type="text/javascript">bkLib.onDomLoaded(function() {
+        new nicEditor().panelInstance('community-detail');
+        });</script>
 <%= javascript_include_tag "communities" %>
 <div class="center70">
 	<h2>コミュニティ作成</h2>

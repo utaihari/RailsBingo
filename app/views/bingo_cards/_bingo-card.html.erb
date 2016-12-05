@@ -1,4 +1,4 @@
-<table boder = "3" id="bingo_card" align="center">
+<table boder = "3" id="bingo-card" align="center">
 	<thead>
 		<tr class="bingo_char">
 			<th class="text-center">B</th>
@@ -14,9 +14,9 @@
 	<tr>
 		<%end%>
 		<% if num > 0 %>
-		<td data-number=<%= num %> class="bingo_number text-center" onclick="number_click(this, <%= i %>)"><%= num %></td>
+		<td data-number=<%= num %> class="bingo-number text-center" onclick="number_click(this, <%= i %>)"><%= num %></td>
 		<% else %>
-		<td class="bingo_number free text-center" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
+		<td class="bingo-number free text-center" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
 		<% end %>
 		<%i += 1%>
 		<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>
@@ -24,4 +24,4 @@
 	<%end%>
 	<%end%>
 </table>
-<div id="bingo_button" style="display: none;"><button onclick="bingo()" class="btn btn-danger btn-lg center-block">BINGO</button></div>
+<div id="bingo-button" style="display: none;"><button onclick="bingo()" class="btn btn-danger btn-lg center-block">BINGO</button></div>

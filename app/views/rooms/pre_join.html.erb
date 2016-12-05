@@ -1,6 +1,6 @@
 <div class="center70">
 	<h1><%= @room.name %></h1>
-	<div id="room_detail">
+	<div id="room-detail">
 		<p>部屋ＩＤ <%= @room.id %></p>
 	</div>
 	<% if !@room.AllowJoinDuringGame && @room.isPlaying  %>
@@ -13,18 +13,19 @@
 		<% else %>
 		<p>このゲームではビンゴした際に主催者にあなたのメールアドレスが通知されます</p>
 		<p>部屋ＩＤをもう一度確認し、信頼できない場合は参加しないでください</p>
+		<p>あなたのメールアドレス（正しくない場合は修正してください）　：　<%= current_user.email %></p>
 		<% end %>
-		<%= link_to "ゲームに参加", join_room_path(@community.id, @room.id) %>
+		<%= link_to "ゲームに参加", join_room_path(@community.id, @room.id), class: "btn btn-lg btn-primary" %>
 	</div>
 	<% else %>
 	<div>
 		<p>ゲームに参加するにはログインが必要です</p>
 
-		<%= link_to "ログイン", new_user_session_direct_game_path(Users::RegistrationsController::FROM_JOIN_ROOM, @community.id, @room.id) %>
+		<%= link_to "ログイン", new_user_session_direct_game_path(Users::RegistrationsController::FROM_JOIN_ROOM, @community.id, @room.id), class: "btn btn-lg btn-info" %>
 		<% if @room.AllowGuest %>
-		<%= link_to "ゲストとして参加", new_user_registrations_direct_game_path(Users::RegistrationsController::FROM_JOIN_ROOM, @community.id, @room.id, 1) %>
+		<%= link_to "ゲストとして参加", new_user_registrations_direct_game_path(Users::RegistrationsController::FROM_JOIN_ROOM, @community.id, @room.id, 1), class: "btn btn-lg btn-secondary" %>
 		<% end %>
-		<%= link_to "新規登録", new_user_registration_path %>
+		<%= link_to "新規登録", new_user_registration_path, class: "btn btn-lg btn-info" %>
 	</div>
 	<% end %>
 	<% end %>

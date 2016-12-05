@@ -14,7 +14,7 @@
 
 
 	<% if !@opened_rooms.blank? %>
-	<div id="opend_rooms" class="white-box">
+	<div id="opend-rooms" class="white-box">
 		<h2>現在開催中のビンゴ</h2>
 		<% @opened_rooms.each do |room| %>
 		<div class="room">
@@ -24,7 +24,7 @@
 	</div>
 	<% end %>
 	<% if @isOrganizer %>
-	<div id="closed_rooms" class="white-box">
+	<div id="closed-rooms" class="white-box">
 		<h2>終了したビンゴ <span class="note">（部屋作成後１週間で自動的に削除されます）</span></h2>
 		<% @closed_rooms.each do |room| %>
 		<div class="room">
@@ -36,13 +36,13 @@
 	<br>
 	<div class="white-box">
 		<h2 onclick="show_members()">参加者一覧 <span class="note">(クリックして表示)</span></h2>
-		<div id="community_members" style="display: none;">
+		<div id="community-members" style="display: none;">
 			<% @members.each do |member| %>
 			<div class="member">
 				<% if member.user.id == @community.user_id %>
 				<p class="organizer"><%= member.user.name %><span class="note">(管理者)</span></p>
 				<% elsif current_user.id == member.user.id%>
-				<p class="my_self"><%= member.user.name %></p>
+				<p class="my-self"><%= member.user.name %></p>
 				<% else %>
 				<p class="other"><%= member.user.name %></p>
 				<% end %>
