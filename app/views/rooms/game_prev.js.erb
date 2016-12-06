@@ -1,0 +1,2 @@
+$( ('#game-prev' ) ).html('<%= j( render :partial => "game-prev", :locals => { community: @community, room: @room, isRoomOrganizer: @isRoomOrganizer, isRoomMember: @isRoomMember, members: @members, svg: @svg, url: @url } ) %>');
+$( ('#game-main' ) ).html('');

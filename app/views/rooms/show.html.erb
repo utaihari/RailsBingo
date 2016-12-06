@@ -1,12 +1,7 @@
 <%= javascript_include_tag "rooms.js" %>
-<%= javascript_include_tag "velocity.min.js" %>
-<%= javascript_include_tag "tabtab.min.js" %>
-<script>
-	$('.tabs').tabtab();
-</script>
 
 <div class="center70">
-	<div id="data" data-room_id=<%= @room.id %> data-condition=<%= @room.isPlaying %>></div>
+	<div id="data" data-community_id=<%= @community.id %> data-room_id=<%= @room.id %> data-condition=<%= @room.isPlaying %>></div>
 	<h1><%= @room.name %></h1>
 	<div id="notice"></div>
 	<% if @room.AllowGuest %>
@@ -25,51 +20,35 @@
 	<div><%= raw @room.detail %></div>
 
 	<% if @isRoomOrganizer %>
-	<div id="primary" data-mercury="full">
-	</div>
 	<% if @room.isPlaying %>
-
-	<div class="white-box">
-		<%= render :partial => "number-generator", :locals => { room: @room } %>
-		<%= link_to '別ウィンドウで開く',tool_number_generator_path(@community.id,@room.id),
-		:onclick=>"window.open(this.href,'番号選出', 'height=400, width=300');return false;" %>
+	<div id="game-main">
+		<%= render :partial => "game_main", :locals => { community: @community, room: @room　} %>
 	</div>
-	<div class="white-box">
-		<%= render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url } %>
-		<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(@community.id, @room.id),
-		:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
-	</div>
-	<div class="white-box">
-		<%= render :partial => "bingo-users" %>
-		<%= link_to '別ウィンドウで開く',tool_bingo_users_path(@room.id),
-		:onclick=>"open_bingo_users_window(this);return false;" %>
-	</div>
-
 	<% else %>
-	<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
-	<br>
+	<div id="game-prev">
+		<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
+	</div>
+	<% end %>
+	<% else %>
 	<div class="white-box">
-		<%= render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url } %>
+		<%= render :partial => "qr-code", :locals => { room: @room, svg: @svg, url: @url } %>
 		<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(@community.id, @room.id),
 		:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
 	</div>
-
+	<% if @isRoomMember %>
+	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id, @room.id, @card.id) ,class: "btn btn-info"%>
+	<% else %>
+	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id, @room.id),　class: "btn btn-info btn-sm" %>
 	<% end %>
-	<% if @room.isPlaying %>
-	<%= link_to "ゲームを終わる", community_room_result_path(@community.id,@room.id) ,class:"btn btn-info"%>
 	<% end %>
+	<div class="white-box">
+		<%= render :partial => "members", :locals => {members: @members, room_id: @room.id } %>
+		<%= link_to '別ウィンドウで開く',tool_members_path(@community.id, @room.id),
+		:onclick=>"window.open(this.href,'メンバー', 'height=600, width=400');return false;" %>
+	</div>
+	<% if @isRoomOrganizer %>
 	<%= link_to "部屋情報を修正する", edit_community_room_path(@community.id, @room.id) , class: "btn btn-info btn-sm" %>
 	<%= link_to 'この部屋を削除', community_room_path, method: :delete, class: "btn btn-danger btn-sm" ,data: { confirm: '本当に削除してもよろしいですか?' } %>
-	<% else %>
-	<% if @isRoomMember %>
-	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id,@room.id,@card.id) ,class: "btn btn-info"%>
-	<% else %>
-	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id,@room.id),　class: "btn btn-info btn-sm" %>
 	<% end %>
-	<% end %>
-	<div class="white-box">
-	<%= render :partial => "members", :locals => {members: @members, room_id: @room.id } %>
-	<%= link_to '別ウィンドウで開く',tool_members_path(@community.id, @room.id),
-		:onclick=>"window.open(this.href,'QRコード', 'height=600, width=400');return false;" %>
-	</div>
+
 </div>

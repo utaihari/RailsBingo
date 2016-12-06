@@ -197,8 +197,9 @@ class RoomsController < ApplicationController
     return
   end
 
-  def start_game
-    @room = Room.joins(:community).joins(:user).find_by(id: params[:room_id])
+  def game_main
+    @community = Community.find(params[:community_id])
+    @room = Room.joins(:community).joins(:user).find(params[:room_id])
     if @room == nil
       render :json => "不正なパラメータです" and return
     end

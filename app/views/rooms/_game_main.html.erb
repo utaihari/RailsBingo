@@ -1,0 +1,12 @@
+<div class="white-box">
+	<%= render :partial => "number-generator", :locals => { room: room } %>
+	<%= link_to '別ウィンドウで開く',tool_number_generator_path(community.id, room.id),
+	:onclick=>"window.open(this.href,'番号選出', 'height=400, width=300');return false;" %>
+</div>
+<div class="white-box">
+	<%= render :partial => "bingo-users" %>
+	<%= link_to '別ウィンドウで開く',tool_bingo_users_path(room.id),
+	:onclick=>"open_bingo_users_window(this);return false;" %>
+</div>
+
+<%= link_to "ゲームを終わる", community_room_result_path(community.id,room.id) ,class:"btn btn-info"%>

@@ -6,6 +6,7 @@ rate = []
 bingo_users = []
 
 $(->
+	@community_id = $("#data").data("community_id")
 	@room_id = $("#data").data("room_id")
 	@condition = $("#data").data("condition")
 	console.log(@condition)
@@ -47,19 +48,8 @@ $(->
 	return
 
 @start_game = (room_id) ->
-	$.ajaxSetup({async: false});
-	$.post('/API/start_game', {room_id: room_id}, (data) ->
-		return
-		)
-	$('#notice').text("ゲームを開始中です。３秒以内に画面が切り替わらない場合は、ブラウザを更新してください。")
-	setTimeout(->
-        location.reload()
-        $('#notice').text("")
-        @check_bingo = setInterval(->
-        	check_bingo_users(room_id)
-        ,5000)
-    ,1000);
-    condition = 1
+	$.get("/API/#{@community_id}/#{room_id}/game_main")
+	condition = 1
 	return
 
 bingo_users_length = 0
