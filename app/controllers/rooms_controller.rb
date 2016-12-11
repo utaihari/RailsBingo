@@ -53,7 +53,9 @@ class RoomsController < ApplicationController
     if @community == nil || @room == nil
       redirect_to 'pages_index_path'
     end
-    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).select("users.id AS id, users.name, bingo_cards.id AS card_id")
+
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+    @cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
 
     @url = "http://"+request.domain+pre_join_room_path(@community.id,@room.id)
     qrcode = RQRCode::QRCode.new(@url)
@@ -157,6 +159,11 @@ class RoomsController < ApplicationController
     end
   end
 
+  def get_notices
+    notices = RoomNotice.where(room_id: params[:room_id]).order("created_at DESC")
+    render :json => notices.to_json
+  end
+
   def get_number
     numbers = RoomNumber.where(room_id: params[:room_id]).select("number")
     return_nums = []
@@ -207,6 +214,12 @@ class RoomsController < ApplicationController
     @room.save
 
     RoomNumber.create(room_id: @room.id, number: -1)
+  end
+
+  def member_list
+    @room = Room.joins(:community).joins(:user).find(params[:room_id])
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+    @cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
   end
 
   def check_rank
@@ -270,7 +283,9 @@ class RoomsController < ApplicationController
   def tool_members
     @room = Room.find(params[:room_id])
     @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id")
-    render :partial => "members", :locals => {members: @members, room_id: @room.id }, :layout => false and return
+    @cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
+    logger.debug("room_id: "+@room.id.to_s)
+    render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards}, :layout => false and return
   end
 
   private

@@ -20,21 +20,22 @@
 	<div><%= raw @room.detail %></div>
 
 	<% if @isRoomOrganizer %>
-	<% if @room.isPlaying %>
+
 	<div id="game-main">
-		<%= render :partial => "game_main", :locals => { community: @community, room: @room　} %>
+		<% if @room.isPlaying %>
+		<%= render :partial => "game_main", :locals => {community: @community, room: @room} %>
+		<% end %>
 	</div>
-	<% else %>
 	<div id="game-prev">
 		<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
 	</div>
-	<% end %>
-	<% else %>
+
 	<div class="white-box">
 		<%= render :partial => "qr-code", :locals => { room: @room, svg: @svg, url: @url } %>
 		<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(@community.id, @room.id),
 		:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
 	</div>
+	<% else %>
 	<% if @isRoomMember %>
 	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id, @room.id, @card.id) ,class: "btn btn-info"%>
 	<% else %>
@@ -42,7 +43,7 @@
 	<% end %>
 	<% end %>
 	<div class="white-box">
-		<%= render :partial => "members", :locals => {members: @members, room_id: @room.id } %>
+		<%= render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards } %>
 		<%= link_to '別ウィンドウで開く',tool_members_path(@community.id, @room.id),
 		:onclick=>"window.open(this.href,'メンバー', 'height=600, width=400');return false;" %>
 	</div>

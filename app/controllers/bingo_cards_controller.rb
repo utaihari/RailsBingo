@@ -307,6 +307,8 @@ class BingoCardsController < ApplicationController
 		end
 
 		card.checks = checks.join(",")
+		card.riichi_lines = params[:riichi_lines].to_i
+		card.holes += 1
 		if card.save
 			render :json => checks
 		else
@@ -323,6 +325,9 @@ class BingoCardsController < ApplicationController
 		community = Community.find(params[:community_id])
 		room = Room.joins(:community).find(params[:room_id])
 		item = Item.find(params[:item_id])
+
+		notice = "#{item.name}を使用しました"
+		RoomNotice.create(user_name: current_user.name, notice: notice)
 
 		user_item = UserItemList.joins(:user).joins(:community).joins(:item).find_by(user_id: current_user.id, community_id: community.id, item_id: item.id)
 		if room.isPlaying && !item.AllowUseDuringGame
@@ -445,6 +450,10 @@ class BingoCardsController < ApplicationController
 		if !check_bingo(card_id) || BingoUser.exists?(room_id: room_id, user_id: current_user.id)
 			render :json => true and return
 		end
+
+		card = BingoCard.find(card_id)
+		card.bingo_lines += 1
+		card.save
 
 		BingoUser.create(room_id: room_id, user_id: current_user.id, times: times, seconds: seconds)
 		render :json => true and return

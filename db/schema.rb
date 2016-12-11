@@ -10,15 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161204173519) do
+ActiveRecord::Schema.define(version: 20161207155454) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
     t.integer  "user_id"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.string   "numbers",    default: ""
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+    t.string   "numbers",      default: ""
     t.string   "checks"
+    t.integer  "bingo_lines",  default: 0
+    t.integer  "riichi_lines", default: 0
+    t.integer  "holes",        default: 0
   end
 
   create_table "bingo_users", force: :cascade do |t|
@@ -83,6 +86,14 @@ ActiveRecord::Schema.define(version: 20161204173519) do
     t.float    "effect",             default: 0.0
     t.boolean  "is_select_number",   default: false
     t.integer  "item_type",          default: 0
+  end
+
+  create_table "room_notices", force: :cascade do |t|
+    t.integer  "room_id"
+    t.text     "notice",     default: ""
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.text     "user_name"
   end
 
   create_table "room_numbers", force: :cascade do |t|

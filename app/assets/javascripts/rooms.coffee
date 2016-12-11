@@ -9,11 +9,6 @@ $(->
 	@community_id = $("#data").data("community_id")
 	@room_id = $("#data").data("room_id")
 	@condition = $("#data").data("condition")
-	console.log(@condition)
-	if @condition == true
-        @check_bingo = setInterval(->
-        	check_bingo_users(room_id)
-        ,5000)
 )
 
 @rate_update =(room_id) ->
@@ -23,7 +18,13 @@ $(->
 		return
 		)
 	return
-
+@notices_update = ->
+	$.getJSON('/API/get_notices', {room_id: room_id}, (json) ->
+		for i in json
+			$('#notices').prepend("<div><span class=\"user_name\">#{i.user_name}</span><span>#{i.notice}</span>")
+		return
+		)
+	return
 @get_random_number = ->
 	numbers = []
 	for r, index in rate
@@ -48,15 +49,15 @@ $(->
 	return
 
 @start_game = (room_id) ->
-	$.get("/API/#{@community_id}/#{room_id}/game_main")
+	$.get("/API/game_main/#{@community_id}/#{room_id}")
 	condition = 1
 	return
 
 bingo_users_length = 0
 @bingo_users_window
-check_bingo_users  = (room_id) ->
+@check_bingo_users  = ->
 	$.ajaxSetup({async: false});
-	$.getJSON('/API/check_bingo_users',{room_id: room_id},(json)->
+	$.getJSON('/API/check_bingo_users',{room_id: @room_id},(json)->
 		bingo_users = json
 	)
 
@@ -80,4 +81,6 @@ check_bingo_users  = (room_id) ->
 	@bingo_users_window = window.open(obj.href, "ビンゴリスト", 'height=300, width=400')
 	return
 
-
+@joined_user_update = (room_id) ->
+	$.get("/API/member_list/#{room_id}")
+	return
