@@ -34,7 +34,7 @@
 			<% end %>
 		</ul>
 		<div id="card-area" class="center-block">
-			<%= render :partial => "bingo-card", :locals => { numbers: @numbers } %>
+			<%= render :partial => "bingo-card", :locals => { numbers: @numbers, checks: @checks } %>
 		</div>
 		<div id="past-numbers">
 			<p>過去の番号</p>

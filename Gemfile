@@ -56,3 +56,11 @@ gem 'rqrcode'
 
 # html_editer
 # gem 'bootsy'
+
+gem 'capistrano', '~> 3.0.1'
+gem 'capistrano-rails'
+gem 'capistrano-bundler'
+
+platforms :ruby do
+  gem 'unicorn'
+end

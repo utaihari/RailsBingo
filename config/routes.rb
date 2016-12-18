@@ -43,6 +43,7 @@ Rails.application.routes.draw do
 	# get 'TOOLS/number-generator/:room_id', to: 'rooms#tool_number_generator', as:'tool_number-generator'
 	get 'TOOLS/qr-code/:community_id/:room_id', to: 'rooms#tool_qr_code', as:'tool_qr_code'
 	get 'TOOLS/bingo-users/:room_id', to: 'rooms#tool_bingo_users', as:'tool_bingo_users'
+	get 'TOOLS/notices/:room_id', to: 'rooms#tool_notices', as:'tool_notices'
 	get 'TOOLS/bingo-card/:card_id', to: 'bingo_cards#tool_bingo_card', as:'tool_bingo_card'
 	get 'TOOLS/others-card/:user_id/:room_id/:card_id', to: 'bingo_cards#tool_others_card', as:'tool_others_card'
 
@@ -67,6 +68,7 @@ Rails.application.routes.draw do
 	get 'API/get_checked_number', to: 'bingo_cards#get_checked_number',as:'get_checked_number'
 	post 'API/done_bingo', to: 'bingo_cards#done_bingo', as: 'done_bingo'
 	get 'API/check_items', to: 'bingo_cards#check_items', as: 'check_items'
+	get 'API/check_riichi', to: 'bingo_cards#check_riichi'
 	get 'API/:community_id/:room_id/items', to: 'bingo_cards#items', as: 'items'
 	get 'API/:community_id/:room_id/bingo_card', to: 'bingo_cards#bingo_card', as: 'bingo_cards'
 	get 'API/:community_id/:room_id/get_items/:lines/:riichis/:holes', to: 'bingo_cards#get_items', as: 'get_items'

@@ -39,7 +39,6 @@ $(->
 
 game_start_check =  ->
 	@check_condition()
-	console.log(condition)
 	if condition == 1
 		notice.push("ゲームが始まりました")
 		@update_numbers = setInterval(->
@@ -145,8 +144,9 @@ update_list = ->
 
 @check_number = (index) ->
 	calc_number_of_riichi()
+	console.log('riichi_num :'+number_of_one_left_line)
 	$.ajaxSetup({async: false});
-	$.getJSON('/API/check_number',{card_id: @card_id, index: index, riichi_lines: number_of_one_left_line},(json)->
+	$.getJSON('/API/check_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: number_of_one_left_line},(json)->
 		checks[index] = (json[index] == 't')
 	)
 	return
@@ -171,11 +171,11 @@ update_list = ->
 	room_id = $("#data").data("room_id")
 	@numbers_update()
 	@checks_update()
-	$('.bingo-number').each( (i,e)->
-		if jQuery.inArray(Number($(e).data('number')), numbers) >= 0
-			$(e).toggleClass("checked", checks[i])
-		return
-	)
+	# $('.bingo-number').each( (i,e)->
+	# 	if jQuery.inArray(Number($(e).data('number')), numbers) >= 0
+	# 		$(e).toggleClass("checked", checks[i])
+	# 	return
+	# )
 	update_list()
 	@update_items()
 	return
@@ -237,14 +237,12 @@ using_item_id = 0
 @select_number = (item_id) ->
 	choosing_number = true
 	using_item_id = item_id
-	console.log($('.tabs').tabtab())
 	# .tabSwitch($('#card_area'), $('#items'))
 
 	notice.push("アイテムを使う数字を選んでください")
 	return
 
 @show_select_window = (item_id) ->
-	console.log('[data-remodal-id=modal-select'+item_id+']')
 	modalInstance = $.remodal.lookup[$('[data-remodal-id=modal-select'+item_id+']').data('remodal')]
 	modalInstance.open()
 	$('#select-notice').text("")
@@ -334,7 +332,6 @@ calc_number_of_riichi = ->
 	for check in checks
 		if check == true
 			holes.push(1)
-			number_of_hole++
 		else
 			holes.push(0)
 

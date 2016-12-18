@@ -1,19 +1,17 @@
 <div class="white-box">
-	<%= render :partial => "number-generator", :locals => {room: room} %>
+	<%= render :partial => "number-generator", :locals => {room: room , isWindow: false} %>
 	<%= link_to '別ウィンドウで開く',tool_number_generator_path(community.id, room.id),
 	:onclick=>"window.open(this.href,'番号選出', 'height=400, width=300');return false;" %>
 </div>
 <div class="white-box">
-<h3>お知らせ一覧<button type="button" class="btn btn-primary btn-xs" onclick="notices_update()">更新</button>
-<button type="button" class="btn btn-success btn-xs" onclick="$('.user_name').toggle();">ユーザー名表示切替</button></h3>
-
-	<div id="notices">
-	</div>
+	<%= render :partial => "notices", :locals => {isWindow: false, room_id: room.id} %>
+	<%= link_to '別ウィンドウで開く',tool_notices_path(room.id),
+	:onclick=>"window.open(this.href,'お知らせ一覧', 'height=600, width=600');return false;"  %>
 </div>
 <div class="white-box">
-	<%= render :partial => "bingo-users" %>
+	<%= render :partial => "bingo-users", :locals => {isWindow: false} %>
 	<%= link_to '別ウィンドウで開く',tool_bingo_users_path(room.id),
 	:onclick=>"open_bingo_users_window(this);return false;" %>
 </div>
 
-<%= link_to "ゲームを終わる", community_room_result_path(community.id,room.id) ,class:"btn btn-info"%>
+<%= link_to "ゲームを終わる", community_room_result_path(community.id, room.id), class:"btn btn-info", data: {confirm: '本当に終了してもよろしいですか?'} %>

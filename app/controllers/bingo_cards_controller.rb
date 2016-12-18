@@ -72,7 +72,7 @@ class BingoCardsController < ApplicationController
 		@checks = numberlist.checks.split(",")
 		@card = BingoCard.find(params[:card_id])
 		user_name = User.find(params[:user_id]).name
-		render :partial => "others-card", :locals => {user_name: user_name,  room: @room, card: @card, numbers: @numbers, checks: @checks }, :layout => false and return
+		render :partial => "others-card", :locals => {user_name: user_name,  room: @room, card: @card, numbers: @numbers, checks: @checks, isWindow: true }, :layout => false and return
 	end
 
 	def distribute_item(community_id, room_id)
@@ -201,6 +201,7 @@ class BingoCardsController < ApplicationController
 		numbers.each{|n|
 			@numbers << n.to_i
 		}
+		@checks = numberlist.checks.split(",")
 	end
 	def make_bingo_num(free_num)
 		numbers =[]
@@ -306,6 +307,9 @@ class BingoCardsController < ApplicationController
 			checks[index] = "t"
 		end
 
+		if card.riichi_lines != params[:riichi_lines].to_i
+			RoomNotice.create(room_id: params[:room_id], user_name: current_user.name, notice: "リーチ！")
+		end
 		card.checks = checks.join(",")
 		card.riichi_lines = params[:riichi_lines].to_i
 		card.holes += 1
@@ -327,7 +331,7 @@ class BingoCardsController < ApplicationController
 		item = Item.find(params[:item_id])
 
 		notice = "#{item.name}を使用しました"
-		RoomNotice.create(user_name: current_user.name, notice: notice)
+		RoomNotice.create!(room_id: room.id, user_name: current_user.name, notice: notice)
 
 		user_item = UserItemList.joins(:user).joins(:community).joins(:item).find_by(user_id: current_user.id, community_id: community.id, item_id: item.id)
 		if room.isPlaying && !item.AllowUseDuringGame
@@ -373,7 +377,7 @@ class BingoCardsController < ApplicationController
 		numbers_unchecked = []
 
 		numbers.each_with_index do |number, index|
-			if checks[index] == 'f' && room_numbers_rate[number.to_i + 1].to_i != 0 && number != -1
+			if checks[index] == 'f' && room_numbers_rate[number.to_i + 1].to_i != 0 && number.to_i != -1
 				numbers_unchecked.push(number)
 			end
 		end
@@ -413,11 +417,12 @@ class BingoCardsController < ApplicationController
 		if numbers_unchecked.blank?
 			return
 		end
-		logger.debug("numbers_unchecked"+numbers_unchecked.to_s)
+		logger.debug("numbers_unchecked "+numbers_unchecked.to_s)
 		selected_num = numbers_unchecked[rand(numbers_unchecked.length()+1)]
 
 		numbers.each_with_index do |number,index|
 			if number == selected_num
+				logger.debug("nunbers_selected:"+numbers[index].to_s)
 				numbers[index] = -1
 			end
 		end

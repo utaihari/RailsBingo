@@ -1,7 +1,10 @@
+<% if isWindow %>
 <%= stylesheet_link_tag "application", :media => "all" %>
 <%= javascript_include_tag "application" %>
 <%= javascript_include_tag "rooms-number-generator" %>
 <%= csrf_meta_tags %>
+<% end %>
+
 <div id="number-generator">
 	<%= image_tag 'generator.png', :size => '300x250'%>
 	<div id="number-display"></div>

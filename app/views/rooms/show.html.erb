@@ -27,11 +27,13 @@
 		<% end %>
 	</div>
 	<div id="game-prev">
-		<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info" >ビンゴゲームを始める</button>
+		<% if !@room.isPlaying %>
+		<button id="start-button" onclick="start_game(<%= @room.id %>)" class="btn btn-info">ビンゴゲームを始める</button>
+		<% end %>
 	</div>
 
 	<div class="white-box">
-		<%= render :partial => "qr-code", :locals => { room: @room, svg: @svg, url: @url } %>
+		<%= render :partial => "qr-code", :locals => { room: @room, svg: @svg, url: @url, isWindow: false } %>
 		<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(@community.id, @room.id),
 		:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
 	</div>
@@ -43,13 +45,13 @@
 	<% end %>
 	<% end %>
 	<div class="white-box">
-		<%= render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards } %>
+		<%= render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards, isWindow: false } %>
 		<%= link_to '別ウィンドウで開く',tool_members_path(@community.id, @room.id),
 		:onclick=>"window.open(this.href,'メンバー', 'height=600, width=400');return false;" %>
 	</div>
 	<% if @isRoomOrganizer %>
-	<%= link_to "部屋情報を修正する", edit_community_room_path(@community.id, @room.id) , class: "btn btn-info btn-sm" %>
-	<%= link_to 'この部屋を削除', community_room_path, method: :delete, class: "btn btn-danger btn-sm" ,data: { confirm: '本当に削除してもよろしいですか?' } %>
+	<%= link_to "部屋情報を修正する", edit_community_room_path(@community.id, @room.id), class: "btn btn-info btn-sm" %>
+	<%= link_to 'この部屋を削除', community_room_path, method: :delete, class: "btn btn-danger btn-sm", data: { confirm: '本当に削除してもよろしいですか?' } %>
 	<% end %>
 
 </div>

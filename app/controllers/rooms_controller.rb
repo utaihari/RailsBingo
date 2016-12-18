@@ -130,7 +130,7 @@ class RoomsController < ApplicationController
     @room.isFinished = true
     @room.save
     if !@room.can_bring_item
-      UserItemList.destroy_all(room_id: @room.id, temp: true)
+      UserItemList.delete_all(room_id: @room.id, temp: true)
     end
   end
 
@@ -160,7 +160,7 @@ class RoomsController < ApplicationController
   end
 
   def get_notices
-    notices = RoomNotice.where(room_id: params[:room_id]).order("created_at DESC")
+    notices = RoomNotice.where(room_id: params[:room_id]).order("created_at ASC")
     render :json => notices.to_json
   end
 
@@ -264,7 +264,7 @@ class RoomsController < ApplicationController
   #TOOLS
   def tool_number_generator
     @room = Room.find(params[:room_id])
-    render "_number-generator", :locals => { room: @room },:layout => false and return
+    render "_number-generator", :locals => { room: @room, isWindow: true },:layout => false and return
   end
   def tool_qr_code
     @room = Room.find(params[:room_id])
@@ -274,18 +274,21 @@ class RoomsController < ApplicationController
     @svg = qrcode.as_svg(offset: 0, color: '000',
       shape_rendering: 'crispEdges',
       module_size: 3)
-    render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url }, :layout => false and return
+    render :partial => "qr-code", :locals => { room:@room, svg: @svg, url: @url, isWindow: true }, :layout => false and return
   end
   def tool_bingo_users
     @room = Room.find(params[:room_id])
-    render :partial => "bingo-users", :layout => false and return
+    render :partial => "bingo-users", :locals => {isWindow: true}, :layout => false and return
+  end
+  def tool_notices
+    render :partial => "notices", :locals => {room_id: params[:room_id], isWindow: true}, :layout => false and return
   end
   def tool_members
     @room = Room.find(params[:room_id])
     @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id")
     @cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
     logger.debug("room_id: "+@room.id.to_s)
-    render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards}, :layout => false and return
+    render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards, isWindow: true}, :layout => false and return
   end
 
   private

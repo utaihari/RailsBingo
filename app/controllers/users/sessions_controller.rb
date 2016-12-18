@@ -8,10 +8,11 @@ class Users::SessionsController < Devise::SessionsController
     @community_id = nil
     @room_id = nil
     @isDirectGame = false
-
+    session[:dest_url] = pages_user_index_path
     if params[:community_id] != nil || params[:room_id] != nil
       @community_id = params[:community_id]
       @room_id = params[:room_id]
+      session[:dest_url] = join_room_path(@community_id, @room_id)
       @isDirectGame = true
     end
     super

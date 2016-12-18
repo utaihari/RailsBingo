@@ -34,7 +34,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
         session[:dest_url] = join_room_path(@community_id, @room_id)
       end
     else
-      session[:dest_url] = pages_index_path
+      session[:dest_url] = pages_user_index_path
     end
     super
   end
