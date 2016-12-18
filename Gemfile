@@ -60,6 +60,7 @@ gem 'rqrcode'
 gem 'capistrano', '~> 3.0.1'
 gem 'capistrano-rails'
 gem 'capistrano-bundler'
+gem 'capistrano-rbenv'
 
 platforms :ruby do
   gem 'unicorn'

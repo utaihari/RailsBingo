@@ -17,9 +17,9 @@
 # property set. Specify the username and a domain or IP for the server.
 # Don't use `:all`, it's a meta role.
 
-# role :app, %w{root@160.16.223.100}, my_property: :my_value
-# role :web, %w{root@160.16.223.100}, other_property: :other_value
-# role :db,  %w{root@160.16.223.100}
+role :app, %w{root@160.16.223.100}
+role :web, %w{root@160.16.223.100}
+role :db,  %w{root@160.16.223.100}
 
 
 
@@ -41,11 +41,11 @@
 #
 # Global options
 # --------------
-#  set :ssh_options, {
-#    keys: %w(/home/rlisowski/.ssh/id_rsa),
-#    forward_agent: false,
-#    auth_methods: %w(password)
-#  }
+ # set :ssh_options, {
+ #   keys: %w(C:\key\id_rsa.ppk),
+ #   forward_agent: false,
+ #   auth_methods: %w(ta08hari)
+ # }
 #
 # The server-based syntax can be used to override options:
 # ------------------------------------
@@ -64,8 +64,8 @@ server "160.16.223.100",
   roles: %w{web app db},
   ssh_options: {
     # user: "taketu", # overrides user setting above
-    keys: %w(C:\key\id_rsa.ppk),
+    keys: %w(C:\key\id_rsa),
     forward_agent: false,
-    auth_methods: %w(ta08hari),
-    password: "ta08hari"
+    auth_methods: %w(publickey)
+    # password: "ta08hari"
   }
