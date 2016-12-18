@@ -32,3 +32,6 @@ set :default_env, { path: "/usr/local/rbenv/shims:/usr/local/rbenv/bin:$PATH" }
 
 # Default value for keep_releases is 5
 # set :keep_releases, 5
+
+set :password, ask('Server password', nil)
+server '160.16.223.100', user: 'taketu', port: 22, password: fetch(:password), roles: %w{web app db}

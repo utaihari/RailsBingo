@@ -3,9 +3,9 @@
 # Defines a single server with a list of roles and multiple properties.
 # You can define all roles on a single server, or split them:
 
-# server "example.com", user: "deploy", roles: %w{app db web}, my_property: :my_value
-# server "example.com", user: "deploy", roles: %w{app web}, other_property: :other_value
-# server "db.example.com", user: "deploy", roles: %w{db}
+# server "160.16.223.100", user: "root", roles: %w{app db web}, my_property: :my_value
+# server "160.16.223.100", user: "root", roles: %w{app web}, other_property: :other_value
+# server "160.16.223.100", user: "root", roles: %w{db}
 
 
 
@@ -17,9 +17,9 @@
 # property set. Specify the username and a domain or IP for the server.
 # Don't use `:all`, it's a meta role.
 
-# role :app, %w{deploy@example.com}, my_property: :my_value
-# role :web, %w{user1@primary.com user2@additional.com}, other_property: :other_value
-# role :db,  %w{deploy@example.com}
+# role :app, %w{root@160.16.223.100}, my_property: :my_value
+# role :web, %w{root@160.16.223.100}, other_property: :other_value
+# role :db,  %w{root@160.16.223.100}
 
 
 
@@ -60,12 +60,12 @@
 #     # password: "please use keys"
 #   }
 server "160.16.223.100",
-  user: "user_name",
-  roles: %w{web app},
+  user: "taketu",
+  roles: %w{web app db},
   ssh_options: {
-    user: "taketu", # overrides user setting above
-    keys: %w(/home/taketu/.ssh/id_rsa),
+    # user: "taketu", # overrides user setting above
+    keys: %w(C:\key\id_rsa.ppk),
     forward_agent: false,
-    auth_methods: %w(ta08hari)
-    # password: "please use keys"
+    auth_methods: %w(ta08hari),
+    password: "ta08hari"
   }

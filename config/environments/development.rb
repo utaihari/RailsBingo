@@ -62,4 +62,5 @@ Rails.application.configure do
     Bullet.add_footer = true
   end
   config.log_level = :debug
+
 end
