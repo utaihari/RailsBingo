@@ -41,29 +41,31 @@
 <body>
 	<nav class="navbar navbar-default navbar-static-top">
 		<div class="container navbar-header">
-			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-menu-1">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<%= link_to "BingoLive!", root_path, class:"navbar-brand" %>
-			<div class="navbar-collapse collapse navbar-responsive-collapse" id="nav-menu-1">
-				<ul class="nav navbar-nav">
-					<% if user_signed_in? %>
-					<% if !current_user.isGuest %>
-					<li><%= link_to 'マイページ', pages_user_index_path %></li>
-					<li><%= link_to 'プロフィール変更', edit_user_registration_path %></li>
-					<li><%= link_to 'ログアウト', destroy_user_session_path, method: :delete %></li>
-					<% else %>
-					<li><%= link_to "ゲストとして参加中", pages_user_index_path %></li>
-					<li><%= link_to 'ゲームを離脱', destroy_user_session_path, method: :delete, data: { confirm: '本当に終了してもよろしいですか?' }%></li>
-					<% end %>
+			<div class="center70">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#nav-menu-1">
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+				</button>
+				<%= link_to "BingoLive!", root_path, class:"navbar-brand" %>
+				<div class="navbar-collapse collapse navbar-responsive-collapse" id="nav-menu-1">
+					<ul class="nav navbar-nav">
+						<% if user_signed_in? %>
+						<% if !current_user.isGuest %>
+						<li><%= link_to 'マイページ', pages_user_index_path %></li>
+						<li><%= link_to 'プロフィール変更', edit_user_registration_path %></li>
+						<li><%= link_to 'ログアウト', destroy_user_session_path, method: :delete %></li>
+						<% else %>
+						<li><%= link_to "ゲストとして参加中", pages_user_index_path %></li>
+						<li><%= link_to 'ゲームを離脱', destroy_user_session_path, method: :delete, data: { confirm: '本当に終了してもよろしいですか?' }%></li>
+						<% end %>
 
-					<% else %>
-					<li><%= link_to '新規登録', new_user_registration_path %></li>
-					<li><%= link_to 'ログイン', new_user_session_path %></li>
-					<% end %>
-				</ul>
+						<% else %>
+						<li><%= link_to '新規登録', new_user_registration_path %></li>
+						<li><%= link_to 'ログイン', new_user_session_path %></li>
+						<% end %>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</nav>
