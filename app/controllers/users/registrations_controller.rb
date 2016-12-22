@@ -44,13 +44,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
     if params[:room] != nil
       params.require(:room).permit(:name)
       params.require(:room).permit(:direct)
-    end
-    if params[:room][:direct] != nil && params[:room][:direct] == 't'
-      @community = Community.find(0)
-      number_rate = Array.new(75,10)
-      @room = @community.room.build(user_id: 0, community_id: 0, name: params[:room][:name], AllowGuest: true, rates:number_rate.join(","))
-      @room.save
-      session[:dest_url] = community_room_path(0, @room.id)
+      if params[:room][:direct] != nil && params[:room][:direct] == 't'
+        @community = Community.find(0)
+        number_rate = Array.new(75,10)
+        @room = @community.room.build(user_id: 0, community_id: 0, name: params[:room][:name], AllowGuest: true, rates:number_rate.join(","))
+        @room.save
+        session[:dest_url] = community_room_path(0, @room.id)
+      end
     end
     super
     if params[:user][:isGuest] == 't'
