@@ -1,4 +1,6 @@
 <h2>ビンゴを開催</h2>
+<div>ユーザー登録するとアイテム機能などを利用できます</div>
+<%= link_to "新規登録",  new_user_registration_path %>
 <div>
   <%= devise_error_messages! %>
   <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
