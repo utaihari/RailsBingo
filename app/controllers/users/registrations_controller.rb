@@ -41,6 +41,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    if params[:room] != nil
+      params.require(:room).permit(:name)
+      params.require(:room).permit(:direct)
+    end
     if params[:room][:direct] != nil && params[:room][:direct] == 't'
       @community = Community.find(0)
       number_rate = Array.new(75,10)
@@ -92,8 +96,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # If you have extra params to permit, append them to the sanitizer.
   def configure_sign_up_params
     devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :detail])
-    params.require(:room).permit(:name)
-    params.require(:room).permit(:direct)
   end
 
   # If you have extra params to permit, append them to the sanitizer.
