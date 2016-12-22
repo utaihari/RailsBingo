@@ -58,9 +58,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
       guest.isGuest = true
       guest.save
     end
-    if params[:room][:direct] != nil && params[:room][:direct] == 't'
-      @room.user_id = current_user.id
-      @room.save
+    if params[:room] != nil
+      if params[:room][:direct] != nil && params[:room][:direct] == 't'
+        @room.user_id = current_user.id
+        @room.save
+      end
     end
   end
 
