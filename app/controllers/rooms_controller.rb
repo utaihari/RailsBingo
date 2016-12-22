@@ -57,7 +57,7 @@ class RoomsController < ApplicationController
     @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
     @cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
 
-    @url = "http://bingo-live"+pre_join_room_path(@community.id,@room.id)
+    @url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)
     qrcode = RQRCode::QRCode.new(@url)
     @svg = qrcode.as_svg(offset: 0, color: '000',
       shape_rendering: 'crispEdges',
