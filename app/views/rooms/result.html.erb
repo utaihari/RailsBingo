@@ -5,9 +5,10 @@
 	<div class="white-box">
 		<h3>ビンゴしたユーザー一覧</h3>
 		<% if !@bingo_list.blank? %>
-		<% for user in @bingo_list %>
+		<% @bingo_list.each_with_index do |user, i| %>
 		<div>
 			<div>
+				<div><%= i+1 %>位</div>
 				<%= user.name %> さん
 				<span onclick="view_mail_address(this)">
 					<a href="#" onclick="">メールアドレス表示</a>

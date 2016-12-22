@@ -417,12 +417,10 @@ class BingoCardsController < ApplicationController
 		if numbers_unchecked.blank?
 			return
 		end
-		logger.debug("numbers_unchecked "+numbers_unchecked.to_s)
 		selected_num = numbers_unchecked[rand(numbers_unchecked.length()+1)]
 
 		numbers.each_with_index do |number,index|
 			if number == selected_num
-				logger.debug("nunbers_selected:"+numbers[index].to_s)
 				numbers[index] = -1
 			end
 		end
@@ -455,6 +453,9 @@ class BingoCardsController < ApplicationController
 		if !check_bingo(card_id) || BingoUser.exists?(room_id: room_id, user_id: current_user.id)
 			render :json => true and return
 		end
+
+		notice = "ビンゴ！"
+		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice)
 
 		card = BingoCard.find(card_id)
 		card.bingo_lines += 1

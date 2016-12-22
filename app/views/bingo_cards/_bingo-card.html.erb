@@ -14,7 +14,7 @@
 	<tr>
 		<% end %>
 		<% if num > 0 %>
-		<td data-number=<%= num %> class="bingo-number text-center <%= if checks[i]=='t' then 'checked' end %>}" onclick="number_click(this, <%= i %>)"><%= num %></td>
+		<td data-number=<%= num %> class="bingo-number text-center <%= if checks[i]=='t' then 'checked' end %>" onclick="number_click(this, <%= i %>)"><%= num %></td>
 		<% else %>
 		<td class="bingo-number text-center free <%= if checks[i]=='t' then 'checked' end %>" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
 		<% end %>

@@ -1,13 +1,17 @@
 <%= javascript_include_tag "bingo_cards.js" %>
 <%= javascript_include_tag "jquery.easytabs.min.js" %>
+<% if !@room.canUseItem %>
+<%= javascript_include_tag "remodal.min.js" %>
+<% end %>
 
 <div class="yellow-filter">
 	<div id="notice" class="text-center" onclick="show_notice_list()"></div>
 	<div id="notice-list" style="display: none;"></div>
 </div>
 <div id="result" style="display: none;">
-	<a href="#modal">結果を表示</a>
+	<a href="#modal" class="btn btn-default btn-lg">結果を表示</a>
 </div>
+
 <div class="remodal-bg">
 	<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %> data-community_id=<%= @community.id %> data-get_item=<%= !@get_items.blank? %>></div>
 	<div class="center70">
@@ -22,7 +26,6 @@
 			<%= render :partial => "get_items", :locals => { items: @get_items } %>
 			<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
 		</div>
-		<!-- <p>次のナンバー　→<span id="last_number"></span></p> -->
 	</div>
 
 	<div id="tab-container" class="tab-container">

@@ -143,10 +143,9 @@ update_list = ->
 	return
 
 @check_number = (index) ->
-	calc_number_of_riichi()
-	console.log('riichi_num :'+number_of_one_left_line)
+	checks[index] = true
 	$.ajaxSetup({async: false});
-	$.getJSON('/API/check_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: number_of_one_left_line},(json)->
+	$.getJSON('/API/check_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: calc_number_of_riichi()},(json)->
 		checks[index] = (json[index] == 't')
 	)
 	return
@@ -348,7 +347,7 @@ calc_number_of_riichi = ->
 		number_of_one_left_line++
 	if (holes[4]+holes[8]+holes[12]+holes[16]+holes[20]) == 4
 		number_of_one_left_line++
-	return
+	return number_of_one_left_line
 
 
 set_number_of_bingos = ->
