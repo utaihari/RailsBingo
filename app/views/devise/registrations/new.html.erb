@@ -1,5 +1,7 @@
 <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
-<script type="text/javascript">bkLib.onDomLoaded('user-detail');</script>
+<script type="text/javascript">bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('user-detail');
+});</script>
 
 <div class="center70">
   <% if @source == Users::RegistrationsController::FROM_TOP_PAGE %>
