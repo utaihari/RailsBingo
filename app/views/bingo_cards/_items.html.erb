@@ -31,6 +31,11 @@
 					<button data-remodal-action="close" class="remodal-close"></button>
 					<h2><%= item.name %></h2>
 					<p>残り <span class=<%= "q-"+item.id.to_s %>><%= item.quantity %></span>個</p>
+					<% if item.AllowUseDuringGame != 't' %>
+						<div class="items-no-use-playing">
+					<% else %>
+						<div>
+					<% end %>
 					<% if item.AllowUseDuringGame != 't' && room.isPlaying %>
 					<p>このアイテムはゲーム中に使用できません</p>
 					<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
@@ -46,6 +51,7 @@
 					<% end %>
 					<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
 					<% end %>
+					</div>
 				</div>
 				<% if item.item_type == 1 %>
 
