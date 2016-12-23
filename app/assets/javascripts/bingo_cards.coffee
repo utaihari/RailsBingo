@@ -41,6 +41,7 @@ game_start_check =  ->
 	@check_condition()
 	if condition == 1
 		notice.push("ゲームが始まりました")
+		@update_items()
 		@update_numbers = setInterval(->
 			@numbers_update()
 			update_list()
