@@ -13,7 +13,7 @@
 		<tr>
 			<td><%= item.name %></td>
 			<td>
-				<% if item.AllowUseDuringGame == 't' %>
+				<% if item.AllowUseDuringGame == true || item.AllowUseDuringGame == 't' %>
 				可
 				<% else %>
 				不可
