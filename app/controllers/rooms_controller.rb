@@ -269,7 +269,7 @@ class RoomsController < ApplicationController
   def tool_qr_code
     @room = Room.find(params[:room_id])
     @community = Community.find(params[:community_id])
-    @url = "http://"+request.domain+pre_join_room_path(@community.id,@room.id)
+    @url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)
     qrcode = RQRCode::QRCode.new(@url)
     @svg = qrcode.as_svg(offset: 0, color: '000',
       shape_rendering: 'crispEdges',
