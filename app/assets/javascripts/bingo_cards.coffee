@@ -41,7 +41,7 @@ game_start_check =  ->
 	@check_condition()
 	if condition == 1
 		notice.push("ゲームが始まりました")
-		@update_items()
+		change_item_detail()
 		@update_numbers = setInterval(->
 			@numbers_update()
 			update_list()
@@ -356,4 +356,8 @@ set_number_of_bingos = ->
 	$('#number-of-bingo').text(number_of_bingo)
 	$('#number-of-one-left-line').text(number_of_one_left_line)
 	$('#number-of-hole').text(number_of_hole)
+	return
+
+change_item_detail = ->
+	$('.items-no-use-playing').text("このアイテムはゲーム中に使用できません")
 	return
