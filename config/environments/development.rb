@@ -63,4 +63,17 @@ Rails.application.configure do
   end
   config.log_level = :debug
 
+
+  config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+
+  config.action_mailer.smtp_settings = {
+    :enable_starttls_auto => true,
+    :address => "smtp.gmail.com",
+    :port => 587,
+    :domain => 'smtp.gmail.com',
+    :user_name => Settings[:gmail][:user_name],
+    :password => Settings[:gmail][:password],
+    :authentication => 'login',
+  }
+
 end

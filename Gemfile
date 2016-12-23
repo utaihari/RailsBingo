@@ -57,10 +57,7 @@ gem 'rqrcode'
 # html_editer
 # gem 'bootsy'
 
-gem 'capistrano', '~> 3.0.1'
-gem 'capistrano-rails'
-gem 'capistrano-bundler'
-gem 'capistrano-rbenv'
+gem 'config'
 
 platforms :ruby do
   gem 'unicorn'
