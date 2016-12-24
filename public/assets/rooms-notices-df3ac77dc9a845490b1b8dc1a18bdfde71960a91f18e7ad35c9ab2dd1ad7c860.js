@@ -1,0 +1,1 @@
+(function(){this.notices_update=function(n){$.getJSON("/API/get_notices",{room_id:n},function(n){var e,t,s;for($("#notices").text(""),t=0,s=n.length;t<s;t++)e=n[t],$("#notices").prepend('<div><span class="user_name">'+e.user_name+"\u3055\u3093: </span> <span>"+e.notice+"</span>")})}}).call(this);
