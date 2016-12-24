@@ -1,0 +1,165 @@
+/* line 5, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.checked {
+  color: #ff69b4;
+}
+
+/* line 8, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.bingo-char {
+  font-size: 40px;
+}
+
+/* line 12, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+table {
+  table-layout: fixed;
+}
+
+/* line 15, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+td {
+  width: 80px;
+  height: 80px;
+  padding: 0px;
+  margin: 0px;
+}
+
+/* line 21, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+#card-area {
+  width: 400px;
+}
+
+/* line 24, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+#bingo-card {
+  table-layout: fixed;
+  width: 400px;
+  margin-right: auto;
+  margin-left: auto;
+}
+/* line 29, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+#bingo-card .bingo-number {
+  background-color: rgba(204, 255, 255, 0.7);
+  font-size: 30px;
+}
+/* line 34, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+#bingo-card .free {
+  font-size: 20px;
+}
+
+/* line 39, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.num-range {
+  font-size: 10px;
+}
+
+/* line 46, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+#numbers #last-number {
+  color: #ff3000;
+  font-size: 40px;
+}
+
+@media only screen and (max-width: 400px) {
+  /* line 53, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+  #card-area {
+    width: 100%;
+  }
+
+  /* line 56, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+  #bingo-card {
+    table-layout: fixed;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  /* line 61, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+  #bingo-card .bingo-number {
+    background-color: rgba(204, 255, 255, 0.7);
+    font-size: 30px;
+  }
+  /* line 66, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+  #bingo-card .free {
+    font-size: 20px;
+  }
+}
+/* line 73, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+ul.foo {
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  padding-bottom: 2px;
+  padding-left: 0px;
+}
+
+/* line 80, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+ul.foo li {
+  display: table-cell;
+  vertical-align: middle;
+  text-align: center;
+  background-color: #FFAAFF;
+  border-left: 1px solid white;
+  height: 35px;
+}
+
+/* line 88, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+ul.foo li:first-child {
+  border: none;
+}
+
+/* line 91, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+ul.foo li a {
+  display: block;
+  text-decoration: none;
+  color: dimgrey;
+  font-size: 20px;
+}
+
+/* line 98, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.etabs {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 102, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.tab {
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  background: #eee;
+  border: solid 1px #999;
+  border-bottom: none;
+  -moz-border-radius: 4px 4px 0 0;
+  -webkit-border-radius: 4px 4px 0 0;
+}
+
+/* line 112, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.tab a {
+  font-size: 14px;
+  line-height: 2em;
+  display: block;
+  padding: 0 10px;
+  outline: none;
+}
+
+/* line 119, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.tab a:hover {
+  text-decoration: underline;
+}
+
+/* line 123, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.tab.active {
+  background: #fff;
+  padding-top: 6px;
+  position: relative;
+  top: 1px;
+  border-color: #666;
+}
+
+/* line 130, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.tab a.active {
+  font-weight: bold;
+}
+
+/* line 133, /home/taketu/github/RailsGame/app/assets/stylesheets/bingo_cards.scss */
+.tab-container .panel-container {
+  background: #fff;
+  border: solid #666 1px;
+  padding: 10px;
+  -moz-border-radius: 0 4px 4px 4px;
+  -webkit-border-radius: 0 4px 4px 4px;
+}

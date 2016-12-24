@@ -119,13 +119,13 @@ ActiveRecord::Schema.define(version: 20161207155454) do
     t.boolean  "isFinished",          default: false, null: false
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.boolean  "canUseItem",          default: false
+    t.boolean  "canUseItem"
     t.string   "rates"
     t.boolean  "AllowGuest",          default: false
     t.text     "detail",              default: ""
-    t.         "bingo_score",         default: "0.0"
-    t.         "riichi_score",        default: "0.5"
-    t.         "hole_score",          default: "0.2"
+    t.float    "bingo_score",         default: 0.2
+    t.float    "riichi_score"
+    t.float    "hole_score"
     t.boolean  "AllowJoinDuringGame", default: true
     t.integer  "user_id"
     t.integer  "profit",              default: 0
