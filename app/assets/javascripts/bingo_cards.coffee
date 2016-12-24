@@ -215,6 +215,23 @@ update_list = ->
 	$('.q-'+item_id).text(q)
 	return
 
+@use_item_all = (item_id, update_card) ->
+
+	room_id = @room_id
+	community_id = @community_id
+
+	$.ajaxSetup({async: false});
+	$.getJSON('/API/use_item_all',{community_id: @community_id, room_id: @room_id, item_id: item_id},(json)->
+		notice.push(json)
+		if update_card
+			$.get("/API/#{community_id}/#{room_id}/bingo_card")
+		return
+		)
+
+	$('.item-rows-'+item_id).hide()
+
+	return
+
 @use_item_select_number = (item_id, number) ->
 	$.ajaxSetup({async: false});
 	s_notice = ""

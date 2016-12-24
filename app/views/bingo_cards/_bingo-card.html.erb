@@ -1,6 +1,6 @@
 <table boder = "3" id="bingo-card" align="center">
 	<thead>
-		<tr class="bingo_char">
+		<tr class="bingo-char">
 			<th class="text-center">B</th>
 			<th class="text-center">I</th>
 			<th class="text-center">N</th>
@@ -19,7 +19,7 @@
 		<td class="bingo-number text-center free <%= if checks[i]=='t' then 'checked' end %>" data-number=-1 onclick="number_click(this, <%= i %>)">FREE</td>
 		<% end %>
 		<%i += 1%>
-		<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25then %>
+		<% if i == 5 || i == 10 || i == 15  || i == 20 || i == 25 then %>
 	</tr>
 	<%end%>
 	<%end%>

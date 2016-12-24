@@ -1,0 +1,25 @@
+<table boder = "3" id="added-numbers" align="center">
+	<thead>
+		<tr class="bingo-char">
+			<th class="text-center">B</th>
+			<th class="text-center">I</th>
+			<th class="text-center">N</th>
+			<th class="text-center">G</th>
+			<th class="text-center">O</th>
+		</tr>
+	</thead>
+	<% 15.times do |num| %>
+	<tr>
+		<% 5.times do |i| %>
+		<td>
+			<div class="number-wrapper">
+				<div class="added-number-icon icon icon-cross"></div>
+				<div id=added-<%= num+i*15+1 %> class="added-number text-center">
+					<%= num+i*15+1 %>
+				</div>
+			</td>
+		</div>
+		<% end %>
+	</tr>
+	<%end%>
+</table>

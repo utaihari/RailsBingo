@@ -40,9 +40,8 @@
 			<%= render :partial => "bingo-card", :locals => { numbers: @numbers, checks: @checks } %>
 		</div>
 		<div id="past-numbers">
-			<p>過去の番号</p>
-			<div id="number-list-wrapper">
-				<ul id="number-list"></ul>
+			<div id="added-numbers-area">
+				<%= render :partial => "added_numbers" %>
 			</div>
 		</div>
 		<% if @room.canUseItem %>

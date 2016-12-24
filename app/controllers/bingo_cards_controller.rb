@@ -21,7 +21,7 @@ class BingoCardsController < ApplicationController
 		if !@room.can_bring_item
 			room_id = @room.id
 		end
-		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("items.name, items.AllowUseDuringGame, items.id, quantity, items.item_type").order("items.name")
+		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type").order("items.name")
 
 		@get_items = distribute_item(params[:community_id], params[:room_id])
 	end
@@ -46,7 +46,7 @@ class BingoCardsController < ApplicationController
 		if !@room.can_bring_item
 			room_id = @room.id
 		end
-		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("items.name, items.AllowUseDuringGame, items.id, quantity, items.item_type").order("items.name")
+		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type").order("items.name")
 		render :action => 'show', community_id: params[:community_id], room_id: params[:room_id], id: @card.id
 	end
 
@@ -133,7 +133,7 @@ class BingoCardsController < ApplicationController
 		if !@room.can_bring_item
 			room_id = @room.id
 		end
-		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("items.name, items.AllowUseDuringGame, items.id, quantity, items.item_type")
+		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type")
 		numberlist = BingoCard.find_by(user_id: current_user.id, room_id: params[:room_id])
 		@numbers = []
 		numbers = numberlist.numbers.split(",")
@@ -326,14 +326,11 @@ class BingoCardsController < ApplicationController
 	end
 
 	def use_item
-		community = Community.find(params[:community_id])
 		room = Room.joins(:community).find(params[:room_id])
-		item = Item.find(params[:item_id])
+		user_item = UserItemList.find(params[:item_id])
+		item = Item.find(user_item.item_id)
 
-		notice = "#{item.name}を使用しました"
-		RoomNotice.create!(room_id: room.id, user_name: current_user.name, notice: notice)
 
-		user_item = UserItemList.joins(:user).joins(:community).joins(:item).find_by(user_id: current_user.id, community_id: community.id, item_id: item.id)
 		if room.isPlaying && !item.AllowUseDuringGame
 			render :json => "error1" and return
 		end
@@ -341,6 +338,9 @@ class BingoCardsController < ApplicationController
 		if user_item == nil
 			render :json => "error2" and return
 		end
+
+		notice = "#{item.name}を使用しました"
+		RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
 
 		quantity = user_item.quantity
 		if quantity == 1
@@ -368,6 +368,43 @@ class BingoCardsController < ApplicationController
 		end
 	end
 
+	def use_item_all
+		room = Room.joins(:community).find(params[:room_id])
+		user_item = UserItemList.find(params[:item_id])
+		item = Item.find(user_item.item_id)
+
+		if room.isPlaying && !item.AllowUseDuringGame
+			render :json => "error1" and return
+		end
+
+		if user_item == nil
+			render :json => "error2" and return
+		end
+
+		notice = "#{item.name}を#{user_item.quantity}個使用しました"
+		RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+
+		quantity = user_item.quantity
+
+		case item.item_type.to_i
+		when 0
+			selected_num = increase_rate_random_num_all(room.id, item.effect, quantity)
+			user_item.destroy
+			render :json => "#{selected_num.join(", ")} の確率が上昇しました".to_json and return
+		when 1
+			render :json => "このアイテムはまとめて使用できません".to_json and return
+		when 2
+			use_quantity = add_free_all(room.id, quantity)
+			if quantity - use_quantity <= 0
+				user_item.destroy
+			else
+				user_item.quantity -= use_quantity
+				user_item.save
+			end
+			render :json => "FREEが追加されました".to_json and return
+		end
+	end
+
 	def increase_rate_random_num(room_id, effect)
 		card = BingoCard.find_by(user_id:current_user.id, room_id:room_id)
 		room = Room.find(room_id)
@@ -386,6 +423,29 @@ class BingoCardsController < ApplicationController
 		increase_rate(room_id, effect, selected_num)
 		return selected_num
 	end
+
+	def increase_rate_random_num_all(room_id, effect, quantity)
+		card = BingoCard.find_by(user_id:current_user.id, room_id:room_id)
+		room = Room.find(room_id)
+		room_numbers_rate = room.rates.split(',')
+		numbers = card.numbers.split(',')
+		checks = card.checks.split(',')
+		numbers_unchecked = []
+
+		numbers.each_with_index do |number, index|
+			if checks[index] == 'f' && room_numbers_rate[number.to_i + 1].to_i != 0 && number.to_i != -1
+				numbers_unchecked.push(number)
+			end
+		end
+
+		selected_num = []
+		quantity.times{|i|
+			selected_num << numbers_unchecked[rand(numbers_unchecked.length())]
+		}
+		increase_rates(room_id, effect, selected_num)
+		return selected_num
+	end
+
 	def increase_rate(room_id, effect, number)
 		room = Room.joins(:user).joins(:community).find(room_id)
 		rates = room.rates.split(',')
@@ -398,6 +458,22 @@ class BingoCardsController < ApplicationController
 		increase = rate_size.to_f * effect.to_f
 		rates[number.to_i-1] = rates[number.to_i-1].to_i + increase
 
+		room.rates = rates.join(',')
+		room.save
+	end
+
+	def increase_rates(room_id, effect, numbers)
+		room = Room.joins(:user).joins(:community).find(room_id)
+		rates = room.rates.split(',')
+		rate_size = 0
+		rates.each do |rate|
+			rate_size += rate.to_i
+		end
+		numbers.each{|number|
+			increase = rate_size.to_f * effect.to_f
+			rates[number.to_i-1] = rates[number.to_i-1].to_i + increase
+			rate_size += increase
+		}
 		room.rates = rates.join(',')
 		room.save
 	end
@@ -424,6 +500,40 @@ class BingoCardsController < ApplicationController
 				numbers[index] = -1
 			end
 		end
+		card.numbers = numbers.join(',')
+		card.save
+	end
+
+	def add_free_all(room_id, quantity)
+		card = BingoCard.joins(:user).joins(:room).find_by(user_id:current_user.id, room_id:room_id)
+		room = Room.find(room_id)
+		room_numbers_rate = room.rates.split(',')
+		numbers = card.numbers.split(',')
+		checks = card.checks.split(',')
+		numbers_unchecked = []
+
+		numbers.each_with_index do |number, index|
+			if checks[index] == 'f' && room_numbers_rate[number.to_i-1].to_i != 0 && number.to_i != -1
+				numbers_unchecked.push(number)
+			end
+		end
+		if numbers_unchecked.blank?
+			return 0
+		end
+		quantity.times{|use_quantity|
+
+			selected_num = numbers_unchecked[rand(numbers_unchecked.length()+1)]
+
+			numbers.each_with_index do |number,index|
+				if number == selected_num
+					numbers[index] = -1
+				end
+			end
+			numbers_unchecked.delete(selected_num)
+			if numbers_unchecked.blank?
+				return use_quantity + 1
+			end
+		}
 		card.numbers = numbers.join(',')
 		card.save
 	end

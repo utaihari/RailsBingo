@@ -8,12 +8,16 @@ class RoomsController < ApplicationController
 
   def new
     @community = Community.find_by(id:params[:community_id])
-    @room = @community.room.build
+    last_room = Room.order(updated_at: :desc).find_by(community_id: @community.id)
+    if last_room == nil
+      @room = @community.room.build
+    else
+      @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: last_room.name, canUseItem: last_room.canUseItem, AllowGuest: last_room.AllowGuest, AllowJoinDuringGame: last_room.AllowJoinDuringGame, detail: last_room.detail, number_of_free: last_room.number_of_free.to_i, can_bring_item: last_room.can_bring_item, profit: last_room.profit.to_i, bingo_score: last_room.bingo_score.to_f, riichi_score: last_room.riichi_score.to_f, hole_score: last_room.hole_score.to_f)
+    end
   end
   def direct_new
     @community = Community.find(0)
     @communities = Community.joins(:community_administrator).where('community_administrators.user_id = ?', current_user.id)
-    @room = @community.room.build
 
     if @communities.length == 1
       redirect_to controller: 'rooms', action: 'new', community_id: @communities[0].id
@@ -27,7 +31,7 @@ class RoomsController < ApplicationController
     end
 
     number_rate = Array.new(75,10)
-    @room = @community.room.build(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail], number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i, bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f, rates:number_rate.join(","))
+    @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail], number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i, bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f, rates:number_rate.join(","))
 
     if @room.save
       redirect_to controller: 'rooms', action: 'show', id: @room.id
