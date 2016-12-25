@@ -1,7 +1,7 @@
 <%= javascript_include_tag "communities.js" %>
 <div class="center70">
 	<h1 onclick="show_detail()"><%= @community.name %><span class="note">(クリックして詳細表示)</span></h1>
-	<div id="community_detail" style="display: none;">
+	<div id="community-detail" style="display: none;">
 		<p>コミュニティID: <%= @community.id %></p>
 		<p>作成者: <%= @organizer.name %>, ID: <%= @organizer.id %></p>
 	</div>
