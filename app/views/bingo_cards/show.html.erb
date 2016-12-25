@@ -35,11 +35,12 @@
 			<% if @room.canUseItem %>
 			<li class='tab'><a href="#items">アイテム</a></li>
 			<% end %>
+			<li class='tab' onclick="joined_user_update()"><a href="#member-list">他人のカード</a></li>
 		</ul>
 		<div id="card-area" class="center-block">
 			<%= render :partial => "bingo-card", :locals => { numbers: @numbers, checks: @checks } %>
 		</div>
-		<div id="past-numbers">
+		<div id="past-numbers" class="center-block">
 			<div id="added-numbers-area">
 				<%= render :partial => "added_numbers" %>
 			</div>
@@ -48,5 +49,8 @@
 		<div id="items">
 		</div>
 		<% end %>
+		<div id="member-list" class="center-block">
+			<%= render :partial => "member_list", :locals => { members: @members, cards: @cards, room_id: @room.id } %>
+		</div>
 	</div>
 </div>

@@ -17,6 +17,8 @@ class BingoCardsController < ApplicationController
 		@checks = numberlist.checks.split(",")
 		@card = BingoCard.find(params[:id])
 
+		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: @room.id}, :room_user_lists => {room_id: @room.id}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+		@cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
 		room_id = 0
 		if !@room.can_bring_item
 			room_id = @room.id
@@ -33,6 +35,9 @@ class BingoCardsController < ApplicationController
 		if @card != nil
 			redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@card.id) and return
 		end
+
+		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: @room.id}, :room_user_lists => {room_id: @room.id}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+		@cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
 
 		@numbers = make_bingo_num(@room.number_of_free.to_i)
 		@checks =[]
@@ -73,6 +78,12 @@ class BingoCardsController < ApplicationController
 		@card = BingoCard.find(params[:card_id])
 		user_name = User.find(params[:user_id]).name
 		render :partial => "others-card", :locals => {user_name: user_name,  room: @room, card: @card, numbers: @numbers, checks: @checks, isWindow: true }, :layout => false and return
+	end
+
+	def member_list
+		@room = Room.joins(:community).joins(:user).find(params[:room_id])
+		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+		@cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
 	end
 
 	def distribute_item(community_id, room_id)

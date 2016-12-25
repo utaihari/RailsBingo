@@ -380,3 +380,6 @@ set_number_of_bingos = ->
 change_item_detail = ->
 	$('.items-no-use-playing').text("このアイテムはゲーム中に使用できません")
 	return
+@joined_user_update = ->
+	$.get("/API/member_list_from_card/#{@room_id}")
+	return
