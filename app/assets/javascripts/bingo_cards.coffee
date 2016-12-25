@@ -187,6 +187,7 @@ update_list = ->
 @bingo = ->
 	current_time = new Date()
 	if !check_bingo || done_bingo
+		$('#bingo-button').hide()
 		return
 	$.post('/API/done_bingo', {card_id: @card_id, room_id: @room_id, times: numbers.length, seconds: current_time-number_arrive_time}, (data) ->
 		done_bingo = data
