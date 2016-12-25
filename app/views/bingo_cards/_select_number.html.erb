@@ -16,11 +16,7 @@
 		<%end%>
 		<% if num > 0 %>
 		<td data-number=<%= num %> class="bingo-number text-center">
-			<% if checks[i] == 't' %>
-			<%= num %>
-			<% else %>
-			<button data-remodal-action="confirm" onclick="use_item_select_number(<%= item_id %>, <%= num %>)"><%= num %></button>
-			<% end %>
+			<button id=select-number-<%= num %> data-remodal-action="confirm" onclick="use_item_select_number(<%= item_id %>, <%= num %>)"><%= num %></button>
 		</td>
 		<% else %>
 		<td class="bingo-number free text-center" data-number=-1>FREE</td>

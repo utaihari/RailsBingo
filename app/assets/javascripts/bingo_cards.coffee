@@ -134,6 +134,8 @@ update_list = ->
 			notice.push("新しいナンバーは "+ numbers[numbers.length-1] + "です")
 			for i in [number_length..numbers.length]
 				$("#added-#{numbers[i-1]}").addClass("icon-cross")
+				if document.getElementById("select-number-#{numbers[i-1]}") != null
+					$("#select-number-#{numbers[i-1]}").hide()
 
 		number_length = numbers.length
 		$('ul#number-list').empty()
