@@ -46,6 +46,13 @@
       <%= f.text_area :detail, rows: 10, cols: 40, :style => 'width: 100%', :id => 'user-detail' %>
     </div>
 
+    <% if devise_mapping.rememberable? -%>
+    <div class="field">
+      <%= f.check_box :remember_me , {:checked => true} %>
+      <%= f.label :remember_me, "次回以降自動でログイン" %>
+    </div>
+    <% end -%>
+
     <div class="actions">
       <% if @source == Users::RegistrationsController::FROM_JOIN_ROOM %>
       <%= f.submit "新規登録してビンゴに参加" %>

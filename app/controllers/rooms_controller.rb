@@ -18,7 +18,7 @@ class RoomsController < ApplicationController
   def direct_new
     @community = Community.find(0)
     @communities = Community.joins(:community_administrator).where('community_administrators.user_id = ?', current_user.id)
-
+    @room = @community.room.build
     if @communities.length == 1
       redirect_to controller: 'rooms', action: 'new', community_id: @communities[0].id
     end
