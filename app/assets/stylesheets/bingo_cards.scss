@@ -34,15 +34,12 @@ td{
 	.free{
 		font-size: 20px;
 	}
-
 }
 .num-range{
 	font-size: 10px;
 }
 
 #numbers{
-	// width: 30%;
-	// float: left;
 	#last-number{
 		color: #ff3000;
 		font-size: 40px;
@@ -76,8 +73,8 @@ td{
 		margin-left : auto;
 	}
 }
-#card-area{
-	width:400px;
+#added-numbers-area{
+	width:100%;
 }
 
 #added-numbers{
@@ -132,30 +129,6 @@ td{
 		-o-transform: rotate(45deg);
 		transform: rotate(45deg);
 	}
-}
-ul.foo {
-	display:table;
-	table-layout:fixed;
-	width:100%;
-	padding-bottom: 2px;
-	padding-left: 0px;
-}
-ul.foo li {
-	display:table-cell;
-	vertical-align:middle;
-	text-align:center;
-	background-color:#FFAAFF;
-	border-left:1px solid white;
-	height: 35px;
-}
-ul.foo li:first-child {
-	border:none;
-}
-ul.foo li a {
-	display:block;
-	text-decoration:none;
-	color:dimgrey;
-	font-size: 20px;
 }
 
 .etabs {

@@ -40,7 +40,7 @@
 		<div id="card-area" class="center-block">
 			<%= render :partial => "bingo-card", :locals => { numbers: @numbers, checks: @checks } %>
 		</div>
-		<div id="past-numbers" class="center-block">
+		<div id="past-numbers">
 			<div id="added-numbers-area">
 				<%= render :partial => "added_numbers" %>
 			</div>
@@ -49,7 +49,7 @@
 		<div id="items">
 		</div>
 		<% end %>
-		<div id="member-list" class="center-block">
+		<div id="member-list">
 			<%= render :partial => "member_list", :locals => { members: @members, cards: @cards, room_id: @room.id } %>
 		</div>
 	</div>
