@@ -160,14 +160,11 @@ update_list = ->
 	if jQuery.inArray(Number($(obj).data('number')), numbers) >= 0
 		@check_number(index)
 		$(obj).toggleClass("checked", checks[index])
-		if check_bingo()
+		if check_bingo() && !done_bingo
 			$('#bingo-button').show()
 		else
 			$('#bingo-button').hide()
 		return
-	if choosing_number
-		choosing_number = false
-		use_item_select_number(using_item_id, $(obj).data('number'))
 
 	return
 
