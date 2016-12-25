@@ -254,8 +254,7 @@ update_list = ->
 
 hide_added_number = ->
 	for number in numbers
-		if document.getElementById("select-number-#{number}") != null
-			$("#select-number-#{number}").hide()
+		$(".select-number-#{number}").hide()
 
 @show_select_window = (item_id) ->
 	hide_added_number()
