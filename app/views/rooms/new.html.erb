@@ -32,13 +32,13 @@
 	</div>
 	<div class="form-group" >
 		<%= f.label :canUseItem, "アイテム使用許可" %>
-		<span onclick="show_room_detail()"><%= f.check_box :canUseItem ,{},"true","false" %></span>
+		<span onclick="show_room_detail()"><%= f.check_box :canUseItem ,{:id => "canUseItem" },"true","false"%></span>
 	</div>
 
 	<div id="item-setting" style="display:none;">
 		<div class="form-group" >
 			<%= f.label :can_bring_item, "アイテム持ち込み許可" %>
-			<span onclick="show_profit_item_detail()"><%= f.check_box :can_bring_item ,{},"true","false" %></span>
+			<span onclick="show_profit_item_detail()"><%= f.check_box :can_bring_item ,{:id => "can_bring_item"},"true","false" %></span>
 		</div>
 		<p>開始時に配布するアイテムの枚数</p>
 		<div class="form-group">

@@ -132,6 +132,8 @@ update_list = ->
 	if number_length isnt numbers.length
 		if numbers[numbers.length-1] isnt -1
 			notice.push("新しいナンバーは "+ numbers[numbers.length-1] + "です")
+			for i in [number_length..numbers.length]
+				$("#added-#{numbers[i-1]}").addClass("icon-cross")
 
 		number_length = numbers.length
 		$('ul#number-list').empty()

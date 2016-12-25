@@ -381,13 +381,12 @@ class BingoCardsController < ApplicationController
 			render :json => "error2" and return
 		end
 
-		notice = "#{item.name}を#{user_item.quantity}個使用しました"
-		RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
-
 		quantity = user_item.quantity
 
 		case item.item_type.to_i
 		when 0
+			notice = "#{item.name}を#{user_item.quantity}個使用しました"
+			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
 			selected_num = increase_rate_random_num_all(room.id, item.effect, quantity)
 			user_item.destroy
 			render :json => "#{selected_num.join(", ")} の確率が上昇しました".to_json and return
@@ -395,6 +394,10 @@ class BingoCardsController < ApplicationController
 			render :json => "このアイテムはまとめて使用できません".to_json and return
 		when 2
 			use_quantity = add_free_all(room.id, quantity)
+
+			notice = "#{item.name}を#{use_quantity}個使用しました"
+			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+
 			if quantity - use_quantity <= 0
 				user_item.destroy
 			else
@@ -531,11 +534,14 @@ class BingoCardsController < ApplicationController
 			end
 			numbers_unchecked.delete(selected_num)
 			if numbers_unchecked.blank?
+				card.numbers = numbers.join(',')
+				card.save
 				return use_quantity + 1
 			end
 		}
 		card.numbers = numbers.join(',')
 		card.save
+		return 0
 	end
 
 	def get_checked_number
