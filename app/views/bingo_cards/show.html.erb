@@ -31,7 +31,7 @@
 	<div id="tab-container" class="tab-container">
 		<ul class='etabs'>
 			<li class='tab'><a href="#card-area">カード</a></li>
-			<li class='tab'><a href="#past-numbers">過去の番号</a></li>
+			<li class='tab'><a href="#added-numbers-area">過去の番号</a></li>
 			<% if @room.canUseItem %>
 			<li class='tab'><a href="#items">アイテム</a></li>
 			<% end %>
@@ -40,16 +40,14 @@
 		<div id="card-area" class="center-block">
 			<%= render :partial => "bingo-card", :locals => { numbers: @numbers, checks: @checks } %>
 		</div>
-		<div id="past-numbers">
-			<div id="added-numbers-area">
-				<%= render :partial => "added_numbers" %>
-			</div>
+		<div id="added-numbers-area" class="center-block">
+			<%= render :partial => "added_numbers" %>
 		</div>
 		<% if @room.canUseItem %>
-		<div id="items">
+		<div id="items" class="center-block">
 		</div>
 		<% end %>
-		<div id="member-list">
+		<div id="member-list" class="center-block">
 			<%= render :partial => "member_list", :locals => { members: @members, cards: @cards, room_id: @room.id } %>
 		</div>
 	</div>

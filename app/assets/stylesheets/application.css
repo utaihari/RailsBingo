@@ -25,14 +25,15 @@
  }
 
  @media screen and (max-width:640px){
-/* 	img{
- 		max-width: 100%;
- 		height: auto;
- 		width :auto;　
- 	}*/
- 	#container{
+
+/* 	body{
  		width:100%;
- 	}
+ 		background-color: #FFEEFF;
+ 		color:#333333;
+ 	}*/
+/* 	#container{
+ 		width:100%;
+ 	}*/
  	.center70{
  		width: 90%;
  		margin-right: auto;

@@ -12,16 +12,18 @@
 table{
 	table-layout: fixed;
 }
-td{
-	width: 80px;
-	height: 80px;
-	padding: 0px;
-	margin: 0px;
-}
+
 #card-area{
 	width:400px;
 }
 #bingo-card{
+	td{
+		width: 80px;
+		height: 80px;
+		padding: 0px;
+		margin: 0px;
+	}
+
 	table-layout: fixed;
 	width:400px;
 	margin-right : auto;
@@ -46,35 +48,8 @@ td{
 	}
 }
 
-@media only screen and (max-width: 400px){
-	#card-area{
-		width:100%;
-	}
-	#bingo-card{
-		table-layout: fixed;
-		width:100%;
-		margin-right : auto;
-		margin-left : auto;
-		.bingo-number{
-			background-color: rgba(204, 255, 255, 0.7);
-			font-size: 30px;
-		}
-		.free{
-			font-size: 20px;
-		}
-	}
-	#added-numbers-area{
-		width:100%;
-	}
-	#added-numbers{
-		table-layout: fixed;
-		width:100%;
-		margin-right : auto;
-		margin-left : auto;
-	}
-}
 #added-numbers-area{
-	width:100%;
+	width:400px;
 }
 
 #added-numbers{
@@ -128,6 +103,34 @@ td{
 		-webkit-transform: rotate(45deg);
 		-o-transform: rotate(45deg);
 		transform: rotate(45deg);
+	}
+}
+
+@media only screen and (max-width: 400px){
+	#card-area{
+		width:100%;
+	}
+	#bingo-card{
+		table-layout: fixed;
+		width:100%;
+		margin-right : auto;
+		margin-left : auto;
+		.bingo-number{
+			background-color: rgba(204, 255, 255, 0.7);
+			font-size: 30px;
+		}
+		.free{
+			font-size: 20px;
+		}
+	}
+	#added-numbers-area{
+		width:100%;
+	}
+	#added-numbers{
+		table-layout: fixed;
+		width:100%;
+		margin-right : auto;
+		margin-left : auto;
 	}
 }
 
