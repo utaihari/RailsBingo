@@ -132,6 +132,7 @@ update_list = ->
 	if number_length isnt numbers.length
 		if numbers[numbers.length-1] isnt -1
 			notice.push("新しいナンバーは "+ numbers[numbers.length-1] + "です")
+			hide_added_number()
 			for i in [number_length..numbers.length]
 				$("#added-#{numbers[i-1]}").addClass("icon-cross")
 				if document.getElementById("select-number-#{numbers[i-1]}") != null
@@ -146,7 +147,6 @@ update_list = ->
 			$('#last-number').text(numbers[number_length-1])
 		number_arrive_time = new Date()
 	return
-
 @check_number = (index) ->
 	checks[index] = true
 	$.ajaxSetup({async: false});
@@ -252,18 +252,13 @@ update_list = ->
 	$('.q-'+item_id).text(q)
 	return
 
-choosing_number = false
-using_item_id = 0
-
-@select_number = (item_id) ->
-	choosing_number = true
-	using_item_id = item_id
-	# .tabSwitch($('#card_area'), $('#items'))
-
-	notice.push("アイテムを使う数字を選んでください")
-	return
+hide_added_number = ->
+	for number in numbers
+		if document.getElementById("select-number-#{number}") != null
+			$("#select-number-#{number}").hide()
 
 @show_select_window = (item_id) ->
+	hide_added_number()
 	modalInstance = $.remodal.lookup[$('[data-remodal-id=modal-select'+item_id+']').data('remodal')]
 	modalInstance.open()
 	$('#select-notice').text("")
