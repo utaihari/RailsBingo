@@ -12,18 +12,16 @@
 table{
 	table-layout: fixed;
 }
-
+td{
+	width: 80px;
+	height: 80px;
+	padding: 0px;
+	margin: 0px;
+}
 #card-area{
 	width:400px;
 }
 #bingo-card{
-	td{
-		width: 80px;
-		height: 80px;
-		padding: 0px;
-		margin: 0px;
-	}
-
 	table-layout: fixed;
 	width:400px;
 	margin-right : auto;

@@ -85,3 +85,46 @@ bingo_users_length = 0
 @joined_user_update = (room_id) ->
 	$.get("/API/member_list/#{room_id}")
 	return
+@update_easy_to_apper_numbers = ->
+	@rate_update(@room_id)
+	numbers = []
+	for r, index in rate
+		numbers.push({number:index+1, rate:r})
+	numbers.sort((a,b)->
+    	if(a.rate > b.rate)
+    		return -1
+    	if(a.rate < b.rate)
+    		return 1
+    	return 0
+	)
+	$('#easy-to-apper-numbers').empty()
+	for index in [9..0]
+		$('#easy-to-apper-numbers').prepend("<span><font size=#{1+(numbers[index].rate/10)}>#{numbers[index].number}</font> </span>")
+	return
+
+@hide_bingo_users = ->
+	$('#bingo-users-wrapper').hide()
+	$('#show-bingo-users').show()
+	return
+@show_bingo_users = ->
+	$('#bingo-users-wrapper').show()
+	$('#show-bingo-users').hide()
+	return
+
+@hide_easy_to_apper_numbers = ->
+	$('#easy-to-apper-numbers-wrapper').hide()
+	$('#show-easy-to-apper-numbers').show()
+	return
+@show_easy_to_apper_numbers = ->
+	$('#easy-to-apper-numbers-wrapper').show()
+	$('#show-easy-to-apper-numbers').hide()
+	return
+
+@hide_notices = ->
+	$('#notices-wrapper').hide()
+	$('#show-notices').show()
+	return
+@show_notices = ->
+	$('#notices-wrapper').show()
+	$('#show-notices').hide()
+	return

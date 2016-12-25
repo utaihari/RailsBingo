@@ -3,15 +3,31 @@
 	<%= link_to '別ウィンドウで開く',tool_number_generator_path(community.id, room.id),
 	:onclick=>"window.open(this.href,'番号選出', 'height=400, width=300');return false;" %>
 </div>
-<div class="white-box">
-	<%= render :partial => "notices", :locals => {isWindow: false, room_id: room.id} %>
-	<%= link_to '別ウィンドウで開く',tool_notices_path(room.id),
-	:onclick=>"window.open(this.href,'お知らせ一覧', 'height=600, width=600');return false;"  %>
-</div>
-<div class="white-box">
-	<%= render :partial => "bingo-users", :locals => {isWindow: false} %>
-	<%= link_to '別ウィンドウで開く',tool_bingo_users_path(room.id),
-	:onclick=>"open_bingo_users_window(this);return false;" %>
-</div>
 
+<div id="notices-wrapper">
+	<div class="white-box">
+		<%= render :partial => "notices", :locals => {isWindow: false, room_id: room.id} %>
+		<%= link_to '別ウィンドウで開く',tool_notices_path(room.id),
+		:onclick=>"window.open(this.href,'お知らせ一覧', 'height=600, width=600');return false;"  %>
+	</div>
+</div>
+<div id="show-notices" style="display: none;" onclick="show_notices()">お知らせ一覧を開く</div>
+
+<div id="bingo-users-wrapper">
+	<div class="white-box">
+		<%= render :partial => "bingo-users", :locals => {isWindow: false} %>
+		<%= link_to '別ウィンドウで開く',tool_bingo_users_path(room.id),
+		:onclick=>"open_bingo_users_window(this);return false;" %>
+	</div>
+</div>
+<div id="show-bingo-users" style="display: none;" onclick="show_bingo_users()">ビンゴユーザー一覧を開く</div>
+
+<div id="easy-to-apper-numbers-wrapper">
+	<div class="white-box">
+		<h3><span onclick="hide_easy_to_apper_numbers()">出やすい数字</span><button type="button" class="btn btn-primary btn-xs" onclick="update_easy_to_apper_numbers()">更新</button></h3>
+		<div id="easy-to-apper-numbers">
+		</div>
+	</div>
+</div>
+<div id="show-easy-to-apper-numbers" style="display: none;" onclick="show_easy_to_apper_numbers()">出やすい数字一覧を開く</div>
 <%= link_to "ゲームを終わる", community_room_result_path(community.id, room.id), class:"btn btn-info", data: {confirm: '本当に終了してもよろしいですか?'} %>

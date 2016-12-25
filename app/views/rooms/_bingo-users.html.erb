@@ -2,7 +2,5 @@
 <%= stylesheet_link_tag "application", :media => "all" %>
 <% end %>
 
-<h2>ビンゴしたユーザー一覧<button type="button" class="btn btn-primary btn-xs" onclick="check_bingo_users()">更新</button></h2>
-<div>
-	<div id="bingo-user-list"></div>
-</div>
+<h3><span onclick="hide_bingo_users()">ビンゴしたユーザー一覧</span><button type="button" class="btn btn-primary btn-xs" onclick="check_bingo_users()">更新</button></h3>
+<div id="bingo-user-list"></div>
