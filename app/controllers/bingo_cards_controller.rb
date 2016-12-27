@@ -23,7 +23,7 @@ class BingoCardsController < ApplicationController
 		if !@room.can_bring_item
 			room_id = @room.id
 		end
-		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type").order("items.name")
+		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type, items.description").order("items.name")
 
 		@get_items = distribute_item(params[:community_id], params[:room_id])
 	end
@@ -51,7 +51,7 @@ class BingoCardsController < ApplicationController
 		if !@room.can_bring_item
 			room_id = @room.id
 		end
-		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type").order("items.name")
+		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type, items.description").order("items.name")
 		render :action => 'show', community_id: params[:community_id], room_id: params[:room_id], id: @card.id
 	end
 
@@ -124,8 +124,11 @@ class BingoCardsController < ApplicationController
 		if !room.can_bring_item
 			room_id = room.id
 		end
+
+		user_item = UserItemList.where(user_id: current_user.id, community_id: community_id, temp: !room.can_bring_item, room_id: room_id).includes(:user).includes(:community).includes(:item)
+
 		selected_items.each do |item|
-			i = UserItemList.joins(:user).joins(:community).joins(:item).find_by(user_id: current_user.id, community_id: community_id, item_id: item.id, temp: !room.can_bring_item, room_id: room_id)
+			i = user_item.find_by(item_id: item.id)
 			if i != nil
 				i.quantity += 1
 				i.save
@@ -144,7 +147,7 @@ class BingoCardsController < ApplicationController
 		if !@room.can_bring_item
 			room_id = @room.id
 		end
-		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type")
+		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type, items.description")
 		numberlist = BingoCard.find_by(user_id: current_user.id, room_id: params[:room_id])
 		@numbers = []
 		numbers = numberlist.numbers.split(",")
@@ -312,11 +315,7 @@ class BingoCardsController < ApplicationController
 
 		checks = card.checks.split(",")
 
-		if checks[index] == "t"
-			checks[index] = "f"
-		else
-			checks[index] = "t"
-		end
+		checks[index] = "t"
 
 		if card.riichi_lines != params[:riichi_lines].to_i
 			RoomNotice.create(room_id: params[:room_id], user_name: current_user.name, notice: "リーチ！")
@@ -331,6 +330,34 @@ class BingoCardsController < ApplicationController
 		end
 	end
 
+	def uncheck_number
+		if params[:card_id] == nil
+			return
+		end
+		card = BingoCard.joins(:user).joins(:room).find_by(id:params[:card_id])
+		if card == nil || params[:index] == nil
+			return
+		end
+		index = Integer(params[:index])
+
+		if index < 0 || 24 < index
+			return
+		end
+
+		checks = card.checks.split(",")
+
+		checks[index] = "f"
+
+		card.checks = checks.join(",")
+		card.riichi_lines = params[:riichi_lines].to_i
+		card.holes -= 1
+		if card.save
+			render :json => checks
+		else
+			render :json => 0
+		end
+	end
+
 	def check_items
 		items = UserItemList.where(community_id: params[:community_id], user_id: current_user.id)
 		render :json => items
@@ -338,7 +365,7 @@ class BingoCardsController < ApplicationController
 
 	def use_item
 		room = Room.joins(:community).find(params[:room_id])
-		user_item = UserItemList.find(params[:item_id])
+		user_item = UserItemList.joins(:user).joins(:community).joins(:item).find(params[:item_id])
 		item = Item.find(user_item.item_id)
 
 
@@ -350,8 +377,11 @@ class BingoCardsController < ApplicationController
 			render :json => "error2" and return
 		end
 
-		notice = "#{item.name}を使用しました"
-		RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+		if item.item_type.to_i == 3
+			if !room.isPlaying
+				render :json => "このアイテムはゲーム中のみ使用できます" and return
+			end
+		end
 
 		quantity = user_item.quantity
 		if quantity == 1
@@ -361,6 +391,8 @@ class BingoCardsController < ApplicationController
 			user_item.save
 		end
 
+		notice = "#{item.name}を使用しました"
+		RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
 		selected_num = -1
 
 		case item.item_type.to_i
@@ -376,6 +408,13 @@ class BingoCardsController < ApplicationController
 		when 2
 			add_free(room.id)
 			render :json => "FREEが追加されました".to_json and return
+		when 3
+			n = Array.new
+			n = delete_number(room.id, item.effect.to_i)
+			render :json =>	"#{n.join(',')}が取り消されました".to_json
+		when 4
+			shuffle_card(params[:card_id])
+			render :json => "カード上の数字がシャッフルされました"
 		end
 	end
 
@@ -404,7 +443,7 @@ class BingoCardsController < ApplicationController
 		when 1
 			render :json => "このアイテムはまとめて使用できません".to_json and return
 		when 2
-			use_quantity = add_free_all(room.id, quantity)
+			use_quantity = add_free_all(room.id, item.effect.to_i)
 
 			notice = "#{item.name}を#{use_quantity}個使用しました"
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
@@ -555,6 +594,42 @@ class BingoCardsController < ApplicationController
 		return 0
 	end
 
+	def delete_number(room_id, quantity)
+		room_numbers = RoomNumber.where(room_id: room_id).order(created_at: :desc)
+		delete_number = Array.new
+		quantity.times do |index|
+			if room_numbers[index] == -1
+				return delete_number
+			end
+			delete_number << room_numbers[index].number
+			room_numbers[index].destroy
+		end
+		return delete_number
+	end
+
+	def shuffle_card(card_id)
+		card = BingoCard.find(card_id).includes(:user).includes(:room)
+		temp_card = Array.new
+
+		card_numbers = card.numbers.split(",")
+		card_checks = card.checks.split(",")
+
+		card_numbers.each_with_index { |number, index|
+			temp_card << {number: number, check: card_checks[index]}
+		}
+		temp_card.shuffle!
+
+		numbers = Array.new
+		checks = Array.new
+		temp_card.each{|t|
+			numbers << t[:number]
+			checks << t[:check]
+		}
+		card.numbers = numbers.join(",")
+		card.checks = checks.join(",")
+		card.save
+	end
+
 	def get_checked_number
 		if params[:room_id] == nil
 			render :json =>[] and return
@@ -566,6 +641,12 @@ class BingoCardsController < ApplicationController
 		checks = card.checks.split(",")
 
 		render :json => checks
+	end
+
+	def get_card_numbers
+		card = BingoCard.find(params[:card_id])
+		card_numbers = card.numbers.split(",")
+		render :json => card_numbers
 	end
 
 	def done_bingo

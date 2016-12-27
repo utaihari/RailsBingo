@@ -6,6 +6,7 @@ numbers = []
 checks = []
 notice = []
 notice_list = []
+card_numbers = []
 number_length = 0
 condition = 0
 number_arrive_time = new Date()
@@ -45,6 +46,7 @@ game_start_check =  ->
 		@update_numbers = setInterval(->
 			@numbers_update()
 			update_list()
+			reload_check_numbers()
 		,5000)
 		@end_check = setInterval(->
 			game_end_check()
@@ -66,6 +68,7 @@ game_end_check =  ->
 		set_number_of_bingos()
 		@update_result()
 		$('#result').show('slow')
+		$('[data-remodal-id=result]').remodal().open()
 	return
 display_notice = ->
 	if notice.length != 0
@@ -154,6 +157,14 @@ update_list = ->
 		checks[index] = (json[index] == 't')
 	)
 	return
+
+@uncheck_number = (index) ->
+	checks[index] = false
+	$.ajaxSetup({async: false});
+	$.getJSON('/API/uncheck_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: calc_number_of_riichi()},(json)->
+		checks[index] = (json[index] == 't')
+	)
+	return
 @number_click = (obj, index) ->
 	if checks[index]
 		return
@@ -172,12 +183,9 @@ update_list = ->
 	room_id = $("#data").data("room_id")
 	@numbers_update()
 	@checks_update()
-	# $('.bingo-number').each( (i,e)->
-	# 	if jQuery.inArray(Number($(e).data('number')), numbers) >= 0
-	# 		$(e).toggleClass("checked", checks[i])
-	# 	return
-	# )
 	update_list()
+	get_card_numbers()
+	reload_check_numbers()
 	@update_items()
 	return
 @display_past_number = ->
@@ -203,7 +211,7 @@ update_list = ->
 	community_id = @community_id
 
 	$.ajaxSetup({async: false});
-	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id},(json)->
+	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: @card_id},(json)->
 		notice.push(json)
 		if update_card
 			$.get("/API/#{community_id}/#{room_id}/bingo_card")
@@ -377,3 +385,21 @@ change_item_detail = ->
 @joined_user_update = ->
 	$.get("/API/member_list_from_card/#{@room_id}")
 	return
+get_card_numbers = ->
+	$.ajaxSetup({async: false});
+	$.getJSON('/API/get_card_numbers',{@card_id},(json)->
+		card_numbers = json
+		return
+		)
+	return
+
+reload_check_numbers = ->
+	for check, index in checks
+		if check
+			if !(parseInt(card_numbers[index]) in numbers) && (parseInt(card_numbers[index]) != -1)
+				$("#card-#{card_numbers[index]}").removeClass("checked")
+				$("#added-#{card_numbers[index]}").removeClass("icon-cross")
+				uncheck_number(index)
+	return
+
+

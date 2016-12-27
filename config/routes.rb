@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 	get 'pages/index'
 	get 'pages/user_index'
 
+	get 'communityes/search', to: 'communities#search', as:'community_search'
 	get 'communities/:community_id/rooms/:room_id/card_create', to: 'bingo_cards#create', as:'community_room_bingo_cards'
 	get 'communities/:community_id/rooms/:room_id/result', to: 'rooms#result', as:'community_room_result'
 	get 'communities/:community_id/rooms/:room_id/bingo_cards/:bingo_card_id/result', to: 'bingo_cards#result', as:'community_room_bingo_card_result'
@@ -65,7 +66,9 @@ Rails.application.routes.draw do
 
 	#bingo-card
 	get 'API/check_number', to: 'bingo_cards#check_number',as:'check_number'
+	get 'API/uncheck_number', to: 'bingo_cards#uncheck_number',as:'uncheck_number'
 	get 'API/get_checked_number', to: 'bingo_cards#get_checked_number',as:'get_checked_number'
+	get 'API/get_card_numbers', to: 'bingo_cards#get_card_numbers'
 	post 'API/done_bingo', to: 'bingo_cards#done_bingo', as: 'done_bingo'
 	get 'API/check_items', to: 'bingo_cards#check_items', as: 'check_items'
 	get 'API/check_riichi', to: 'bingo_cards#check_riichi'

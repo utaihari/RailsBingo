@@ -9,6 +9,11 @@ class CommunitiesController < ApplicationController
     @belong_communities = CommunityUserList.where(user_id: current_user.id)
   end
 
+  def search
+    @communities = Community.search(params[:search]).includes(:user)
+    @belong_communities = CommunityUserList.where(user_id: current_user.id)
+  end
+
   def show
     @members = CommunityUserList.joins(:user).where(community_id: params[:id]).includes(:user)
     @isOrganizer = isCommunityOrganizer(params[:id])

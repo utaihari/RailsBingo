@@ -6,7 +6,7 @@
 		<%= submit_tag "コミュニティ検索", :name => nil %>
 	</p>
 	<% end %>
-
+	<% if !@communities.blank? %>
 	<table class="table">
 		<thead>
 			<tr>
@@ -17,6 +17,7 @@
 		</thead>
 
 		<tbody>
+
 			<% @communities.each do |community| %>
 			<tr>
 				<td><%= community.name %></td>
@@ -44,7 +45,7 @@
 			<% end %>
 		</tbody>
 	</table>
-
+	<% end %>
 	<br>
 
 

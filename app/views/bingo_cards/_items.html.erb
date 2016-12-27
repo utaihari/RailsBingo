@@ -21,60 +21,65 @@
 				<td><a href=<%= sh %>><%= item.name %></a></td>
 				<td class=<%= c_q %>><%= item.quantity %></td>
 				<td>
-				<% if item.AllowUseDuringGame == 't' %>
-				可
-				<% else %>
-				不可
-				<% end %>
+					<% if item.AllowUseDuringGame == 't' %>
+					可
+					<% else %>
+					不可
+					<% end %>
 				</td>
 				<div class="remodal" data-remodal-id=<%= h %>>
 					<button data-remodal-action="close" class="remodal-close"></button>
 					<h2><%= item.name %></h2>
+					<p><%= item.description %></p>
 					<p>残り <span class=<%= "q-"+item.id.to_s %>><%= item.quantity %></span>個</p>
 					<% if item.AllowUseDuringGame != 't' %>
-						<div class="items-no-use-playing">
-					<% else %>
+					<div class="items-no-use-playing">
+						<% else %>
 						<div>
-					<% end %>
-					<% if item.AllowUseDuringGame != 't' && room.isPlaying %>
-					<p>このアイテムはゲーム中に使用できません</p>
-					<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
-					<% else %>
+							<% end %>
+							<% if item.AllowUseDuringGame != 't' && room.isPlaying %>
+							<p>このアイテムはゲーム中に使用できません</p>
+							<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
+							<% else %>
+							<% if item.item_type == 0%>
+							<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item_all(<%= item.id %>, true)">全て使用する</button>
+							<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, false)">使用する</button>
+							<% elsif item.item_type == 1 %>
+							<button data-remodal-action="confirm" class="remodal-confirm" onclick="show_select_window(<%= item.id %>)">使用する</button>
+							<% elsif item.item_type == 2%>
+							<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item_all(<%= item.id %>, true)">全て使用する</button>
+							<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, true)">使用する</button>
+							<% elsif item.item_type == 3%>
+							<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, false)">使用する</button>
+							<% elsif item.item_type == 4%>
+							<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, true)">使用する</button>
+							<% else %>
+							<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, false)">使用する</button>
+							<% end %>
+							<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
+							<% end %>
+						</div>
+					</div>
 					<% if item.item_type == 1 %>
 
-					<button data-remodal-action="confirm" class="remodal-confirm" onclick="show_select_window(<%= item.id %>)">使用する</button>
-
-					<% elsif item.item_type == 2%>
-					<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item_all(<%= item.id %>, true)">全て使用する</button>
-					<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, true)">使用する</button>
-					<% else %>
-					<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item_all(<%= item.id %>, true)">全て使用する</button>
-					<button data-remodal-action="confirm" class="remodal-confirm" onclick="use_item(<%= item.id %>, false)">使用する</button>
 					<% end %>
-					<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
-					<% end %>
-					</div>
-				</div>
-				<% if item.item_type == 1 %>
-
+				</tr>
 				<% end %>
-			</tr>
-			<% end %>
-			<% end %>
-		</tbody>
-	</table>
-</div>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
 
-<% if !items.blank? %>
-<% items.each do |item| %>
-<% if item.item_type == 1 %>
-<div style="display: none;">
-	<%= oh="modal-select"+item.id.to_s %>
-</div>
-<div class="remodal" data-remodal-id=<%= oh %>>
-	<button data-remodal-action="close" class="remodal-close"></button>
-	<%= render :partial => "select_number", :locals => { numbers: numbers, item_id: item.id, checks: checks } %>
-</div>
-<% end %>
-<% end %>
-<% end %>
+	<% if !items.blank? %>
+	<% items.each do |item| %>
+	<% if item.item_type == 1 %>
+	<div style="display: none;">
+		<%= oh="modal-select"+item.id.to_s %>
+	</div>
+	<div class="remodal" data-remodal-id=<%= oh %>>
+		<button data-remodal-action="close" class="remodal-close"></button>
+		<%= render :partial => "select_number", :locals => { numbers: numbers, item_id: item.id, checks: checks } %>
+	</div>
+	<% end %>
+	<% end %>
+	<% end %>
