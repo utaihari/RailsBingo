@@ -595,15 +595,23 @@ class BingoCardsController < ApplicationController
 	end
 
 	def delete_number(room_id, quantity)
+		room = Room.find(room_id)
 		room_numbers = RoomNumber.where(room_id: room_id).order(created_at: :desc)
+		room_rates = room.rates.split(",")
+
 		delete_number = Array.new
 		quantity.times do |index|
 			if room_numbers[index] == -1
+				room.rates = room_rates.join(",")
+				room.save
 				return delete_number
 			end
 			delete_number << room_numbers[index].number
+			room_rates[room_numbers[index].number-1] = 10.0
 			room_numbers[index].destroy
 		end
+		room.rates = room_rates.join(",")
+		room.save
 		return delete_number
 	end
 
