@@ -45,6 +45,23 @@
 		:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
 	</div>
 
+	<div id="item-use" class="white-box container-fluid">
+		<h3>アイテム使用</h3>
+		<select id="select-user">
+		<option selected value="-1">ユーザを選択</option>
+			<% @members.each do |member| %>
+			<option value=<%= member.card_id %>><%= member.name %></option>
+			<% end %>
+		</select>
+		<select id="select-item">
+			<option selected value="-1">アイテムを選択</option>
+			<%= @items.each do |item| %>
+			<option value=<%= item.id %>><%= item.name %></option>
+			<% end %>
+		</select>
+		<button type="button" class="btn btn-primary" onclick="item_use()">使用する</button>
+	</div>
+
 	<% else %>
 	<% if @isRoomMember %>
 	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id, @room.id, @card.id) ,class: "btn btn-info"%>
@@ -52,7 +69,7 @@
 	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id, @room.id),　class: "btn btn-info btn-sm" %>
 	<% end %>
 	<% end %>
-	<div class="white-box">
+	<div class="white-box container-fluid" >
 		<%= render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards, isWindow: false } %>
 		<%= link_to '別ウィンドウで開く',tool_members_path(@community.id, @room.id),
 		:onclick=>"window.open(this.href,'メンバー', 'height=600, width=400');return false;" %>

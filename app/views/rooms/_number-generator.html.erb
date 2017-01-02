@@ -5,7 +5,7 @@
 <%= csrf_meta_tags %>
 <% end %>
 
-<div id="number-generator">
+<div id="number-generator" class="container-fluid">
 	<%= image_tag 'generator.png', :size => '130x110'%>
 	<div id="number-display"></div>
 	<button id="next-number-button" class="btn btn-info" onclick="random_number_add(<%= room.id %>)">次の番号を出力</button>

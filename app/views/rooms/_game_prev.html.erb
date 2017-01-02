@@ -1,13 +1,13 @@
 <% if isRoomOrganizer %>
 <br>
-<div class="white-box">
+<div class="white-box container-fluid">
 <%= render :partial => "qr-code", :locals => { room:room, svg: svg, url: url, isWindow: false} %>
 	<%= link_to '別ウィンドウでQRコードを開く',tool_qr_code_path(community.id, room.id),
 	:onclick=>"window.open(this.href,'QRコード', 'height=250, width=400');return false;" %>
 </div>
 
 <div id="notices-wrapper">
-	<div class="white-box">
+	<div class="white-box container-fluid">
 		<%= render :partial => "notices", :locals => {isWindow: false, room_id: room.id} %>
 		<%= link_to '別ウィンドウで開く',tool_notices_path(room.id),
 		:onclick=>"window.open(this.href,'お知らせ一覧', 'height=600, width=600');return false;"  %>

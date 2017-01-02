@@ -66,6 +66,7 @@ class RoomsController < ApplicationController
     @svg = qrcode.as_svg(offset: 0, color: '000',
       shape_rendering: 'crispEdges',
       module_size: 3)
+    @items = Item.where("((item_type = ?) OR (item_type = ?) OR (item_type = ?)) AND (AllowUseDuringGame = 't')",0,2,4)
   end
 
   def edit

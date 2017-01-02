@@ -364,42 +364,43 @@ class BingoCardsController < ApplicationController
 	end
 
 	def use_item
+
 		room = Room.joins(:community).find(params[:room_id])
-		user_item = UserItemList.joins(:user).joins(:community).joins(:item).find(params[:item_id])
-		item = Item.find(user_item.item_id)
+		item = Item.new
 
-
-		if room.isPlaying && !item.AllowUseDuringGame
-			render :json => "error1" and return
-		end
-
-		if user_item == nil
-			render :json => "error2" and return
-		end
-
-
-		if params[:from_room_master] == true
+		if params[:from_room_master].to_s == "true"
 			if room.user_id != current_user.id
 				render :json => "error3" and return
 			end
+			item = Item.find(params[:item_id])
 		else
+			user_item = UserItemList.joins(:user).joins(:community).joins(:item).find(params[:item_id])
+			item = Item.find(user_item.item_id)
+			if room.isPlaying && !item.AllowUseDuringGame
+				render :json => "error1" and return
+			end
+
+			if user_item == nil
+				render :json => "error2" and return
+			end
+
 			if user_item.user_id != current_user.id
 				render :json => "error3" and return
 			end
-		end
 
-		if item.item_type.to_i == 3
-			if !room.isPlaying
-				render :json => "このアイテムはゲーム中のみ使用できます" and return
+			if item.item_type.to_i == 3
+				if !room.isPlaying
+					render :json => "このアイテムはゲーム中のみ使用できます" and return
+				end
 			end
-		end
 
-		quantity = user_item.quantity
-		if quantity == 1
-			user_item.destroy
-		else
-			user_item.quantity -= 1
-			user_item.save
+			quantity = user_item.quantity
+			if quantity == 1
+				user_item.destroy
+			else
+				user_item.quantity -= 1
+				user_item.save
+			end
 		end
 
 		# notice = "#{item.name}を使用しました"
@@ -641,7 +642,7 @@ class BingoCardsController < ApplicationController
 	end
 
 	def shuffle_card(card_id)
-		card = BingoCard.find(card_id).includes(:user).includes(:room)
+		card = BingoCard.joins(:user).joins(:room).find(card_id)
 		temp_card = Array.new
 
 		card_numbers = card.numbers.split(",")

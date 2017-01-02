@@ -135,3 +135,12 @@ bingo_users_length = 0
 	$('#notices-wrapper').show()
 	$('#show-notices').hide()
 	return
+@item_use = ->
+	item_id = $('#select-item').val()
+	card_id = $('#select-user').val()
+
+	if parseInt(item_id) == -1 || parseInt(card_id) == -1
+		return
+	$.post('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: card_id, from_room_master: true},(json)->
+		)
+	return
