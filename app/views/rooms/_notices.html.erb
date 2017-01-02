@@ -3,8 +3,10 @@
 <%= javascript_include_tag "application" %>
 <%= stylesheet_link_tag "application", :media => "all" %>
 <% end %>
-<h3><span onclick="hide_notices()">お知らせ一覧</span><button type="button" class="btn btn-primary btn-xs" onclick="notices_update(<%= room_id %>)">更新</button>
+<div class="notices_box">
+<h3><span onclick="hide_notices()">お知らせ一覧</span>
 	<button type="button" class="btn btn-success btn-xs" onclick="$('.user_name').toggle();">ユーザー名表示切替</button>
 </h3>
 <div id="notices">
+</div>
 </div>

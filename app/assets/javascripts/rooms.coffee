@@ -4,11 +4,15 @@
 
 rate = []
 bingo_users = []
+notices_length = 0
 
 $(->
 	@community_id = $("#data").data("community_id")
 	@room_id = $("#data").data("room_id")
 	@condition = $("#data").data("condition")
+	@update_notice = setInterval(->
+		@notices_update(@room_id)
+	,1500)
 )
 
 @rate_update =(room_id) ->
@@ -18,12 +22,15 @@ $(->
 		return
 		)
 	return
+
 @notices_update = (room_id) ->
-	$.getJSON('/API/get_notices', {room_id: room_id}, (json) ->
-		$('#notices').text("")
-		for i in json
-			$('#notices').prepend("<div><span class=\"user_name\">#{i.user_name}さん: </span><span>#{i.notice}</span>")
-		return
+	$.getJSON('/API/get_notices', {room_id: room_id, length: notices_length}, (json) ->
+		if json != null
+			json.reverse()
+			notices_length += json.length
+			for i in json
+				$('#notices').prepend("<div><span class=\"user_name\">#{i.user_name}さん: </span><span>#{i.notice}</span>")
+			return
 		)
 	return
 @get_random_number = ->

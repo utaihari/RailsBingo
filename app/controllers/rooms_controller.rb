@@ -164,8 +164,19 @@ class RoomsController < ApplicationController
   end
 
   def get_notices
-    notices = RoomNotice.where(room_id: params[:room_id]).order("created_at ASC")
+    length = params[:length].to_i
+    notices_length = RoomNotice.where(room_id: params[:room_id]).order("created_at DESC").count
+
+    logger.debug "notices_length: "+notices_length.to_s
+
+    notices_length -= length
+
+    if notices_length > 0
+      notices = RoomNotice.where(room_id: params[:room_id]).order("created_at DESC").limit(notices_length)
+    end
+
     render :json => notices.to_json
+
   end
 
   def get_number

@@ -377,6 +377,17 @@ class BingoCardsController < ApplicationController
 			render :json => "error2" and return
 		end
 
+
+		if params[:from_room_master] == true
+			if room.user_id != current_user.id
+				render :json => "error3" and return
+			end
+		else
+			if user_item.user_id != current_user.id
+				render :json => "error3" and return
+			end
+		end
+
 		if item.item_type.to_i == 3
 			if !room.isPlaying
 				render :json => "このアイテムはゲーム中のみ使用できます" and return
@@ -391,30 +402,40 @@ class BingoCardsController < ApplicationController
 			user_item.save
 		end
 
-		notice = "#{item.name}を使用しました"
-		RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+		# notice = "#{item.name}を使用しました"
+		# RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
 		selected_num = -1
 
 		case item.item_type.to_i
 		when 0
-			selected_num = increase_rate_random_num(room.id, item.effect)
-			render :json => "#{selected_num} の確率が上昇しました".to_json and return
+			selected_num = increase_rate_random_num(params[:card_id], item.effect)
+			notice = "#{selected_num} の確率が上昇しました"
+			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+			render :json => notice.to_json and return
 		when 1
 			if params[:number] == nil
 				render :json => "error3" and return
 			end
 			increase_rate(room.id, item.effect, params[:number])
-			render :json => "#{params[:number]} の確率が上昇しました".to_json and return
+			notice = "#{params[:number]} の確率が上昇しました"
+			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+			render :json => notice.to_json and return
 		when 2
-			add_free(room.id)
+			add_free(params[:card_id])
+			notice = "#{item.name}を使用しました"
+			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
 			render :json => "FREEが追加されました".to_json and return
 		when 3
 			n = Array.new
 			n = delete_number(room.id, item.effect.to_i)
-			render :json =>	"#{n.join(',')}が取り消されました".to_json
+			notice = "#{n.join(',')}が取り消されました"
+			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+			render :json =>	notice.to_json and return
 		when 4
 			shuffle_card(params[:card_id])
-			render :json => "カード上の数字がシャッフルされました"
+			notice = "#{item.name}を使用しました"
+			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+			render :json => "カード上の数字がシャッフルされました".to_json and return
 		end
 	end
 
@@ -431,19 +452,23 @@ class BingoCardsController < ApplicationController
 			render :json => "error2" and return
 		end
 
+		if user_item.user_id != current_user.id
+			render :json => "error3" and return
+		end
+
 		quantity = user_item.quantity
 
 		case item.item_type.to_i
 		when 0
-			notice = "#{item.name}を#{user_item.quantity}個使用しました"
-			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
-			selected_num = increase_rate_random_num_all(room.id, item.effect, quantity)
+			selected_num = increase_rate_random_num_all(params[:card_id], item.effect, quantity)
 			user_item.destroy
-			render :json => "#{selected_num.join(", ")} の確率が上昇しました".to_json and return
+			notice = "#{selected_num.join(", ")} の確率が上昇しました"
+			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+			render :json => notice.to_json and return
 		when 1
 			render :json => "このアイテムはまとめて使用できません".to_json and return
 		when 2
-			use_quantity = add_free_all(room.id, item.effect.to_i)
+			use_quantity = add_free_all(params[:card_id], item.effect.to_i)
 
 			notice = "#{item.name}を#{use_quantity}個使用しました"
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
@@ -458,9 +483,9 @@ class BingoCardsController < ApplicationController
 		end
 	end
 
-	def increase_rate_random_num(room_id, effect)
-		card = BingoCard.find_by(user_id:current_user.id, room_id:room_id)
-		room = Room.find(room_id)
+	def increase_rate_random_num(card_id, effect)
+		card = BingoCard.joins(:user).joins(:room).find(card_id)
+		room = Room.find(card.room_id)
 		room_numbers_rate = room.rates.split(',')
 		numbers = card.numbers.split(',')
 		checks = card.checks.split(',')
@@ -473,13 +498,13 @@ class BingoCardsController < ApplicationController
 		end
 
 		selected_num = numbers_unchecked[rand(numbers_unchecked.length())]
-		increase_rate(room_id, effect, selected_num)
+		increase_rate(room.id, effect, selected_num)
 		return selected_num
 	end
 
-	def increase_rate_random_num_all(room_id, effect, quantity)
-		card = BingoCard.find_by(user_id:current_user.id, room_id:room_id)
-		room = Room.find(room_id)
+	def increase_rate_random_num_all(card_id, effect, quantity)
+		card = BingoCard.joins(:user).joins(:room).find(card_id)
+		room = Room.find(card.room_id)
 		room_numbers_rate = room.rates.split(',')
 		numbers = card.numbers.split(',')
 		checks = card.checks.split(',')
@@ -495,7 +520,7 @@ class BingoCardsController < ApplicationController
 		quantity.times{|i|
 			selected_num << numbers_unchecked[rand(numbers_unchecked.length())]
 		}
-		increase_rates(room_id, effect, selected_num)
+		increase_rates(room.id, effect, selected_num)
 		return selected_num
 	end
 
@@ -530,9 +555,9 @@ class BingoCardsController < ApplicationController
 		room.rates = rates.join(',')
 		room.save
 	end
-	def add_free(room_id)
-		card = BingoCard.joins(:user).joins(:room).find_by(user_id:current_user.id, room_id:room_id)
-		room = Room.find(room_id)
+	def add_free(card_id)
+		card = BingoCard.joins(:user).joins(:room).find(card_id)
+		room = Room.find(card.room_id)
 		room_numbers_rate = room.rates.split(',')
 		numbers = card.numbers.split(',')
 		checks = card.checks.split(',')
@@ -558,8 +583,8 @@ class BingoCardsController < ApplicationController
 	end
 
 	def add_free_all(room_id, quantity)
-		card = BingoCard.joins(:user).joins(:room).find_by(user_id:current_user.id, room_id:room_id)
-		room = Room.find(room_id)
+		card = BingoCard.joins(:user).joins(:room).find(card_id)
+		room = Room.find(card.room_id)
 		room_numbers_rate = room.rates.split(',')
 		numbers = card.numbers.split(',')
 		checks = card.checks.split(',')

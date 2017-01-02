@@ -211,7 +211,7 @@ update_list = ->
 	community_id = @community_id
 
 	$.ajaxSetup({async: false});
-	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: @card_id},(json)->
+	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: @card_id, from_room_master: false},(json)->
 		notice.push(json)
 		if update_card
 			$.get("/API/#{community_id}/#{room_id}/bingo_card")
@@ -231,7 +231,7 @@ update_list = ->
 	community_id = @community_id
 
 	$.ajaxSetup({async: false});
-	$.getJSON('/API/use_item_all',{community_id: @community_id, room_id: @room_id, item_id: item_id},(json)->
+	$.getJSON('/API/use_item_all',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: @card_id},(json)->
 		notice.push(json)
 		if update_card
 			$.get("/API/#{community_id}/#{room_id}/bingo_card")
