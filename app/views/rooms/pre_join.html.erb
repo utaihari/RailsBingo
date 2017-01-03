@@ -2,6 +2,7 @@
 	<h1><%= @room.name %></h1>
 	<div id="room-detail">
 		<p>部屋ＩＤ <%= @room.id %></p>
+		<div><%= raw @room.detail %></div>
 	</div>
 	<% if !@room.AllowJoinDuringGame && @room.isPlaying  %>
 		このゲームは途中参加できません。
@@ -13,7 +14,7 @@
 		<% else %>
 		<p>このゲームではビンゴした際に主催者にあなたのメールアドレスが通知されます</p>
 		<p>部屋ＩＤをもう一度確認し、信頼できない場合は参加しないでください</p>
-		<p>あなたのメールアドレス（正しくない場合は修正してください）　：　<%= current_user.email %></p>
+		<p>あなたのメールアドレス（正しくない場合は修正してください） ： <%= current_user.email %></p>
 		<% end %>
 		<%= link_to "ゲームに参加", join_room_path(@community.id, @room.id), class: "btn btn-lg btn-primary" %>
 	</div>

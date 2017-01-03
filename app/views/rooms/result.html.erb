@@ -9,7 +9,7 @@
 		<div>
 			<div>
 				<div><%= i+1 %>位</div>
-				<%= user.name %> さん
+				<%= link_to user.name, user_path(user.id), target: "_new" %> さん
 				<span onclick="view_mail_address(this)">
 					<a href="#" onclick="">メールアドレス表示</a>
 					<span class="view-mail-addess" style="display: none;">

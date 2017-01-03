@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'users/show'
+
 	get 'rooms/result'
 
 	root 'pages#index'
@@ -31,8 +33,8 @@ Rails.application.routes.draw do
 		get '/users/direct/:source/sign_in/:community_id/:room_id/', to: 'users/sessions#new', as:'new_user_session_direct_game'
 
 		get '/users/direct/:source', to: 'users/registrations#new', as:'new_user_registrations_from_top'
-
 	end
+	resources :users, :only => [:show]
 
 	get 'communities/:id/join', to: 'communities#join', as:'join_community'
 	get 'communities/:id/leave', to: 'communities#leave', as:'leave_community'

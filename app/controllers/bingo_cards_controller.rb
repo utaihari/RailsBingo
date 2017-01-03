@@ -36,6 +36,10 @@ class BingoCardsController < ApplicationController
 			redirect_to community_room_bingo_card_path(params[:community_id],params[:room_id],@card.id) and return
 		end
 
+		notice = "参加しました"
+		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice)
+
+
 		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: @room.id}, :room_user_lists => {room_id: @room.id}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
 		@cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
 
@@ -469,7 +473,7 @@ class BingoCardsController < ApplicationController
 		when 1
 			render :json => "このアイテムはまとめて使用できません".to_json and return
 		when 2
-			use_quantity = add_free_all(params[:card_id], item.effect.to_i)
+			use_quantity = add_free_all(params[:card_id], quantity.to_i)
 
 			notice = "#{item.name}を#{use_quantity}個使用しました"
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
@@ -692,7 +696,11 @@ class BingoCardsController < ApplicationController
 		seconds = params[:seconds]
 		card_id = params[:card_id]
 
-		if !check_bingo(card_id) || BingoUser.exists?(room_id: room_id, user_id: current_user.id)
+		if !check_bingo(card_id)
+			render :json => false and return
+		end
+
+		if BingoUser.exists?(room_id: room_id, user_id: current_user.id)
 			render :json => true and return
 		end
 

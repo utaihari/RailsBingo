@@ -223,6 +223,11 @@ update_list = ->
 		$('.item-rows-'+item_id).hide()
 	quantity.text(q)
 	$('.q-'+item_id).text(q)
+
+	if check_bingo() && !done_bingo
+		$('#bingo-button').show()
+	else
+		$('#bingo-button').hide()
 	return
 
 @use_item_all = (item_id, update_card) ->
@@ -394,12 +399,19 @@ get_card_numbers = ->
 	return
 
 reload_check_numbers = ->
+	number_unchecked = false
 	for check, index in checks
 		if check
 			if !(parseInt(card_numbers[index]) in numbers) && (parseInt(card_numbers[index]) != -1)
 				$("#card-#{card_numbers[index]}").removeClass("checked")
 				$("#added-#{card_numbers[index]}").removeClass("icon-cross")
 				uncheck_number(index)
+				number_unchecked = true
+	if number_unchecked
+		if check_bingo() && !done_bingo
+				$('#bingo-button').show()
+		else
+				$('#bingo-button').hide()
 	return
 
 
