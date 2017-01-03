@@ -131,7 +131,7 @@ class RoomsController < ApplicationController
     if !isRoomOrganizer(params[:room_id])
       render :text => "主催者ではありません"
     end
-    @bingo_list = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("seconds","times","name","email")
+    @bingo_list = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("seconds","times","name","email","user_id")
     @room.isFinished = true
     @room.save
     if !@room.can_bring_item
@@ -236,6 +236,11 @@ class RoomsController < ApplicationController
     @room = Room.joins(:community).joins(:user).find(params[:room_id])
     @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
     @cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
+  end
+
+  def use_item_tool
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+    @items = Item.where("((item_type = ?) OR (item_type = ?) OR (item_type = ?)) AND (AllowUseDuringGame = 't')",0,2,4)
   end
 
   def check_rank

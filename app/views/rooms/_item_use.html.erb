@@ -1,0 +1,14 @@
+<h3>アイテム使用<button type="button" class="btn btn-primary btn-xs" onclick="item_use_update()">更新</button></h3>
+<select id="select-user">
+	<option selected value="-1">ユーザを選択</option>
+	<% members.each do |member| %>
+	<option value=<%= member.card_id %>><%= member.name %></option>
+	<% end %>
+</select>
+<select id="select-item">
+	<option selected value="-1">アイテムを選択</option>
+	<%= items.each do |item| %>
+	<option value=<%= item.id %>><%= item.name %></option>
+	<% end %>
+</select>
+<button type="button" class="btn btn-primary" onclick="item_use()">使用する</button>

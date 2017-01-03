@@ -10,9 +10,10 @@ $(->
 	@community_id = $("#data").data("community_id")
 	@room_id = $("#data").data("room_id")
 	@condition = $("#data").data("condition")
-	@update_notice = setInterval(->
-		@notices_update(@room_id)
-	,1500)
+	@notices_update(@room_id)
+	# @update_notice = setInterval(->
+	# 	@notices_update(@room_id)
+	# ,1500)
 )
 
 @rate_update =(room_id) ->
@@ -92,6 +93,9 @@ bingo_users_length = 0
 @joined_user_update = (room_id) ->
 	$.get("/API/member_list/#{room_id}")
 	return
+@item_use_update = ->
+	$.get("/API/use_item_tool/#{@room_id}")
+	return
 @update_easy_to_apper_numbers = ->
 	@rate_update(@room_id)
 	numbers = []
@@ -143,4 +147,18 @@ bingo_users_length = 0
 		return
 	$.post('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: card_id, from_room_master: true},(json)->
 		)
+	return
+
+notice_auto_update = false
+@notice_auto_update = =>
+	if !notice_auto_update
+		@update_notice = setInterval(->
+			@notices_update(@room_id)
+		,1500)
+		$('#notice-update-button').text("自動更新中")
+		notice_auto_update = true
+	else
+		clearInterval(@update_notice)
+		$('#notice-update-button').text("自動更新する")
+		notice_auto_update = false
 	return

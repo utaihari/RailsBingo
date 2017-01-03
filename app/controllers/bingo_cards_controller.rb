@@ -587,7 +587,7 @@ class BingoCardsController < ApplicationController
 		card.save
 	end
 
-	def add_free_all(room_id, quantity)
+	def add_free_all(card_id, quantity)
 		card = BingoCard.joins(:user).joins(:room).find(card_id)
 		room = Room.find(card.room_id)
 		room_numbers_rate = room.rates.split(',')
@@ -603,6 +603,8 @@ class BingoCardsController < ApplicationController
 		if numbers_unchecked.blank?
 			return 0
 		end
+
+		return_val = 0
 		quantity.times{|use_quantity|
 
 			selected_num = numbers_unchecked[rand(numbers_unchecked.length()+1)]
@@ -616,12 +618,13 @@ class BingoCardsController < ApplicationController
 			if numbers_unchecked.blank?
 				card.numbers = numbers.join(',')
 				card.save
-				return use_quantity + 1
+				return (use_quantity + 1)
 			end
+			return_val = use_quantity + 1
 		}
 		card.numbers = numbers.join(',')
 		card.save
-		return 0
+		return return_val
 	end
 
 	def delete_number(room_id, quantity)
@@ -696,7 +699,7 @@ class BingoCardsController < ApplicationController
 		seconds = params[:seconds]
 		card_id = params[:card_id]
 
-		if !check_bingo(card_id)
+		if !check_bingo(card_id, room_id)
 			render :json => false and return
 		end
 
@@ -716,12 +719,26 @@ class BingoCardsController < ApplicationController
 	end
 	private
 
-	def check_bingo(card_id)
+	def check_bingo(card_id, room_id)
 		card = BingoCard.find_by(id:card_id)
 		if card == nil
 			return false
 		end
+		room_numbers = RoomNumber.where(room_id: room_id)
+		room_numbers_array = []
+		room_numbers.each { |n|
+			room_numbers_array << n.number.to_i
+		}
 		checks = card.checks.split(",")
+		card_numbers = card.numbers.split(",")
+
+		checks.each_with_index { |check, i|
+			if check == 't'
+				if !room_numbers_array.include?(card_numbers[i].to_i)
+					return false
+				end
+			end
+		}
 
 		# Alignment bingocard sequence
 		# 0  1  2  3  4

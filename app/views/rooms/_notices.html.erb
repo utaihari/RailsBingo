@@ -2,9 +2,11 @@
 <%= javascript_include_tag "rooms-notices.js" %>
 <%= javascript_include_tag "application" %>
 <%= stylesheet_link_tag "application", :media => "all" %>
+<div id="data" data-room_id=<%= room_id %>></div>
 <% end %>
-<div class="notices_box">
+<div>
 <h3><span onclick="hide_notices()">お知らせ一覧</span>
+	<button type="button" id="notice-update-button" class="btn btn-primary btn-xs" onclick="notice_auto_update(<%= room_id %>)">自動更新する</button>
 	<button type="button" class="btn btn-success btn-xs" onclick="$('.user_name').toggle();">ユーザー名表示切替</button>
 </h3>
 <div id="notices">

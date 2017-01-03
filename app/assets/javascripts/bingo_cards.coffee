@@ -37,7 +37,15 @@ $(->
 		$('[data-remodal-id=getitem]').remodal().open()
 	return
 )
-
+@onPageLoad = ->
+	room_id = $("#data").data("room_id")
+	@numbers_update()
+	@checks_update()
+	update_list()
+	get_card_numbers()
+	reload_check_numbers()
+	@update_items()
+	return
 game_start_check =  ->
 	@check_condition()
 	if condition == 1
@@ -179,15 +187,7 @@ update_list = ->
 
 	return
 
-@onPageLoad = ->
-	room_id = $("#data").data("room_id")
-	@numbers_update()
-	@checks_update()
-	update_list()
-	get_card_numbers()
-	reload_check_numbers()
-	@update_items()
-	return
+
 @display_past_number = ->
 	$('#number-list-wrapper').toggle('slow')
 	return
@@ -224,6 +224,9 @@ update_list = ->
 	quantity.text(q)
 	$('.q-'+item_id).text(q)
 
+	get_card_numbers()
+	@checks_update()
+
 	if check_bingo() && !done_bingo
 		$('#bingo-button').show()
 	else
@@ -244,6 +247,7 @@ update_list = ->
 		)
 
 	$('.item-rows-'+item_id).hide()
+	get_card_numbers()
 
 	return
 

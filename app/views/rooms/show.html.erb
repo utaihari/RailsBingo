@@ -33,9 +33,11 @@
 	</div>
 	<div id="notices-wrapper">
 		<div class="white-box">
-			<%= render :partial => "notices", :locals => {isWindow: false, room_id: @room.id} %>
+			<div class="notices_box">
+				<%= render :partial => "notices", :locals => {isWindow: false, room_id: @room.id} %>
+			</div>
 			<%= link_to '別ウィンドウで開く',tool_notices_path(@room.id),
-			:onclick=>"window.open(this.href,'お知らせ一覧', 'height=600, width=600');return false;"  %>
+			:onclick=>"window.open(this.href,'お知らせ一覧', 'height=600, width=400');return false;"  %>
 		</div>
 	</div>
 	<div id="show-notices" style="display: none;" onclick="show_notices()">お知らせ一覧を開く</div>
@@ -46,20 +48,7 @@
 	</div>
 
 	<div id="item-use" class="white-box container-fluid">
-		<h3>アイテム使用</h3>
-		<select id="select-user">
-		<option selected value="-1">ユーザを選択</option>
-			<% @members.each do |member| %>
-			<option value=<%= member.card_id %>><%= member.name %></option>
-			<% end %>
-		</select>
-		<select id="select-item">
-			<option selected value="-1">アイテムを選択</option>
-			<%= @items.each do |item| %>
-			<option value=<%= item.id %>><%= item.name %></option>
-			<% end %>
-		</select>
-		<button type="button" class="btn btn-primary" onclick="item_use()">使用する</button>
+		<%= render :partial => "item_use", :locals => {members: @members, items: @items} %>
 	</div>
 
 	<% else %>
