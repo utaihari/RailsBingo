@@ -166,5 +166,5 @@ notice_auto_update = false
 	$('.ip-address').toggle()
 	return
 @show_room_detail = ->
-	$('.room-detail').toggle()
+	$('#room-detail').toggle()
 	return
