@@ -162,3 +162,6 @@ notice_auto_update = false
 		$('#notice-update-button').text("自動更新する")
 		notice_auto_update = false
 	return
+@show_ip_address = ->
+	$('.ip-address').toggle()
+	return

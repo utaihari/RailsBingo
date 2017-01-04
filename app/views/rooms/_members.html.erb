@@ -4,7 +4,10 @@
 <%= stylesheet_link_tag "application", :media => "all" %>
 <% end %>
 
-<h3>参加者一覧<button type="button" class="btn btn-primary btn-xs" onclick="joined_user_update(<%= room_id %>)">更新</button></h3>
+<h3>参加者一覧<button type="button" class="btn btn-primary btn-xs" onclick="joined_user_update(<%= room_id %>)">更新</button>
+<% if room_master %>
+	<button type="button" class="btn btn-primary btn-xs" onclick="show_ip_address()">ipアドレス表示切替</button>
+<% end %></h3>
 <div id="member-list">
 	<%= render :partial => "member_list", :locals => {room_id: room_id, members: members, cards: cards, isWindow: false} %>
 </div>

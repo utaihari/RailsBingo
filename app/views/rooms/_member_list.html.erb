@@ -1,6 +1,7 @@
 <% members.each_with_index do |member, index| %>
 <p>
 	<%= link_to member.name, user_path(member.id), target: "_new" %>
+	<span class="ip-address" style="display: none;"><%= member.last_sign_in_ip %></span>
 	<%= link_to "ビンゴカードを見る", tool_others_card_path(member.id, room_id, member.card_id),
 	:onclick=>"window.open(this.href,'メンバー', 'height=600, width=500');return false;" %>
 	<span>ビンゴ <%= cards[index].bingo_lines %>列, リーチ <%= cards[index].riichi_lines %>列, 穴 <%= cards[index].holes %>個</span>

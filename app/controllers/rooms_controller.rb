@@ -58,7 +58,7 @@ class RoomsController < ApplicationController
       redirect_to 'pages_index_path'
     end
 
-    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).select("users.id AS id, users.name, bingo_cards.id AS card_id, users.last_sign_in_ip").order("users.id ASC")
     @cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
 
     @url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)
@@ -234,8 +234,9 @@ class RoomsController < ApplicationController
 
   def member_list
     @room = Room.joins(:community).joins(:user).find(params[:room_id])
-    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id, users.last_sign_in_ip").order("users.id ASC")
     @cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
+    @room_mastar = isRoomOrganizer(params[:room_id])
   end
 
   def use_item_tool
@@ -306,10 +307,11 @@ class RoomsController < ApplicationController
   end
   def tool_members
     @room = Room.find(params[:room_id])
-    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id")
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id, users.last_sign_in_ip")
     @cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
+    @room_master = isRoomOrganizer(params[:room_id])
     logger.debug("room_id: "+@room.id.to_s)
-    render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards, isWindow: true}, :layout => false and return
+    render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards, isWindow: true, room_master: @room_master}, :layout => false and return
   end
 
   private

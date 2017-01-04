@@ -59,7 +59,7 @@
 	<% end %>
 	<% end %>
 	<div class="white-box container-fluid" >
-		<%= render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards, isWindow: false } %>
+		<%= render :partial => "members", :locals => {members: @members, room_id: @room.id, cards: @cards, room_master: @isRoomOrganizer, isWindow: false } %>
 		<%= link_to '別ウィンドウで開く',tool_members_path(@community.id, @room.id),
 		:onclick=>"window.open(this.href,'メンバー', 'height=600, width=400');return false;" %>
 	</div>
