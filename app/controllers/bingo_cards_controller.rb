@@ -321,7 +321,7 @@ class BingoCardsController < ApplicationController
 
 		checks[index] = "t"
 
-		if card.riichi_lines != params[:riichi_lines].to_i
+		if card.riichi_lines < params[:riichi_lines].to_i
 			RoomNotice.create(room_id: params[:room_id], user_name: current_user.name, notice: "リーチ！", color: "magenta")
 		end
 		card.checks = checks.join(",")
