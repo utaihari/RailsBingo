@@ -707,7 +707,7 @@ class BingoCardsController < ApplicationController
 			render :json => true and return
 		end
 
-		notice = "ビンゴ！"
+		notice = "ビンゴ！！！"
 		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "red")
 
 		card = BingoCard.find(card_id)
