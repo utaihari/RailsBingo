@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161227115049) do
+ActiveRecord::Schema.define(version: 20170104123542) do
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
@@ -109,9 +109,10 @@ ActiveRecord::Schema.define(version: 20161227115049) do
   create_table "room_notices", force: :cascade do |t|
     t.integer  "room_id"
     t.text     "notice",     default: ""
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.text     "user_name"
+    t.text     "color",      default: "black"
   end
 
   create_table "room_numbers", force: :cascade do |t|

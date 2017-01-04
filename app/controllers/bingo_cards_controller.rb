@@ -37,7 +37,7 @@ class BingoCardsController < ApplicationController
 		end
 
 		notice = "参加しました"
-		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice)
+		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "#333399")
 
 
 		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: @room.id}, :room_user_lists => {room_id: @room.id}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
@@ -322,7 +322,7 @@ class BingoCardsController < ApplicationController
 		checks[index] = "t"
 
 		if card.riichi_lines != params[:riichi_lines].to_i
-			RoomNotice.create(room_id: params[:room_id], user_name: current_user.name, notice: "リーチ！")
+			RoomNotice.create(room_id: params[:room_id], user_name: current_user.name, notice: "リーチ！", color: "magenta")
 		end
 		card.checks = checks.join(",")
 		card.riichi_lines = params[:riichi_lines].to_i
@@ -708,7 +708,7 @@ class BingoCardsController < ApplicationController
 		end
 
 		notice = "ビンゴ！"
-		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice)
+		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "red")
 
 		card = BingoCard.find(card_id)
 		card.bingo_lines += 1
