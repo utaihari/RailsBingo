@@ -2,7 +2,7 @@
 	<h1><%= @room.name %></h1>
 	<div id="room-detail">
 		<p>部屋ＩＤ <%= @room.id %></p>
-		<div><%= raw @room.detail %></div>
+		<div class="white-box"><%= raw @room.detail %></div>
 	</div>
 	<% if !@room.AllowJoinDuringGame && @room.isPlaying  %>
 		このゲームは途中参加できません。
