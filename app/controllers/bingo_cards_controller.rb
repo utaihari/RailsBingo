@@ -710,7 +710,7 @@ class BingoCardsController < ApplicationController
 		notice = "ビンゴ！！！"
 		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "red")
 
-		card = BingoCard.find(card_id)
+		card = BingoCard.joins(:user).joins(:room).find(card_id)
 		card.bingo_lines += 1
 		card.save
 

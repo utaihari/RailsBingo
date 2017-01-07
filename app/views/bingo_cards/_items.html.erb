@@ -1,6 +1,6 @@
 <%= javascript_include_tag "remodal.min.js" %>
-
 <div>
+	<% if room.can_bring_item %>
 	<table class="table">
 		<thead>
 			<tr>
@@ -82,4 +82,8 @@
 	</div>
 	<% end %>
 	<% end %>
+	<% end %>
+	<p><font color="DarkGrey">このゲームのアイテムは次に持ち越すことができます</font></p>
+	<% else %>
+	<p><font color="DarkGrey">このゲームのアイテムは次に持ち越すことができません</font></p>
 	<% end %>

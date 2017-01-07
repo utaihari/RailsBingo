@@ -110,7 +110,7 @@ bingo_users_length = 0
 	)
 	$('#easy-to-apper-numbers').empty()
 	for index in [9..0]
-		$('#easy-to-apper-numbers').prepend("<span><font size=#{1+(numbers[index].rate/10)}>#{numbers[index].number}</font> </span>")
+		$('#easy-to-apper-numbers').prepend("<span style=\"font-size: #{1+(numbers[index].rate/30)}em\">#{numbers[index].number} </span>")
 	return
 
 @hide_bingo_users = ->
