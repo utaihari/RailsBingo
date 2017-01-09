@@ -84,9 +84,9 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-  
+
   config.i18n.default_locale = :ja
-  
+
   config.action_mailer.default_url_options = { :host => '160.16.223.100' }
 
   config.action_mailer.smtp_settings = {
@@ -98,5 +98,6 @@ Rails.application.configure do
     :password => Settings[:gmail][:password],
     :authentication => 'login',
   }
-  
+
+GA.tracker = "UA-89830129-1"
 end

@@ -62,3 +62,5 @@ gem 'config'
 platforms :ruby do
   gem 'unicorn'
 end
+
+gem 'google-analytics-rails'
