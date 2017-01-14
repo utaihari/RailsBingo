@@ -3,20 +3,16 @@
 	<h1><%= @room.name %></h1>
 	<h2>ビンゴ結果発表</h2>
 	<div class="white-box">
-		<h3>ビンゴしたユーザー一覧</h3>
+		<h3>ビンゴしたユーザー一覧 <button type="button" class="btn btn-primary" onclick="view_mail_address()">メールアドレス表示</button></h3>
 		<% if !@bingo_list.blank? %>
 		<% @bingo_list.each_with_index do |user, i| %>
 		<div>
 			<div>
 				<div><%= i+1 %>位</div>
 				<%= link_to user.name, user_path(user.user_id), target: "_new" %> さん
-				<span onclick="view_mail_address(this)">
-					<a href="#" onclick="">メールアドレス表示</a>
-				</span>
 				<span class="view-mail-addess" style="display: none;">
 					<%= user.email %>
 				</span>
-				<span class="note">放送中は表示しないように注意してください</span>
 			</div>
 			<div><%= user.times %>回目 <%= user.seconds %>ms</div>
 		</div>

@@ -83,7 +83,7 @@ bingo_users_length = 0
 	return
 
 @view_mail_address =(obj) ->
-	$(obj).children('.view-mail-addess').toggle()
+	$('.view-mail-addess').toggle()
 	return
 
 @open_bingo_users_window = (obj)->
