@@ -200,12 +200,12 @@ class BingoCardsController < ApplicationController
 		end
 
 		selected_items.each do |item|
-			i = UserItemList.joins(:user).joins(:community).joins(:item).find_by(user_id: current_user.id, community_id: params[:community_id], item_id: item.id)
+			i = UserItemList.joins(:user).joins(:community).joins(:item).find_by(user_id: current_user.id, community_id: params[:community_id], item_id: item.id, temp: false)
 			if i != nil
 				i.quantity += 1
 				i.save
 			else
-				UserItemList.create(user_id: current_user.id, community_id: params[:community_id], item_id: item.id, quantity: 1)
+				UserItemList.create(user_id: current_user.id, community_id: params[:community_id], item_id: item.id, quantity: 1, temp: false)
 			end
 		end
 		user.got_item_after_game = true
@@ -288,7 +288,7 @@ class BingoCardsController < ApplicationController
 			if free_num > 0
 				free_num.times{
 					while true
-						i = rand(numbers.length) + 1
+						i = rand(numbers.length)
 						if !random_numbers.include?(i)
 							random_numbers << i
 							break
