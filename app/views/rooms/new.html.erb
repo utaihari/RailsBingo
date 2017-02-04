@@ -48,15 +48,15 @@
 			<p>終了時に配布するアイテムの枚数</p>
 			<div class="form-group">
 				<%= f.label :bingo_score, "ビンゴ１列につきアイテム" %>
-				<%= f.number_field :bingo_score, :step =>0.5 %>個
+				<%= f.number_field :bingo_score, :step =>0.1 %>個
 			</div>
 			<div class="form-group">
 				<%= f.label :riichi_score, "リーチ１列につきアイテム" %>
-				<%= f.number_field :riichi_score, :step =>0.5 %>個
+				<%= f.number_field :riichi_score, :step =>0.1 %>個
 			</div>
 			<div class="form-group">
 				<%= f.label :hole_score, "穴一つにつきアイテム" %>
-				<%= f.number_field :hole_score, :step =>0.2 %>個
+				<%= f.number_field :hole_score, :step =>0.1 %>個
 			</div>
 		</div>
 	</div>
