@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
-  get 'users/show'
+	resources :change_logs
+	get 'users/show'
 
 	get 'rooms/result'
 
@@ -82,6 +83,8 @@ Rails.application.routes.draw do
 	post 'API/use_item', to: 'bingo_cards#use_item'
 	get 'API/use_item_all', to: 'bingo_cards#use_item_all'
 	get 'API/member_list_from_card/:room_id', to: 'bingo_cards#member_list'
+	post 'API/auto_check', to: 'bingo_cards#auto_check'
+	get 'API/get_settings', to: 'bingo_cards#get_settings'
 
 	get 'API/check_rank', to: 'rooms#check_rank'
 	get 'API/check_bingo_users', to: 'rooms#check_bingo_users'

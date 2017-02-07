@@ -1,0 +1,86 @@
+<div class="center70">
+  <p id="notice"><%= notice %></p>
+
+  <h1>更新履歴</h1>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>内容</th>
+        <th>更新日時</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @change_logs.each do |change_log| %>
+      <tr>
+        <td><%= change_log.title %></td>
+        <td><%= change_log.change_date %></td>
+        <td><%= link_to '詳細を表示', change_log %></td>
+        <% if @is_admin %>
+        <td><%= link_to 'Edit', edit_change_log_path(change_log) %></td>
+        <td><%= link_to 'Destroy', change_log, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <br>
+
+  <h1>追加予定の機能</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>内容</th>
+        <th>更新日時</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @to_be_released.each do |change_log| %>
+      <tr>
+        <td><%= change_log.title %></td>
+        <td><%= change_log.change_date %></td>
+        <td><%= link_to '詳細を表示', change_log %></td>
+        <% if @is_admin %>
+        <td><%= link_to 'Edit', edit_change_log_path(change_log) %></td>
+        <td><%= link_to 'Destroy', change_log, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <br>
+  <h1>既知のバグ</h1>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>内容</th>
+        <th>更新日時</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @to_be_resolved.each do |change_log| %>
+      <tr>
+        <td><%= change_log.title %></td>
+        <td><%= change_log.change_date %></td>
+        <td><%= link_to '詳細を表示', change_log %></td>
+        <% if @is_admin %>
+        <td><%= link_to 'Edit', edit_change_log_path(change_log) %></td>
+        <td><%= link_to 'Destroy', change_log, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <br>
+
+  <% if @is_admin %>
+  <%= link_to 'New Change Log', new_change_log_path %>
+  <% end %>
+</div>
+

@@ -10,18 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170104123542) do
+ActiveRecord::Schema.define(version: 20170207182754) do
+
+  create_table "admin_users", force: :cascade do |t|
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "bingo_cards", force: :cascade do |t|
     t.integer  "room_id"
     t.integer  "user_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.string   "numbers",      default: ""
     t.string   "checks"
     t.integer  "bingo_lines",  default: 0
     t.integer  "riichi_lines", default: 0
     t.integer  "holes",        default: 0
+    t.boolean  "is_auto",      default: false
   end
 
   create_table "bingo_users", force: :cascade do |t|
@@ -53,6 +60,15 @@ ActiveRecord::Schema.define(version: 20170104123542) do
     t.datetime "created_at",                    null: false
     t.datetime "updated_at",                    null: false
     t.boolean  "isChecked",     default: false
+  end
+
+  create_table "change_logs", force: :cascade do |t|
+    t.text     "body"
+    t.integer  "log_type",    default: 0
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.date     "change_date"
+    t.text     "title"
   end
 
   create_table "communities", force: :cascade do |t|
@@ -161,6 +177,14 @@ ActiveRecord::Schema.define(version: 20170104123542) do
     t.integer  "quantity",     default: 0
     t.boolean  "temp",         default: false
     t.integer  "room_id",      default: 0
+  end
+
+  create_table "user_settings", force: :cascade do |t|
+    t.integer  "check_number_freq", default: 5
+    t.integer  "check_state_freq",  default: 8
+    t.boolean  "is_auto",           default: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
   end
 
   create_table "users", force: :cascade do |t|

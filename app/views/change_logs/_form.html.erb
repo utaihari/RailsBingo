@@ -1,0 +1,52 @@
+<script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
+<script type="text/javascript">bkLib.onDomLoaded(function() {
+  new nicEditor().panelInstance('log-body');
+});</script>
+
+
+<%= form_for(change_log) do |f| %>
+<% if change_log.errors.any? %>
+<div id="error_explanation">
+  <h2><%= pluralize(change_log.errors.count, "error") %> prohibited this change_log from being saved:</h2>
+
+  <ul>
+    <% change_log.errors.full_messages.each do |message| %>
+    <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
+<div class="field">
+  <%= f.label :title %>
+  <%= f.text_area :title, :style => 'width: 100%' %>
+</div>
+<br>
+<div class="field">
+  <%= f.label :body %>
+  <%= f.text_area :body, rows: 10, cols: 40, :style => 'width: 100%', :id => 'log-body' %>
+</div>
+<br>
+<div class="field">
+  <%= f.label :log_type %>
+  <%= f.number_field :log_type, default: 0 %>
+</div>
+<div>0:更新履歴 1:追加予定の機能 2:既知のバグ</div>
+<br>
+<div class="field">
+  <%= f.label :change_date %>
+    <%= raw sprintf(
+              f.date_select(
+                  :change_date,
+                  use_month_numbers: true,
+                  start_year:        2017,
+                  end_year:          (Time.now.year - 18),
+                  default:           Date.new(2017, 1, 1),
+                  date_separator:    '%s'),
+              '年 ', '月 ') + '日' %>
+</div>
+
+<div class="actions">
+  <%= f.submit %>
+</div>
+<% end %>

@@ -1,0 +1,19 @@
+<div class="center70">
+	<p id="notice"><%= notice %></p>
+
+	<p>
+		<strong>タイトル:</strong>
+		<%= @change_log.title %>
+	</p>
+
+	<p>
+		<strong>詳細:</strong>
+		<%= raw @change_log.body %>
+	</p>
+
+	<% if @is_admin %>
+	<%= link_to 'Edit', edit_change_log_path(@change_log) %>
+	<% end %>
+
+	<%= link_to 'Back', change_logs_path %>
+</div>

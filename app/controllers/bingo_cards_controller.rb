@@ -205,7 +205,7 @@ class BingoCardsController < ApplicationController
 				i.quantity += 1
 				i.save
 			else
-				UserItemList.create(user_id: current_user.id, community_id: params[:community_id], item_id: item.id, quantity: 1, temp: false)
+				UserItemList.create(user_id: current_user.id, community_id: params[:community_id], item_id: item.id, quantity: 1, temp: falseee)
 			end
 		end
 		user.got_item_after_game = true
@@ -717,6 +717,12 @@ class BingoCardsController < ApplicationController
 		BingoUser.create(room_id: room_id, user_id: current_user.id, times: times, seconds: seconds)
 		render :json => true and return
 	end
+
+	def auto_check
+		settings = UserSetting.find_by(user_id:current_user.id)
+	end
+
+
 	private
 
 	def check_bingo(card_id, room_id)

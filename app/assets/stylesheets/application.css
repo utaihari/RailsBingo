@@ -30,30 +30,47 @@
  		width:100%;
  		background-color: #FFEEFF;
  		color:#333333;
- 	}*/
+ 		}*/
 /* 	#container{
  		width:100%;
- 	}*/
- 	.center70{
- 		width: 90%;
- 		margin-right: auto;
- 		margin-left : auto;
+ 		}*/
+ 		.center70{
+ 			width: 90%;
+ 			margin-right: auto;
+ 			margin-left : auto;
+ 		}
  	}
- }
 
- .note{
- 	color:#330;
- 	font-size: 50%;
- }
- .white-box{
- 	background-color: rgba(255, 255, 255, 0.8);
- 	border-radius: 10px;
- 	padding: 0px 10px 10px 10px;
- 	box-shadow: 3px 3px #a9a9a9;
- }
- .navbar{
- 	background-color: #FFD5EC;
- }
- .yellow-filter{
- 	background-color: rgba(240, 230, 140, 0.5)
- }
+ 	.note{
+ 		color:#330;
+ 		font-size: 50%;
+ 	}
+ 	.white-box{
+ 		background-color: rgba(255, 255, 255, 0.8);
+ 		border-radius: 10px;
+ 		padding: 0px 10px 10px 10px;
+ 		box-shadow: 3px 3px #a9a9a9;
+ 	}
+ 	.navbar{
+ 		background-color: #FFD5EC;
+ 	}
+ 	.yellow-filter{
+ 		background-color: rgba(240, 230, 140, 0.5)
+ 	}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {  /*<footer class="footer">*/
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 20px;
+  background-color: #f5f5f5;
+}

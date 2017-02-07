@@ -418,4 +418,18 @@ reload_check_numbers = ->
 				$('#bingo-button').hide()
 	return
 
+is_auto_check = false
 
+get_settings = ->
+	$.getJSON('/API/get_settings',{},(json)->
+		is_auto_check = json['auto_check']
+		return
+		)
+	return
+
+@auto_check = ->
+	is_auto_check = $('#auto_check').val()
+	$.post('/API/auto_check', {is_auto_check: is_auto_check}, (data) ->
+		return
+		)
+	return

@@ -12,5 +12,7 @@ class User < ApplicationRecord
   has_many :bingo_user, dependent: :destroy
   has_many :community_administrator, dependent: :destroy
   has_many :room, dependent: :destroy
+  has_many :user_setting, dependent: :destroy
+  has_many :admin_user, dependent: :destroy
 
 end
