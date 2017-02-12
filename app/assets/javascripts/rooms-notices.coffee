@@ -21,7 +21,7 @@ notice_auto_update = false
 			json.reverse()
 			notices_length += json.length
 			for i in json
-				$('#notices').prepend("<div><span class=\"user_name\">#{i.user_name}さん: </span><span>#{i.notice}</span>")
+				$('#notices').prepend("<div><span class=\"user_name\">#{i.user_name}さん: </span><span><font color=\"#{i.color}\">#{i.notice}</font></span>")
 			return
 		)
 	return

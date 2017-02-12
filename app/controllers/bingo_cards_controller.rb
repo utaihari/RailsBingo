@@ -17,14 +17,15 @@ class BingoCardsController < ApplicationController
 		@checks = numberlist.checks.split(",")
 		@card = BingoCard.find(params[:id])
 
-		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: @room.id}, :room_user_lists => {room_id: @room.id}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto").order("bingo_cards.is_auto ASC, users.id ASC")
 		@cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
 		room_id = 0
 		if !@room.can_bring_item
 			room_id = @room.id
 		end
 		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type, items.description").order("items.name")
-
+		@is_auto = @card.is_auto
+		@done_bingo = @card.done_bingo
 		@get_items = distribute_item(params[:community_id], params[:room_id])
 	end
 
@@ -38,9 +39,9 @@ class BingoCardsController < ApplicationController
 
 		notice = "参加しました"
 		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "#333399")
+		setting = UserSetting.find_by(user_id: current_user.id)
 
-
-		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: @room.id}, :room_user_lists => {room_id: @room.id}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: @room.id}, :room_user_lists => {room_id: @room.id}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto").order("bingo_cards.is_auto ASC, users.id ASC")
 		@cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
 
 		@numbers = make_bingo_num(@room.number_of_free.to_i)
@@ -48,9 +49,10 @@ class BingoCardsController < ApplicationController
 		25.times { |n|
 			@checks << "f"
 		}
-		@card = BingoCard.create!(room_id:params[:room_id], user_id:current_user.id, numbers: @numbers.join(","), checks: @checks.join(","))
+		@card = BingoCard.create!(room_id:params[:room_id], user_id:current_user.id, numbers: @numbers.join(","), checks: @checks.join(","), is_auto: setting.is_auto)
 		@get_items = distribute_item(params[:community_id], params[:room_id])
-
+		@is_auto = @card.is_auto
+		@done_bingo = @card.done_bingo
 		room_id = 0
 		if !@room.can_bring_item
 			room_id = @room.id
@@ -86,7 +88,7 @@ class BingoCardsController < ApplicationController
 
 	def member_list
 		@room = Room.joins(:community).joins(:user).find(params[:room_id])
-		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto").order("bingo_cards.is_auto ASC, users.id ASC")
 		@cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
 	end
 
@@ -640,7 +642,7 @@ class BingoCardsController < ApplicationController
 				return delete_number
 			end
 			delete_number << room_numbers[index].number
-			room_rates[room_numbers[index].number-1] = 10.0
+			room_rates[room_numbers[index].number-1] = room.pre_rate
 			room_numbers[index].destroy
 		end
 		room.rates = room_rates.join(",")
@@ -712,6 +714,7 @@ class BingoCardsController < ApplicationController
 
 		card = BingoCard.joins(:user).joins(:room).find(card_id)
 		card.bingo_lines += 1
+		card.done_bingo = true
 		card.save
 
 		BingoUser.create(room_id: room_id, user_id: current_user.id, times: times, seconds: seconds)
@@ -719,7 +722,18 @@ class BingoCardsController < ApplicationController
 	end
 
 	def auto_check
+		card = BingoCard.find(params[:card_id])
 		settings = UserSetting.find_by(user_id:current_user.id)
+		is_auto = params[:is_auto_check]
+		if settings == nil
+			settings = UserSetting.create(user_id: current_user.id, is_auto: is_auto)
+		end
+		card.is_auto = is_auto
+		settings.is_auto = is_auto
+
+		card.save
+		settings.save
+		render :json => true and return
 	end
 
 

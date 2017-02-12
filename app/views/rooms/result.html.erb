@@ -1,6 +1,7 @@
 <%= javascript_include_tag "rooms.js" %>
 <div class="center70">
 	<h1><%= @room.name %></h1>
+	<div>参加人数　<%= @number_of_joined %>人</div>
 	<h2>ビンゴ結果発表</h2>
 	<div class="white-box">
 		<h3>ビンゴしたユーザー一覧 <button type="button" class="btn btn-primary" onclick="view_mail_address()">メールアドレス表示</button></h3>
@@ -13,6 +14,7 @@
 				<span class="view-mail-addess" style="display: none;">
 					<%= user.email %>
 				</span>
+				<span><%= user.note %></span>
 			</div>
 			<div><%= user.times %>回目 <%= user.seconds %>ms</div>
 		</div>

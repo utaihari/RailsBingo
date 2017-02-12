@@ -74,7 +74,7 @@ bingo_users_length = 0
 		bingo_users_length = bingo_users.length
 		$('#bingo-user-list').empty()
 		for user, index in bingo_users
-			$('#bingo-user-list').prepend("<div> #{user.name}, #{user.times}回目, #{user.seconds}ms </div>")
+			$('#bingo-user-list').prepend("<div> #{user.name}, #{user.times}回目, #{user.seconds}ms, #{user.note} </div>")
 	if @bingo_users_window? && !@bingo_users_window.closed
 		list = @bingo_users_window.document.getElementById('bingo-user-list')
 		$(list).empty()

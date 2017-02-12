@@ -51,6 +51,8 @@ gem 'twitter-bootstrap-rails'
 gem 'jquery-turbolinks'
 gem "compass-rails"
 
+gem 'bootstrap-sass'
+
 #create_qr-code
 gem 'rqrcode'
 

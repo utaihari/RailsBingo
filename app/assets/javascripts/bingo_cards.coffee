@@ -10,7 +10,6 @@ card_numbers = []
 number_length = 0
 condition = 0
 number_arrive_time = new Date()
-done_bingo = false
 
 $(->
 	$('#tab-container').easytabs()
@@ -19,6 +18,12 @@ $(->
 	@card_id = $("#data").data("card_id")
 	@community_id = $("#data").data("community_id")
 	@get_item = $("#data").data("get_item")
+	@is_auto = $('#data').data("is_auto")
+	@done_bingo = $('#data').data("done_bingo")
+
+	if is_auto
+		$('#auto_check').prop("checked",true)
+
 	for i in [0..24]
 		checks.push(false)
 	@onPageLoad()
@@ -28,13 +33,15 @@ $(->
 	@start_check = setInterval(->
 		game_start_check(room_id)
 	,5000)
-	if check_bingo()
+	if !@done_bingo && check_bingo()
 		$('#bingo-button').show()
 	else
 		$('#bingo-button').hide()
 
 	if @get_item
 		$('[data-remodal-id=getitem]').remodal().open()
+	else if @is_auto
+		$('[data-remodal-id=is_auto]').remodal().open()
 	return
 )
 @onPageLoad = ->
@@ -60,6 +67,7 @@ game_start_check =  ->
 			game_end_check()
 		,8000)
 		clearInterval(@start_check)
+		check_number_local(-1)
 	if condition == 2
 		clearInterval(@start_check)
 		game_end_check()
@@ -144,10 +152,14 @@ update_list = ->
 		if numbers[numbers.length-1] isnt -1
 			notice.push("新しいナンバーは "+ numbers[numbers.length-1] + "です")
 			hide_added_number()
+
+			#action for new numbers
 			for i in [number_length..numbers.length]
 				$("#added-#{numbers[i-1]}").addClass("icon-cross")
 				if document.getElementById("select-number-#{numbers[i-1]}") != null
 					$("#select-number-#{numbers[i-1]}").hide()
+				if @is_auto
+					check_number_local(numbers[i-1])
 
 		number_length = numbers.length
 		$('ul#number-list').empty()
@@ -165,6 +177,12 @@ update_list = ->
 		checks[index] = (json[index] == 't')
 	)
 	return
+
+check_number_local = (number) ->
+	card_nums = $('.bingo-number')
+	for n in card_nums
+		if number == parseInt($(n).data("number"))
+			$(n).addClass("checked")
 
 @uncheck_number = (index) ->
 	checks[index] = false
@@ -194,7 +212,7 @@ update_list = ->
 
 @bingo = ->
 	current_time = new Date()
-	if !check_bingo || done_bingo
+	if !check_bingo || @done_bingo
 		$('#bingo-button').hide()
 		return
 	$.post('/API/done_bingo', {card_id: @card_id, room_id: @room_id, times: numbers.length, seconds: current_time-number_arrive_time}, (data) ->
@@ -418,18 +436,16 @@ reload_check_numbers = ->
 				$('#bingo-button').hide()
 	return
 
-is_auto_check = false
-
 get_settings = ->
 	$.getJSON('/API/get_settings',{},(json)->
-		is_auto_check = json['auto_check']
+		@is_auto = json['auto_check']
 		return
 		)
 	return
 
 @auto_check = ->
-	is_auto_check = $('#auto_check').val()
-	$.post('/API/auto_check', {is_auto_check: is_auto_check}, (data) ->
+	@is_auto = $('#auto_check').prop("checked")
+	$.post('/API/auto_check', {is_auto_check: @is_auto, card_id: @card_id}, (data) ->
 		return
 		)
 	return

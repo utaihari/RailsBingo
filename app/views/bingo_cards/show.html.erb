@@ -13,7 +13,7 @@
 </div>
 
 <div class="remodal-bg">
-	<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %> data-community_id=<%= @community.id %> data-get_item=<%= !@get_items.blank? %>></div>
+	<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %> data-community_id=<%= @community.id %> data-get_item=<%= !@get_items.blank? %> data-is_auto=<%= @is_auto %> data-done_bingo=<%= @done_bingo %>></div>
 	<div class="center70">
 		<div class="remodal" data-remodal-id="result">
 			<button data-remodal-action="close" class="remodal-close"></button>
@@ -23,7 +23,21 @@
 		</div>
 		<div class="remodal" data-remodal-id="getitem">
 			<button data-remodal-action="close" class="remodal-close"></button>
+			<% if @is_auto %>
+			<h2>自動チェック機能がONになっています。</h2>
+			<div>ブラウザを閉じていても、ゲームに参加できます。</div>
+			<div>ゲームの結果は終わり次第、主催者から通知されます。</div>
+			<div>注意：途中参加の場合、これまでに出た数字は自動でチェックされません。手動でチェックしてください。</div>
+			<% end %>
 			<%= render :partial => "get_items", :locals => { items: @get_items } %>
+			<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
+		</div>
+		<div class="remodal" data-remodal-id="is_auto">
+			<button data-remodal-action="close" class="remodal-close"></button>
+			<h2>自動チェック機能がONになっています。</h2>
+			<div>ブラウザを閉じていても、ゲームに参加できます。</div>
+			<div>ビンゴの結果はゲームが終わり次第、主催者から通知されます。</div>
+			<div>注意：途中参加の場合、これまでに出た数字は自動でチェックされません。手動でチェックしてください。</div>
 			<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
 		</div>
 	</div>

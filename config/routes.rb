@@ -42,6 +42,7 @@ Rails.application.routes.draw do
 	get 'communities/:id/member_list', to: 'communities#member_list', as:'community_member_list'
 	get 'communities/:community_id/rooms/:room_id/pre-join', to: 'rooms#pre_join', as:'pre_join_room'
 	get 'communities/:community_id/rooms/:room_id/join', to: 'rooms#join', as:'join_room'
+	get 'communities/:community_id/rooms/:room_id/join_auto', to: 'rooms#join_auto', as:'join_room_auto'
 
 	#TOOLS
 	# get 'TOOLS/number-generator/:room_id', to: 'rooms#tool_number_generator', as:'tool_number-generator'

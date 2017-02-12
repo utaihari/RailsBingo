@@ -16,7 +16,14 @@
 		<p>部屋ＩＤをもう一度確認し、信頼できない場合は参加しないでください</p>
 		<p>あなたのメールアドレス（正しくない場合は<%= link_to '修正', edit_user_registration_path %>してください） ： <%= current_user.email %></p>
 		<% end %>
-		<%= link_to "ゲームに参加", join_room_path(@community.id, @room.id), class: "btn btn-lg btn-primary" %>
+		<br>
+		<%= link_to "ゲームに参加する", join_room_path(@community.id, @room.id), class: "btn btn-lg btn-primary" %>
+		<div>自分でビンゴカードに穴を開けます。設定によってはアイテムの使用ができます。</div>
+		<br>
+		<%= link_to "ゲームに参加し自動でカードに穴を開ける", join_room_auto_path(@community.id, @room.id), class: "btn btn-info" %>
+		<div>自動でビンゴカードに穴を開けます。ビンゴゲーム開催中にブラウザを閉じていても結果を知ることができます。</div>
+		<br>
+		<div>↑どちらを選んでも後から変更できます↑</div>
 	</div>
 	<% else %>
 	<div>

@@ -58,7 +58,7 @@ class RoomsController < ApplicationController
       redirect_to 'pages_index_path'
     end
 
-    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).select("users.id AS id, users.name, bingo_cards.id AS card_id, users.last_sign_in_ip").order("users.id ASC")
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto, users.last_sign_in_ip").order("bingo_cards.is_auto ASC, users.id ASC")
     @cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
 
     @url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)
@@ -126,14 +126,53 @@ class RoomsController < ApplicationController
     end
   end
 
+  def join_auto
+    if !user_signed_in?
+      render 'pre_join'
+    end
+    @community = Community.find_by(id:params[:community_id])
+    @room = Room.find_by(id:params[:room_id])
+
+    if @community == nil || @room == nil
+      redirect_to controller: 'communities', action: 'index'
+    end
+    if !@room.AllowJoinDuringGame && @room.isPlaying
+      render :text => "error"
+    end
+    if !isCommunityMember(@community.id)
+      CommunityUserList.create(community_id: @community.id, user_id: current_user.id)
+    end
+
+
+    if !RoomUserList.exists?(room_id: params[:room_id], user_id: current_user.id)
+      @room_user_list = RoomUserList.new(room_id: params[:room_id], user_id: current_user.id)
+      if @room_user_list.save
+        redirect_to controller: 'bingo_cards', action: 'create', community_id: params[:community_id], room_id: params[:room_id]
+      else
+        redirect_to controller: 'communities', action: 'index'
+      end
+    else
+      settings = UserSetting.find_by(user_id: current_user.id)
+      if settings == nil
+        settings = UserSetting.create(user_id: current_user.id)
+      end
+      settings.is_auto = true
+      settings.save
+      redirect_to controller: 'bingo_cards', action: 'create', community_id: params[:community_id], room_id: params[:room_id]
+    end
+  end
+
+
+
   def result
     @room = Room.joins(:community).joins(:user).find_by(id:params[:room_id])
     if !isRoomOrganizer(params[:room_id])
       render :text => "主催者ではありません"
     end
-    @bingo_list = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("seconds","times","name","email","user_id")
+    @bingo_list = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("seconds","times","name","email","user_id","note")
     @room.isFinished = true
     @room.save
+    @number_of_joined = RoomUserList.where(room_id: params[:room_id]).count
     if !@room.can_bring_item
       UserItemList.delete_all(room_id: @room.id, temp: true)
     end
@@ -146,7 +185,7 @@ class RoomsController < ApplicationController
       render :json => "不正なパラメータです" and return
     end
 
-    number = Integer(params[:number])
+    number = params[:number].to_i
 
     if @room == nil || number < 1 || 75 < number
       render :json => "不正なパラメータです" and return
@@ -155,9 +194,47 @@ class RoomsController < ApplicationController
     if isRoomOrganizer(params[:room_id])
       RoomNumber.create(room_id: params[:room_id],number: params[:number])
       rates = @room.rates.split(",")
+      @room.pre_rate = rates[number-1]
       rates[number-1] = 0
       @room.rates = rates.join(",")
+      @room.times += 1
       @room.save
+
+      auto_cards = BingoCard.includes(:user).includes(:room).where(room_id: params[:room_id], is_auto: true)
+
+      auto_cards.each do |card|
+        card_numbers = card.numbers.split(",")
+        card_checks = card.checks.split(",")
+        card_numbers.each_with_index do |num, i|
+          if num.to_i == number
+            card_checks[i] = "t"
+            card.holes += 1
+
+            if !card.done_bingo
+              riichi_lines = card.riichi_lines
+              card.riichi_lines = calc_riichi_lines(card_checks)
+
+              if riichi_lines != card.riichi_lines
+                notice = "リーチ！(自動機能により登録されました)"
+                user = User.find(card.user_id)
+                RoomNotice.create!(room_id: params[:room_id], user_name: user.name, notice: notice, color: "magenta")
+              end
+
+              if check_bingo(card_checks)
+                user = User.find(card.user_id)
+                notice = "ビンゴ！(自動機能により登録されました)"
+                RoomNotice.create!(room_id: params[:room_id], user_name: user.name, notice: notice, color: "red")
+                card.bingo_lines += 1
+                card.done_bingo = true
+                BingoUser.create(room_id: params[:room_id], user_id: user.id, times: @room.times, seconds: 0, note:"自動ユーザー")
+              end
+            end
+            card.checks = card_checks.join(",")
+
+          end
+        end
+        card.save
+      end
       render :json => rates
     else
       render :json => "ビンゴの主催者では有りません"
@@ -229,18 +306,31 @@ class RoomsController < ApplicationController
     @room.isPlaying = true
     @room.save
 
-    RoomNumber.create(room_id: @room.id, number: -1)
+    RoomNumber.create(room_id: params[:room_id], number: -1)
+    auto_cards = BingoCard.where(room_id: params[:room_id], is_auto: true)
+    auto_cards.each do |card|
+      card_numbers = card.numbers.split(",")
+      card_checks = card.checks.split(",")
+      card_numbers.each_with_index do |num, i|
+        if num.to_i == -1
+          card_checks[i] = "t"
+          card.checks = card_checks.join(",")
+          card.holes += 1
+        end
+      end
+      card.save
+    end
   end
 
   def member_list
     @room = Room.joins(:community).joins(:user).find(params[:room_id])
-    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id, users.last_sign_in_ip").order("users.id ASC")
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto, users.last_sign_in_ip").order("bingo_cards.is_auto ASC, users.id ASC")
     @cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
     @room_mastar = isRoomOrganizer(params[:room_id])
   end
 
   def use_item_tool
-    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("users.id ASC")
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id").order("bingo_cards.is_auto ASC, users.id ASC")
     @items = Item.where("((item_type = ?) OR (item_type = ?) OR (item_type = ?)) AND (AllowUseDuringGame = 't')",0,2,4)
   end
 
@@ -274,7 +364,7 @@ class RoomsController < ApplicationController
     if !isRoomOrganizer(params[:room_id])
       render :json => "不正なパラメータです" and return
     end
-    users = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("Users.name","times","seconds")
+    users = BingoUser.joins(:user).where(room_id: params[:room_id]).order("bingo_users.times ASC, bingo_users.seconds ASC").select("Users.name","times","seconds","note")
     render :json => users and return
   end
 
@@ -307,7 +397,7 @@ class RoomsController < ApplicationController
   end
   def tool_members
     @room = Room.find(params[:room_id])
-    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id, users.last_sign_in_ip")
+    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto, users.last_sign_in_ip")
     @cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
     @room_master = isRoomOrganizer(params[:room_id])
     logger.debug("room_id: "+@room.id.to_s)
@@ -315,6 +405,66 @@ class RoomsController < ApplicationController
   end
 
   private
+
+  def check_bingo(checks)
+    # Alignment bingocard sequence
+    # 0  1  2  3  4
+    # 5  6  7  8  9
+    # 10 11 12 13 14
+    # 15 16 17 18 19
+    # 20 21 22 23 24
+
+    #check horizontal line
+    for i in 0..4
+      if checks[i*5+0] == "t" && checks[i*5+1] == "t" && checks[i*5+2] == "t" && checks[i*5+3] == "t" && checks[i*5+4] == "t"
+        return true
+      end
+    end
+    #check vertical line
+    for i in 0..4
+      if checks[i+0] == "t" && checks[i+5] == "t" && checks[i+10] == "t" && checks[i+15] == "t" && checks[i+20] == "t"
+        return true
+      end
+    end
+    #check diagonal line
+    if checks[0] == "t" && checks[6] == "t" && checks[12] == "t" && checks[18] == "t" && checks[24] == "t"
+      return true
+    end
+    if checks[4] == "t" && checks[8] == "t" && checks[12] == "t" && checks[16] == "t" && checks[20] == "t"
+      return true
+    end
+    return false
+  end
+
+  def calc_riichi_lines(checks)
+    holes = []
+    number_of_one_left_line = 0
+    for check in checks
+      if check == "t"
+        holes.push(1)
+      else
+        holes.push(0)
+      end
+    end
+    for i in 0..4
+      if (holes[i*5+0]+holes[i*5+1]+holes[i*5+2]+holes[i*5+3]+holes[i*5+4]) == 4
+        number_of_one_left_line += 1
+      end
+    end
+    for i in 0..4
+      if (holes[i+0]+holes[i+5]+holes[i+10]+holes[i+15]+holes[i+20]) == 4
+        number_of_one_left_line += 1
+      end
+    end
+    if (holes[0]+holes[6]+holes[12]+holes[18]+holes[24]) == 4
+      number_of_one_left_line += 1
+    end
+    if (holes[4]+holes[8]+holes[12]+holes[16]+holes[20]) == 4
+      number_of_one_left_line += 1
+    end
+    return number_of_one_left_line
+  end
+
 
   def set_room
     @room = Room.find(params[:id])
