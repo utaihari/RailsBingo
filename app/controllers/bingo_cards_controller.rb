@@ -41,7 +41,7 @@ class BingoCardsController < ApplicationController
 		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "#333399")
 		settings = UserSetting.find_by(user_id: current_user.id)
 		if settings == nil
-			settings = UserSetting.create(user_id: current_user.id, is_auto: is_auto)
+			settings = UserSetting.create(user_id: current_user.id)
 		end
 
 		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: @room.id}, :room_user_lists => {room_id: @room.id}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto").order("bingo_cards.is_auto ASC, users.id ASC")
