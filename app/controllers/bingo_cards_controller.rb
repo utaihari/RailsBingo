@@ -39,7 +39,10 @@ class BingoCardsController < ApplicationController
 
 		notice = "参加しました"
 		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "#333399")
-		setting = UserSetting.find_by(user_id: current_user.id)
+		settings = UserSetting.find_by(user_id: current_user.id)
+		if settings == nil
+			settings = UserSetting.create(user_id: current_user.id, is_auto: is_auto)
+		end
 
 		@members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: @room.id}, :room_user_lists => {room_id: @room.id}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto").order("bingo_cards.is_auto ASC, users.id ASC")
 		@cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
@@ -49,7 +52,7 @@ class BingoCardsController < ApplicationController
 		25.times { |n|
 			@checks << "f"
 		}
-		@card = BingoCard.create!(room_id:params[:room_id], user_id:current_user.id, numbers: @numbers.join(","), checks: @checks.join(","), is_auto: setting.is_auto)
+		@card = BingoCard.create!(room_id:params[:room_id], user_id:current_user.id, numbers: @numbers.join(","), checks: @checks.join(","), is_auto: settings.is_auto)
 		@get_items = distribute_item(params[:community_id], params[:room_id])
 		@is_auto = @card.is_auto
 		@done_bingo = @card.done_bingo
