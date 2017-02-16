@@ -14,8 +14,8 @@
 <p>あなた専用の招待URLはこちら</p>
 <!-- コピー対象 -->
 <input id="url" value=<%= invite_url %> size="60">
-
+<br>
 <!-- コピーボタン -->
-<button class="btn" data-clipboard-target="#url">
-	クリップボードにコピー
+<button class="btn btn-default" data-clipboard-text=<%= invite_url %>>
+	招待URLをコピー
 </button>
