@@ -49,8 +49,9 @@
 			<% if @room.canUseItem %>
 			<li class='tab'><a href="#items">アイテム</a></li>
 			<% end %>
-			<li class='tab' onclick="joined_user_update()"><a href="#member-list">他人のカード</a></li>
+			<li class='tab' onclick="joined_user_update()"><a href="#member-list">みんなのカード</a></li>
 			<li class='tab'><a href="#user-setting">設定</a></li>
+			<li class='tab'><a href="#invite">友達を招待</a></li>
 		</ul>
 		<div id="card-area" class="center-block">
 			<%= render :partial => "bingo-card", :locals => { numbers: @numbers, checks: @checks } %>
@@ -67,6 +68,9 @@
 		</div>
 		<div id="user-setting" class="center-block">
 			<%= render :partial => "user_setting" %>
+		</div>
+		<div id="invite" class="center-block">
+			<%= render :partial => "invite", :locals => {invite_url: @invite_url, bonus: @room.invite_bonus} %>
 		</div>
 	</div>
 </div>

@@ -68,6 +68,7 @@ Rails.application.routes.draw do
 	get 'API/game_main/:community_id/:room_id', to: 'rooms#game_main', as: 'game_main'
 	get 'API/member_list/:room_id', to: 'rooms#member_list', as: 'member_list'
 	get 'API/use_item_tool/:room_id', to: 'rooms#use_item_tool', as: 'use_item_tool'
+	get 'API/get_user_notices', to: 'rooms#get_user_notices'
 
 	#bingo-card
 	get 'API/check_number', to: 'bingo_cards#check_number',as:'check_number'

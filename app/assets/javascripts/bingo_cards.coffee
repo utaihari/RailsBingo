@@ -33,6 +33,9 @@ $(->
 	@start_check = setInterval(->
 		game_start_check(room_id)
 	,5000)
+	@notices_check = setInterval(->
+		get_server_notices(room_id)
+	,5000)
 	if !@done_bingo && check_bingo()
 		$('#bingo-button').show()
 	else
@@ -47,6 +50,7 @@ $(->
 @onPageLoad = ->
 	room_id = $("#data").data("room_id")
 	@numbers_update()
+	number_length = numbers.length
 	@checks_update()
 	update_list()
 	get_card_numbers()
@@ -67,7 +71,8 @@ game_start_check =  ->
 			game_end_check()
 		,8000)
 		clearInterval(@start_check)
-		check_number_local(-1)
+		if @is_auto
+			check_number_local(-1)
 	if condition == 2
 		clearInterval(@start_check)
 		game_end_check()
@@ -80,6 +85,7 @@ game_end_check =  ->
 		clearInterval(@end_check)
 		clearInterval(@update_numbers)
 		clearInterval(@update_notice)
+		clearInterval(@notices_check)
 		check_rank()
 		set_number_of_bingos()
 		@update_result()
@@ -147,6 +153,15 @@ items = []
 	)
 	return
 
+get_server_notices = ->
+	$.ajaxSetup({async: false});
+	$.getJSON('/API/get_user_notices',{room_id: @room_id},(json)->
+		for n in json
+			notice.push(n)
+		return
+	)
+	return
+
 update_list = ->
 	if number_length isnt numbers.length
 		if numbers[numbers.length-1] isnt -1
@@ -173,15 +188,20 @@ update_list = ->
 @check_number = (index) ->
 	checks[index] = true
 	$.ajaxSetup({async: false});
-	$.getJSON('/API/check_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: calc_number_of_riichi()},(json)->
+	$.getJSON('/API/check_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: calc_number_of_riichi() , is_auto: false},(json)->
 		checks[index] = (json[index] == 't')
 	)
 	return
 
 check_number_local = (number) ->
 	card_nums = $('.bingo-number')
-	for n in card_nums
+	for n, index in card_nums
 		if number == parseInt($(n).data("number"))
+			# checks[index] = true
+			# $.getJSON('/API/check_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: calc_number_of_riichi(), is_auto: true},(json)->
+			# 	checks[index] = (json[index] == 't')
+			# )
+			# if checks[index]
 			$(n).addClass("checked")
 
 @uncheck_number = (index) ->

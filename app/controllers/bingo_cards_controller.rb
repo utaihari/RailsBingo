@@ -27,6 +27,7 @@ class BingoCardsController < ApplicationController
 		@is_auto = @card.is_auto
 		@done_bingo = @card.done_bingo
 		@get_items = distribute_item(params[:community_id], params[:room_id])
+		@invite_url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)+"?invite_by=#{current_user.id}"
 	end
 
 	def create
@@ -61,6 +62,18 @@ class BingoCardsController < ApplicationController
 			room_id = @room.id
 		end
 		@items = UserItemList.joins(:item).where(user_id: current_user.id, community_id: params[:community_id], temp: !@room.can_bring_item, room_id: room_id).select("user_item_lists.id AS id, items.name, items.AllowUseDuringGame, items.id AS item_id, quantity, items.item_type, items.description").order("items.name")
+		@invite_url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)+"?invite_by=#{current_user.id}"
+		#invite bonus
+		if session[:invite_by] != nil
+			user_notice = "あなたが招待した#{current_user.name}さんがゲームに参加しました"
+			UserNotice.create(user_id: session[:invite_by], room_id: @room.id, notice: user_notice)
+			items = item_deliver(session[:invite_by], @room.id, @room.invite_bonus)
+			item_names = []
+			items.each { |i|
+			item_names.push(i.name) }
+			user_notice = "アイテム #{item_names.join(",")}　を獲得しました"
+			UserNotice.create(user_id: session[:invite_by], room_id: @room.id, notice: user_notice)
+		end
 		render :action => 'show', community_id: params[:community_id], room_id: params[:room_id], id: @card.id
 	end
 
@@ -180,29 +193,9 @@ class BingoCardsController < ApplicationController
 			return []
 		end
 
-		items = Item.all
 		quantity = (params[:bingos].to_f * room.bingo_score.to_f) + (params[:riichis].to_f * room.riichi_score.to_f) + (params[:holes].to_f * room.hole_score.to_f)
 
-		rarity_sum = 0
-		items.each do |item|
-			rarity_sum += item.rarity
-		end
-
-		random_arr = []
-		quantity.to_i.times{
-			random_arr.push(rand(rarity_sum) + 1)
-		}
-
-		selected_items = []
-		random_arr.each do |r|
-			items.each do |item|
-				r -= item.rarity
-				if r <= 0
-					selected_items.push(item)
-					break
-				end
-			end
-		end
+		selected_items = item_select(quantity)
 
 		selected_items.each do |item|
 			i = UserItemList.joins(:user).joins(:community).joins(:item).find_by(user_id: current_user.id, community_id: params[:community_id], item_id: item.id, temp: false)
@@ -326,7 +319,7 @@ class BingoCardsController < ApplicationController
 
 		checks[index] = "t"
 
-		if card.riichi_lines < params[:riichi_lines].to_i
+		if card.riichi_lines < params[:riichi_lines].to_i && params[:is_auto] == false
 			RoomNotice.create(room_id: params[:room_id], user_name: current_user.name, notice: "リーチ！", color: "magenta")
 		end
 		card.checks = checks.join(",")
@@ -791,4 +784,47 @@ class BingoCardsController < ApplicationController
 		end
 		return false
 	end
+
+	def item_select(quantity)
+		items = Item.all
+
+		rarity_sum = 0
+		items.each do |item|
+			rarity_sum += item.rarity
+		end
+
+		random_arr = []
+		quantity.to_i.times{
+			random_arr.push(rand(rarity_sum) + 1)
+		}
+
+		selected_items = []
+		random_arr.each do |r|
+			items.each do |item|
+				r -= item.rarity
+				if r <= 0
+					selected_items.push(item)
+					break
+				end
+			end
+		end
+		return selected_items
+	end
+	def item_deliver(user_id, room_id, quantiry)
+		selected_items = item_select(quantity.to_i)
+		room = Room.find(room_id)
+		user_item = UserItemList.where(user_id: user_id, community_id: room.community_id, temp: !room.can_bring_item, room_id: room_id).includes(:user).includes(:community).includes(:item)
+
+		selected_items.each do |item|
+			i = user_item.find_by(item_id: item.id)
+			if i != nil
+				i.quantity += 1
+				i.save
+			else
+				UserItemList.create(user_id: user_id, community_id: community_id, item_id: item.id, quantity: 1, temp: !room.can_bring_item, room_id: room_id)
+			end
+		end
+		return selected_items
+	end
+
 end

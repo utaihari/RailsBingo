@@ -1,7 +1,7 @@
 <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
 <script type="text/javascript">bkLib.onDomLoaded(function() {
-        new nicEditor().panelInstance('room-detail');
-        });</script>
+	new nicEditor().panelInstance('room-detail');
+});</script>
 
 <%= javascript_include_tag "rooms-new" %>
 <div class="center70">
@@ -58,6 +58,10 @@
 				<%= f.label :hole_score, "穴一つにつきアイテム" %>
 				<%= f.number_field :hole_score, :step =>0.1 %>個
 			</div>
+		</div>
+		<p>友達招待ボーナス</p>
+		<div class="form-group">
+			<%= f.number_field :invite_bonus %>個
 		</div>
 	</div>
 

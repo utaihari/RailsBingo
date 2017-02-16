@@ -14,5 +14,6 @@ class User < ApplicationRecord
   has_many :room, dependent: :destroy
   has_many :user_setting, dependent: :destroy
   has_many :admin_user, dependent: :destroy
+  has_many :user_notice, dependent: :destroy
 
 end

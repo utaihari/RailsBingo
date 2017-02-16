@@ -12,7 +12,7 @@ class RoomsController < ApplicationController
     if last_room == nil
       @room = @community.room.build
     else
-      @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: last_room.name, canUseItem: last_room.canUseItem, AllowGuest: last_room.AllowGuest, AllowJoinDuringGame: last_room.AllowJoinDuringGame, detail: last_room.detail, number_of_free: last_room.number_of_free.to_i, can_bring_item: last_room.can_bring_item, profit: last_room.profit.to_i, bingo_score: last_room.bingo_score.to_f, riichi_score: last_room.riichi_score.to_f, hole_score: last_room.hole_score.to_f)
+      @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: last_room.name, canUseItem: last_room.canUseItem, AllowGuest: last_room.AllowGuest, AllowJoinDuringGame: last_room.AllowJoinDuringGame, detail: last_room.detail, number_of_free: last_room.number_of_free.to_i, can_bring_item: last_room.can_bring_item, profit: last_room.profit.to_i, bingo_score: last_room.bingo_score.to_f, riichi_score: last_room.riichi_score.to_f, hole_score: last_room.hole_score.to_f, invite_bonus: last_room.invite_bonus.to_i)
     end
   end
   def direct_new
@@ -31,7 +31,7 @@ class RoomsController < ApplicationController
     end
 
     number_rate = Array.new(75,10)
-    @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail], number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i, bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f, rates:number_rate.join(","))
+    @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail], number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i, bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f, invite_bonus: params[:room][:invite_bonus].to_i, rates:number_rate.join(","))
 
     if @room.save
       redirect_to controller: 'rooms', action: 'show', id: @room.id
@@ -94,6 +94,7 @@ class RoomsController < ApplicationController
     if @community == nil || @room == nil
       redirect_to controller: 'communities', action: 'index'
     end
+    session[:invide_by] = params[:invide_by]
   end
 
   def join
@@ -349,6 +350,20 @@ class RoomsController < ApplicationController
     return
   end
 
+  def get_user_notices
+    if params[:room_id] == nil
+      render :json => "不正なパラメータです" and return
+    end
+    notice_records = UserNotice.where(user_id: current_user.id, room_id: params[:room_id])
+    notices = []
+    notice_records.each do |n|
+      notices.push(n.notice)
+    end
+    if notices.length != 0
+      notice_records.delete_all
+    end
+    render :json => notices.to_json
+  end
   def view_mail_address
     if !isRoomOrganizer(params[:room_id]) || !isRoomMember(params[:room_id],params[:user_id])
       render :json => "不正なパラメータです" and return
@@ -473,7 +488,7 @@ class RoomsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def room_params
-    params.require(:room).permit(:name, :canUseItem, :AllowGuest, :AllowJoinDuringGame, :detail, :profit, :bingo_score, :riichi_score, :hole_score, :number_of_free, :can_bring_item)
+    params.require(:room).permit(:name, :canUseItem, :AllowGuest, :AllowJoinDuringGame, :detail, :profit, :bingo_score, :riichi_score, :hole_score, :number_of_free, :can_bring_item, :invite_bonus)
   end
 
   def isRoomOrganizer(room_id)

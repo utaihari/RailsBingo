@@ -6,4 +6,5 @@ class Room < ApplicationRecord
 	has_many :bingo_user, dependent: :destroy
 	has_many :bingo_card, dependent: :destroy
 	has_many :room_notice, dependent: :destroy
+	has_many :user_notice, dependent: :destroy
 end
