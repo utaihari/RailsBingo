@@ -815,7 +815,7 @@ class BingoCardsController < ApplicationController
 		end
 		return selected_items
 	end
-	def item_deliver(user_id, room_id, quantiry)
+	def item_deliver(user_id, room_id, quantity)
 		selected_items = item_select(quantity.to_i)
 		room = Room.find(room_id)
 		user_item = UserItemList.where(user_id: user_id, community_id: room.community_id, temp: !room.can_bring_item, room_id: room_id).includes(:user).includes(:community).includes(:item)
