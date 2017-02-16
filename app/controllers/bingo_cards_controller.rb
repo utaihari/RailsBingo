@@ -39,6 +39,11 @@ class BingoCardsController < ApplicationController
 		end
 
 		notice = "参加しました"
+		if session[:invite_by] != nil
+			user = User.find(session[:invite_by])
+			notice = "#{user.name}さんに招待されました"
+		end
+
 		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "#333399")
 		settings = UserSetting.find_by(user_id: current_user.id)
 		if settings == nil

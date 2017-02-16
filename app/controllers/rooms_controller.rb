@@ -94,7 +94,7 @@ class RoomsController < ApplicationController
     if @community == nil || @room == nil
       redirect_to controller: 'communities', action: 'index'
     end
-    session[:invide_by] = params[:invide_by]
+    session[:invite_by] = params[:invite_by]
   end
 
   def join

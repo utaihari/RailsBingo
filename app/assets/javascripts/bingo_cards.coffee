@@ -35,7 +35,7 @@ $(->
 	,5000)
 	@notices_check = setInterval(->
 		get_server_notices(room_id)
-	,5000)
+	,20000)
 	if !@done_bingo && check_bingo()
 		$('#bingo-button').show()
 	else
