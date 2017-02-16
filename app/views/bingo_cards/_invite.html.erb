@@ -1,4 +1,4 @@
-<script src="https://cdn.jsdelivr.net/clipboard.js/1.5.3/clipboard.min.js"></script>
+<%= javascript_include_tag "clipboard.min.js" %>
 <script>
 	$(function () {
 		var clipboard = new Clipboard('.btn');
@@ -13,7 +13,7 @@
 <p>twitterやラインに招待URLを貼り付けよう！</p>
 <p>あなた専用の招待URLはこちら</p>
 <!-- コピー対象 -->
-<input id="url" value=<%= invite_url %> size="60">
+<div><%= invite_url %></div>
 <br>
 <!-- コピーボタン -->
 <button class="btn btn-default" data-clipboard-text=<%= invite_url %>>
