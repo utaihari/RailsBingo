@@ -826,7 +826,7 @@ class BingoCardsController < ApplicationController
 				i.quantity += 1
 				i.save
 			else
-				UserItemList.create(user_id: user_id, community_id: community_id, item_id: item.id, quantity: 1, temp: !room.can_bring_item, room_id: room_id)
+				UserItemList.create(user_id: user_id, community_id: room.community_id, item_id: item.id, quantity: 1, temp: !room.can_bring_item, room_id: room_id)
 			end
 		end
 		return selected_items
