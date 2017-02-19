@@ -697,8 +697,9 @@ class BingoCardsController < ApplicationController
 		if params[:room_id] == nil || params[:times] == nil || params[:seconds] == nil || params[:card_id] == nil
 			render :json => false and return
 		end
+		room = Room.find(params[:room_id])
 		room_id = params[:room_id]
-		times = params[:times]
+		# times = params[:times]
 		seconds = params[:seconds]
 		card_id = params[:card_id]
 
@@ -718,7 +719,7 @@ class BingoCardsController < ApplicationController
 		card.done_bingo = true
 		card.save
 
-		BingoUser.create(room_id: room_id, user_id: current_user.id, times: times, seconds: seconds)
+		BingoUser.create(room_id: room_id, user_id: current_user.id, times: room.times, seconds: seconds)
 		render :json => true and return
 	end
 
