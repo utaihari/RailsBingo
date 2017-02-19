@@ -643,7 +643,7 @@ class BingoCardsController < ApplicationController
 				return delete_number
 			end
 			delete_number << room_numbers[index].number
-			room_rates[room_numbers[index].number-1] = room.pre_rate
+			room_rates[room_numbers[index].number-1] = room.pre_rate * 2
 			room_numbers[index].destroy
 		end
 		room.rates = room_rates.join(",")
