@@ -31,7 +31,10 @@ class RoomsController < ApplicationController
     end
 
     number_rate = Array.new(75,10)
-    @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest], AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail], number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i, bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f, invite_bonus: params[:room][:invite_bonus].to_i, rates:number_rate.join(","))
+    @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest],\
+    AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail],\
+    number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i,\
+    bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f, invite_bonus: params[:room][:invite_bonus].to_i, rates:number_rate.join(","))
 
     if @room.save
       redirect_to controller: 'rooms', action: 'show', id: @room.id
@@ -58,8 +61,10 @@ class RoomsController < ApplicationController
       redirect_to 'pages_index_path'
     end
 
-    @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto, users.last_sign_in_ip").order("bingo_cards.is_auto ASC, users.id ASC")
-    @cards = BingoCard.where(room_id: @room.id).order("user_id ASC")
+    @members = User.joins(:bingo_card).joins(:room_user_list).\
+    where(:bingo_cards => {room_id: room_id}, :room_user_lists => {room_id: room_id}).\
+    select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto, users.last_sign_in_ip").order("bingo_cards.is_auto ASC, users.id ASC")
+    @cards = BingoCard.where(room_id: @room.id).order("is_auto ASC, user_id ASC")
 
     @url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)
     qrcode = RQRCode::QRCode.new(@url)
@@ -326,7 +331,7 @@ class RoomsController < ApplicationController
   def member_list
     @room = Room.joins(:community).joins(:user).find(params[:room_id])
     @members = User.joins(:bingo_card).joins(:room_user_list).where(:bingo_cards => {room_id: params[:room_id]}, :room_user_lists => {room_id: params[:room_id]}).select("users.id AS id, users.name, bingo_cards.id AS card_id, bingo_cards.is_auto AS is_auto, users.last_sign_in_ip").order("bingo_cards.is_auto ASC, users.id ASC")
-    @cards = BingoCard.where(room_id:@room.id).order("user_id ASC")
+    @cards = BingoCard.where(room_id:@room.id).order("is_auto ASC, user_id ASC")
     @room_mastar = isRoomOrganizer(params[:room_id])
   end
 

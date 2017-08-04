@@ -88,23 +88,6 @@ ActiveRecord::Schema.define(version: 20170216164648) do
     t.datetime "updated_at",   null: false
   end
 
-  create_table "community_last_settings", force: :cascade do |t|
-    t.integer  "community_id"
-    t.string   "name",                default: ""
-    t.boolean  "canUseItem",          default: false
-    t.boolean  "AllowGuest",          default: false
-    t.text     "detail",              default: ""
-    t.float    "bingo_score",         default: 0.0
-    t.float    "riichi_score",        default: 0.5
-    t.float    "hole_score",          default: 0.2
-    t.boolean  "AllowJoinDuringGame", default: true
-    t.integer  "profit",              default: 0
-    t.boolean  "can_bring_item",      default: false
-    t.integer  "number_of_free",      default: 1
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
-  end
-
   create_table "community_user_lists", force: :cascade do |t|
     t.integer  "community_id"
     t.integer  "user_id"
@@ -157,13 +140,13 @@ ActiveRecord::Schema.define(version: 20170216164648) do
     t.boolean  "isFinished",          default: false, null: false
     t.datetime "created_at",                          null: false
     t.datetime "updated_at",                          null: false
-    t.boolean  "canUseItem",          default: false
+    t.boolean  "canUseItem"
     t.string   "rates"
     t.boolean  "AllowGuest",          default: false
     t.text     "detail",              default: ""
-    t.         "bingo_score",         default: "0.0"
-    t.         "riichi_score",        default: "0.5"
-    t.         "hole_score",          default: "0.2"
+    t.float    "bingo_score",         default: 0.2
+    t.float    "riichi_score"
+    t.float    "hole_score"
     t.boolean  "AllowJoinDuringGame", default: true
     t.integer  "user_id"
     t.integer  "profit",              default: 0

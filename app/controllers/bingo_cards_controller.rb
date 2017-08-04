@@ -320,7 +320,16 @@ class BingoCardsController < ApplicationController
 			return
 		end
 
+		room_numbers = RoomNumber.find_by(room_id:card.room_id)
+		if !room_numbers.include?(card.numbers.split(",")[index])
+			return
+		end
+
 		checks = card.checks.split(",")
+
+		if checks[index] ==  "t"
+			return
+		end
 
 		checks[index] = "t"
 

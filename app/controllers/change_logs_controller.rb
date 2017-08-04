@@ -7,7 +7,11 @@ class ChangeLogsController < ApplicationController
     @change_logs = ChangeLog.where(log_type:0).order("created_at DESC")
     @to_be_released = ChangeLog.where(log_type:1).order("created_at DESC")
     @to_be_resolved = ChangeLog.where(log_type:2).order("created_at DESC")
-    @is_admin = AdminUser.exists?(user_id: current_user.id)
+
+    @is_admin = false
+    if current_user != nil
+      @is_admin = AdminUser.exists?(user_id: current_user.id)
+    end
   end
 
   # GET /change_logs/1
