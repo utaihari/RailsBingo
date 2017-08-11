@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 	root 'pages#index'
 	get 'pages/index'
 	get 'pages/user_index'
+	get 'pages/user-page/:user_id', to: 'pages#user_page', as: 'user_page'
 
 	get 'communityes/search', to: 'communities#search', as:'community_search'
 	get 'communities/:community_id/rooms/:room_id/card_create', to: 'bingo_cards#create', as:'community_room_bingo_cards'

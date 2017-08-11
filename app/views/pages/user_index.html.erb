@@ -1,6 +1,6 @@
 <div class="center70">
 	<h1><%= current_user.name %>さんのマイページ</h1>
-
+	<div class="white-box"><%= raw current_user.detail %></div>
 	<% if !@opened_rooms.blank? %>
 	<div class="white-box">
 		<h3>主催しているビンゴ</h3>

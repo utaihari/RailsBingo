@@ -75,7 +75,8 @@ class BingoCardsController < ApplicationController
 			items = item_deliver(session[:invite_by], @room.id, @room.invite_bonus)
 			item_names = []
 			items.each { |i|
-			item_names.push(i.name) }
+				item_names.push(i.name)
+			}
 			user_notice = "アイテム #{item_names.join(",")}　を獲得しました"
 			UserNotice.create(user_id: session[:invite_by], room_id: @room.id, notice: user_notice)
 		end
@@ -320,20 +321,20 @@ class BingoCardsController < ApplicationController
 			return
 		end
 
-		room_numbers = RoomNumber.find_by(room_id:card.room_id)
-		if !room_numbers.include?(card.numbers.split(",")[index])
-			return
-		end
+		# room_numbers = RoomNumber.where(room_id:card.room_id)
+		# if !room_numbers.include?(card.numbers.split(",")[index])
+		# 	return
+		# end
 
 		checks = card.checks.split(",")
 
 		if checks[index] ==  "t"
-			return
+			return_val
 		end
 
 		checks[index] = "t"
 
-		if card.riichi_lines < params[:riichi_lines].to_i && params[:is_auto] == false
+		if card.riichi_lines < params[:riichi_lines].to_i
 			RoomNotice.create(room_id: params[:room_id], user_name: current_user.name, notice: "リーチ！", color: "magenta")
 		end
 		card.checks = checks.join(",")

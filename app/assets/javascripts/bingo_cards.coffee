@@ -20,6 +20,7 @@ $(->
 	@get_item = $("#data").data("get_item")
 	@is_auto = $('#data').data("is_auto")
 	@done_bingo = $('#data').data("done_bingo")
+	@show_hint = $('#data').data("show_hint")
 
 	if is_auto
 		$('#auto_check').prop("checked",true)
@@ -50,7 +51,7 @@ $(->
 @onPageLoad = ->
 	room_id = $("#data").data("room_id")
 	@numbers_update()
-	number_length = numbers.length
+	# number_length = numbers.length
 	@checks_update()
 	update_list()
 	get_card_numbers()
@@ -66,13 +67,20 @@ game_start_check =  ->
 			@numbers_update()
 			update_list()
 			reload_check_numbers()
-		,5000)
+		,2000)
 		@end_check = setInterval(->
 			game_end_check()
-		,8000)
+		,10000)
 		clearInterval(@start_check)
+
+		card_nums = $('.bingo-number')
+		for n, index in card_nums
+			if -1 == parseInt($(n).data("number"))
+				if !$(n).hasClass("checked")
+					$(n).addClass("outputted")
 		if @is_auto
 			check_number_local(-1)
+
 	if condition == 2
 		clearInterval(@start_check)
 		game_end_check()
@@ -131,6 +139,7 @@ items = []
 @numbers_update =  ->
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/get_number', {room_id: @room_id}, (json) ->
+		console.log(json)
 		numbers = json
 		return
 	)
@@ -168,13 +177,15 @@ update_list = ->
 			notice.push("新しいナンバーは "+ numbers[numbers.length-1] + "です")
 			hide_added_number()
 
-			#action for new numbers
+			#actions for new numbers
 			for i in [number_length..numbers.length]
 				$("#added-#{numbers[i-1]}").addClass("icon-cross")
 				if document.getElementById("select-number-#{numbers[i-1]}") != null
 					$("#select-number-#{numbers[i-1]}").hide()
 				if @is_auto
 					check_number_local(numbers[i-1])
+				if @show_hint
+					set_outputted(numbers[i-1])
 
 		number_length = numbers.length
 		$('ul#number-list').empty()
@@ -185,10 +196,17 @@ update_list = ->
 			$('#last-number').text(numbers[number_length-1])
 		number_arrive_time = new Date()
 	return
+set_outputted = (number) ->
+	card_nums = $('.bingo-number')
+	for n, index in card_nums
+		if number == parseInt($(n).data("number"))
+			if !$(n).hasClass("checked")
+				$(n).addClass("outputted")
+	return
 @check_number = (index) ->
 	checks[index] = true
 	$.ajaxSetup({async: false});
-	$.getJSON('/API/check_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: calc_number_of_riichi() , is_auto: false},(json)->
+	$.getJSON('/API/check_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: calc_number_of_riichi() , is_auto: "false"},(json)->
 		checks[index] = (json[index] == 't')
 	)
 	return
@@ -203,6 +221,7 @@ check_number_local = (number) ->
 			# )
 			# if checks[index]
 			$(n).addClass("checked")
+			$(n).removeClass("outputted")
 
 @uncheck_number = (index) ->
 	checks[index] = false
@@ -217,7 +236,8 @@ check_number_local = (number) ->
 	if jQuery.inArray(Number($(obj).data('number')), numbers) >= 0
 		@check_number(index)
 		$(obj).toggleClass("checked", checks[index])
-		if check_bingo() && !done_bingo
+		$(obj).removeClass("outputted")
+		if check_bingo() && !@done_bingo
 			$('#bingo-button').show()
 		else
 			$('#bingo-button').hide()
@@ -232,13 +252,15 @@ check_number_local = (number) ->
 
 @bingo = ->
 	current_time = new Date()
-	if !check_bingo || @done_bingo
+	console.log("done_bingo")
+	console.log(@done_bingo)
+	if !check_bingo() || @done_bingo
+		@done_bingo = true
 		$('#bingo-button').hide()
 		return
 	$.post('/API/done_bingo', {card_id: @card_id, room_id: @room_id, times: numbers.length, seconds: current_time-number_arrive_time}, (data) ->
-		done_bingo = data
-		if done_bingo
-			$('#bingo-button').hide()
+		@done_bingo = true
+		$('#bingo-button').hide()
 		return
 		)
 	return
@@ -265,7 +287,7 @@ check_number_local = (number) ->
 	get_card_numbers()
 	@checks_update()
 
-	if check_bingo() && !done_bingo
+	if check_bingo() && !@done_bingo
 		$('#bingo-button').show()
 	else
 		$('#bingo-button').hide()
@@ -450,7 +472,7 @@ reload_check_numbers = ->
 				uncheck_number(index)
 				number_unchecked = true
 	if number_unchecked
-		if check_bingo() && !done_bingo
+		if check_bingo() && !@done_bingo
 				$('#bingo-button').show()
 		else
 				$('#bingo-button').hide()

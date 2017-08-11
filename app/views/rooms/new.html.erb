@@ -22,6 +22,10 @@
 		<%= f.check_box :AllowJoinDuringGame ,{},"true","false" %>
 	</div>
 	<div class="form-group">
+		<%= f.label :show_hint, "既に出力されている数字をわかりやすく表示" %>
+		<%= f.check_box :show_hint ,{},"true","false" %>
+	</div>
+	<div class="form-group">
 		<%= f.label :AllowGuest, "ゲスト許可" %>
 		<%= f.check_box :AllowGuest ,{},"true","false" %>
 		<p>(許可の場合、参加者のメールアドレスは通知されません)</p>

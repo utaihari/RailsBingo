@@ -13,64 +13,73 @@
 </div>
 
 <div class="remodal-bg">
-	<div id="data" data-room_id=<%= @room.id %> data-card_id=<%= @card.id %> data-community_id=<%= @community.id %> data-get_item=<%= !@get_items.blank? %> data-is_auto=<%= @is_auto %> data-done_bingo=<%= @done_bingo %>></div>
-	<div class="center70">
-		<div class="remodal" data-remodal-id="result">
-			<button data-remodal-action="close" class="remodal-close"></button>
-			<%= render :partial => "result" %>
-			<div id="get-items"></div>
-			<button data-remodal-action="confirm" class="remodal-confirm">OK</button>
-		</div>
-		<div class="remodal" data-remodal-id="getitem">
-			<button data-remodal-action="close" class="remodal-close"></button>
-			<% if @is_auto %>
-			<h2>自動チェック機能がONになっています。</h2>
-			<div>ブラウザを閉じていても、ゲームに参加できます。</div>
-			<div>ゲームの結果は終わり次第、主催者から通知されます。</div>
-			<div>注意：途中参加の場合、これまでに出た数字は自動でチェックされません。手動でチェックしてください。</div>
-			<% end %>
-			<%= render :partial => "get_items", :locals => { items: @get_items } %>
-			<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
-		</div>
-		<div class="remodal" data-remodal-id="is_auto">
-			<button data-remodal-action="close" class="remodal-close"></button>
-			<h2>自動チェック機能がONになっています。</h2>
-			<div>ブラウザを閉じていても、ゲームに参加できます。</div>
-			<div>ビンゴの結果はゲームが終わり次第、主催者から通知されます。</div>
-			<div>注意：途中参加の場合、これまでに出た数字は自動でチェックされません。手動でチェックしてください。</div>
-			<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
-		</div>
+	<div id="data"
+	data-room_id=<%= @room.id %>
+	data-card_id=<%= @card.id %>
+	data-community_id=<%= @community.id %>
+	data-get_item=<%= !@get_items.blank? %>
+	data-is_auto=<%= @is_auto %>
+	data-done_bingo=<%= @done_bingo %>
+	data-show_hint=<%= @room.show_hint %>
+	>
+</div>
+<div class="center70">
+	<div class="remodal" data-remodal-id="result">
+		<button data-remodal-action="close" class="remodal-close"></button>
+		<%= render :partial => "result" %>
+		<div id="get-items"></div>
+		<button data-remodal-action="confirm" class="remodal-confirm">OK</button>
 	</div>
-
-	<div id="tab-container" class="tab-container">
-		<ul class='etabs'>
-			<li class='tab'><a href="#card-area">カード</a></li>
-			<li class='tab'><a href="#added-numbers-area">過去の番号</a></li>
-			<% if @room.canUseItem %>
-			<li class='tab'><a href="#items">アイテム</a></li>
-			<% end %>
-			<li class='tab' onclick="joined_user_update()"><a href="#member-list">みんなのカード</a></li>
-			<li class='tab'><a href="#user-setting">設定</a></li>
-			<li class='tab'><a href="#invite">友達を招待</a></li>
-		</ul>
-		<div id="card-area" class="center-block">
-			<%= render :partial => "bingo-card", :locals => { numbers: @numbers, checks: @checks } %>
-		</div>
-		<div id="added-numbers-area" class="center-block">
-			<%= render :partial => "added_numbers" %>
-		</div>
-		<% if @room.canUseItem %>
-		<div id="items" class="center-block">
-		</div>
+	<div class="remodal" data-remodal-id="getitem">
+		<button data-remodal-action="close" class="remodal-close"></button>
+		<% if @is_auto %>
+		<h2>自動チェック機能がONになっています。</h2>
+		<div>ブラウザを閉じていても、ゲームに参加できます。</div>
+		<div>ゲームの結果は終わり次第、主催者から通知されます。</div>
+		<div>注意：途中参加の場合、これまでに出た数字は自動でチェックされません。手動でチェックしてください。</div>
 		<% end %>
-		<div id="member-list" class="center-block">
-			<%= render :partial => "member_list", :locals => { members: @members, cards: @cards, room_id: @room.id } %>
-		</div>
-		<div id="user-setting" class="center-block">
-			<%= render :partial => "user_setting" %>
-		</div>
-		<div id="invite" class="center-block">
-			<%= render :partial => "invite", :locals => {invite_url: @invite_url, bonus: @room.invite_bonus} %>
-		</div>
+		<%= render :partial => "get_items", :locals => { items: @get_items } %>
+		<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
 	</div>
+	<div class="remodal" data-remodal-id="is_auto">
+		<button data-remodal-action="close" class="remodal-close"></button>
+		<h2>自動チェック機能がONになっています。</h2>
+		<div>ブラウザを閉じていても、ゲームに参加できます。</div>
+		<div>ビンゴの結果はゲームが終わり次第、主催者から通知されます。</div>
+		<div>注意：途中参加の場合、これまでに出た数字は自動でチェックされません。手動でチェックしてください。</div>
+		<button data-remodal-action="cancel" class="remodal-cancel">閉じる</button>
+	</div>
+</div>
+
+<div id="tab-container" class="tab-container">
+	<ul class='etabs'>
+		<li class='tab'><a href="#card-area">カード</a></li>
+		<li class='tab'><a href="#added-numbers-area">過去の番号</a></li>
+		<% if @room.canUseItem %>
+		<li class='tab'><a href="#items">アイテム</a></li>
+		<% end %>
+		<li class='tab' onclick="joined_user_update()"><a href="#member-list">みんなのカード</a></li>
+		<li class='tab'><a href="#user-setting">設定</a></li>
+		<li class='tab'><a href="#invite">友達を招待</a></li>
+	</ul>
+	<div id="card-area" class="center-block">
+		<%= render :partial => "bingo-card", :locals => { numbers: @numbers, checks: @checks } %>
+	</div>
+	<div id="added-numbers-area" class="center-block">
+		<%= render :partial => "added_numbers" %>
+	</div>
+	<% if @room.canUseItem %>
+	<div id="items" class="center-block">
+	</div>
+	<% end %>
+	<div id="member-list" class="center-block">
+		<%= render :partial => "member_list", :locals => { members: @members, cards: @cards, room_id: @room.id } %>
+	</div>
+	<div id="user-setting" class="center-block">
+		<%= render :partial => "user_setting" %>
+	</div>
+	<div id="invite" class="center-block">
+		<%= render :partial => "invite", :locals => {invite_url: @invite_url, bonus: @room.invite_bonus} %>
+	</div>
+</div>
 </div>

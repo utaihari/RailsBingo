@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170216164648) do
+ActiveRecord::Schema.define(version: 20170810132529) do
 
   create_table "admin_users", force: :cascade do |t|
     t.integer  "user_id"
@@ -156,6 +156,9 @@ ActiveRecord::Schema.define(version: 20170216164648) do
     t.integer  "pre_rate",            default: 0
     t.integer  "times",               default: 0
     t.integer  "invite_bonus",        default: 0
+    t.boolean  "show_hint",           default: false
+    t.datetime "date"
+    t.string   "prize",               default: ""
   end
 
   create_table "user_item_lists", force: :cascade do |t|

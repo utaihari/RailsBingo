@@ -1,0 +1,204 @@
+/* line 5, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.checked {
+  color: #ff69b4;
+}
+
+/* line 8, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.bingo-char {
+  font-size: 40px;
+}
+
+/* line 12, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+table {
+  table-layout: fixed;
+}
+
+/* line 15, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+td {
+  width: 80px;
+  height: 80px;
+  padding: 0px;
+  margin: 0px;
+}
+
+/* line 21, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#card-area {
+  width: 400px;
+}
+
+/* line 24, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#bingo-card {
+  table-layout: fixed;
+  width: 400px;
+  margin-right: auto;
+  margin-left: auto;
+}
+/* line 29, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#bingo-card .bingo-number {
+  background-color: rgba(204, 255, 255, 0.7);
+  font-size: 30px;
+}
+/* line 34, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#bingo-card .free {
+  font-size: 20px;
+}
+
+/* line 38, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.num-range {
+  font-size: 10px;
+}
+
+/* line 43, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#numbers #last-number {
+  color: #ff3000;
+  font-size: 40px;
+}
+
+/* line 49, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#added-numbers-area {
+  width: 400px;
+}
+
+/* line 53, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#added-numbers {
+  table-layout: fixed;
+  width: 400px;
+  margin-right: auto;
+  margin-left: auto;
+}
+/* line 59, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#added-numbers .number-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+/* line 65, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#added-numbers .added-number {
+  background-color: rgba(204, 255, 255, 0.7);
+  width: 100%;
+  height: 100%;
+  font-size: 30px;
+  padding-top: 10px;
+}
+/* line 73, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#added-numbers .icon {
+  width: 100%;
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  position: absolute;
+}
+/* line 86, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#added-numbers .icon-cross:before, #added-numbers .icon-cross:after {
+  display: block;
+  content: '';
+  width: 7px;
+  height: 40px;
+  -webkit-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  background-color: rgba(177, 51, 104, 0.5);
+  border-radius: 10px;
+  position: absolute;
+  top: 25px;
+  left: 41px;
+}
+/* line 100, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+#added-numbers .icon-cross:after {
+  -webkit-transform: rotate(45deg);
+  -o-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+@media only screen and (max-width: 400px) {
+  /* line 108, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+  #card-area {
+    width: 100%;
+  }
+
+  /* line 111, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+  #bingo-card {
+    table-layout: fixed;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  /* line 116, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+  #bingo-card .bingo-number {
+    background-color: rgba(204, 255, 255, 0.7);
+    font-size: 30px;
+  }
+  /* line 120, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+  #bingo-card .free {
+    font-size: 20px;
+  }
+
+  /* line 124, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+  #added-numbers-area {
+    width: 100%;
+  }
+
+  /* line 127, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+  #added-numbers {
+    table-layout: fixed;
+    width: 100%;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+/* line 135, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.etabs {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 139, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.tab {
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+  background: #eee;
+  border: solid 1px #999;
+  border-bottom: none;
+  -moz-border-radius: 4px 4px 0 0;
+  -webkit-border-radius: 4px 4px 0 0;
+}
+
+/* line 149, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.tab a {
+  font-size: 14px;
+  line-height: 2em;
+  display: block;
+  padding: 0 10px;
+  outline: none;
+}
+
+/* line 156, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.tab a:hover {
+  text-decoration: underline;
+}
+
+/* line 160, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.tab.active {
+  background: #fff;
+  padding-top: 6px;
+  position: relative;
+  top: 1px;
+  border-color: #666;
+}
+
+/* line 167, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.tab a.active {
+  font-weight: bold;
+}
+
+/* line 170, I:/Rails/RailsBingo/app/assets/stylesheets/bingo_cards.scss */
+.tab-container .panel-container {
+  background: #fff;
+  border: solid #666 1px;
+  padding: 10px;
+  -moz-border-radius: 0 4px 4px 4px;
+  -webkit-border-radius: 0 4px 4px 4px;
+}

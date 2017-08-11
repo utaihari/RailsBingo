@@ -12,7 +12,13 @@ class RoomsController < ApplicationController
     if last_room == nil
       @room = @community.room.build
     else
-      @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: last_room.name, canUseItem: last_room.canUseItem, AllowGuest: last_room.AllowGuest, AllowJoinDuringGame: last_room.AllowJoinDuringGame, detail: last_room.detail, number_of_free: last_room.number_of_free.to_i, can_bring_item: last_room.can_bring_item, profit: last_room.profit.to_i, bingo_score: last_room.bingo_score.to_f, riichi_score: last_room.riichi_score.to_f, hole_score: last_room.hole_score.to_f, invite_bonus: last_room.invite_bonus.to_i)
+      @room = Room.new(user_id:current_user.id, community_id: params[:community_id],\
+      name: last_room.name, canUseItem: last_room.canUseItem, AllowGuest: last_room.AllowGuest,\
+      AllowJoinDuringGame: last_room.AllowJoinDuringGame, detail: last_room.detail,\
+      number_of_free: last_room.number_of_free.to_i, can_bring_item: last_room.can_bring_item,\
+      profit: last_room.profit.to_i, bingo_score: last_room.bingo_score.to_f,\
+      riichi_score: last_room.riichi_score.to_f, hole_score: last_room.hole_score.to_f,\
+      invite_bonus: last_room.invite_bonus.to_i, show_hint: last_room.show_hint)
     end
   end
   def direct_new
@@ -34,7 +40,8 @@ class RoomsController < ApplicationController
     @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest],\
     AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail],\
     number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i,\
-    bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f, invite_bonus: params[:room][:invite_bonus].to_i, rates:number_rate.join(","))
+    bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f,\
+    invite_bonus: params[:room][:invite_bonus].to_i, rates:number_rate.join(","), show_hint:params[:room][:show_hint])
 
     if @room.save
       redirect_to controller: 'rooms', action: 'show', id: @room.id
@@ -493,7 +500,7 @@ class RoomsController < ApplicationController
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def room_params
-    params.require(:room).permit(:name, :canUseItem, :AllowGuest, :AllowJoinDuringGame, :detail, :profit, :bingo_score, :riichi_score, :hole_score, :number_of_free, :can_bring_item, :invite_bonus)
+    params.require(:room).permit(:name, :canUseItem, :AllowGuest, :AllowJoinDuringGame, :detail, :profit, :bingo_score, :riichi_score, :hole_score, :number_of_free, :can_bring_item, :invite_bonus, :show_hint)
   end
 
   def isRoomOrganizer(room_id)

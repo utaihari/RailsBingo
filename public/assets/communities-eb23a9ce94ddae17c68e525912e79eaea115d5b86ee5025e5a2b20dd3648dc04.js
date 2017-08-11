@@ -1,1 +1,0 @@
-(function(){this.show_detail=function(){$("#community-detail").toggle("fast")},this.show_members=function(){$("#community-members").toggle("slow")},this.toggle_administrator=function(t,i){return $.getJSON("/API/toggle_administrator",{community_id:t,user_id:i},function(t){t?$(".organize-"+i).text("\u6709"):$(".organize-"+i).text("\u7121")})}}).call(this);

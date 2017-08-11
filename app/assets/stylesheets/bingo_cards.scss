@@ -30,9 +30,84 @@ td{
 		background-color: rgba(204, 255, 255, 0.7);
 		font-size: 30px;
 	}
+	.bingo-number:hover{
+		border-radius: 5%;
+		background-color: rgba(170, 255, 255, 1);
+		animation: change-color 500ms;
+	}
+	.bingo-number:active{
+		animation: number-click 200ms;
+	}
+	.outputted{
+		animation: outputed-number 1000ms;
+		animation-iteration-count: infinite;
+	}
 
 	.free{
 		font-size: 20px;
+	}
+	@keyframes change-color {
+		0% {
+			background-color: rgba(204, 255, 255, 0.7);
+		}
+		100% {
+			background-color: rgba(170, 255, 255, 1);
+		}
+	}
+	@keyframes number-click {
+		0% {
+			background:radial-gradient(rgba(255, 0, 0, 0.5) 0, #8affff 100%, #ccffff 100%);
+		}
+		20% {
+			background:radial-gradient(rgba(255, 0, 0, 0.5) 0, #8affff 80%, #ccffff 100%);
+		}
+		40% {
+			background:radial-gradient(rgba(255, 0, 0, 0.5) 0, #8affff 60%, #ccffff 100%);
+		}
+		60% {
+			background:radial-gradient(rgba(255, 0, 0, 0.5) 0, #8affff 40%, #ccffff 100%);
+		}
+		80% {
+			background:radial-gradient(rgba(255, 0, 0, 0.5) 0, #8affff 20%, #ccffff 100%);
+		}
+		100% {
+			background-color: rgba(170, 255, 255, 1);
+		}
+	}
+	@keyframes outputed-number {
+		0% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 90%, rgba(51, 210, 51, 0.3) 95%, rgba(204, 255, 255, 0.7) 100%,rgba(204, 255, 255, 0.7) 100%);
+		}
+		10% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 80%, rgba(51, 210, 51, 0.3) 85%, rgba(204, 255, 255, 0.7) 90%, rgba(204, 255, 255, 0.7) 100%);
+		}
+		20% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 70%, rgba(51, 210, 51, 0.3) 75%, rgba(204, 255, 255, 0.7) 80%, rgba(204, 255, 255, 0.7) 100%);
+		}
+		30% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 60%, rgba(51, 210, 51, 0.3) 65%, rgba(204, 255, 255, 0.7) 70%, rgba(204, 255, 255, 0.7) 100%);
+		}
+		40% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 50%, rgba(51, 210, 51, 0.3) 55%, rgba(204, 255, 255, 0.7) 60%, rgba(204, 255, 255, 0.7) 100%);
+		}
+		50% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 40%, rgba(51, 210, 51, 0.3) 45%, rgba(204, 255, 255, 0.7) 50%, rgba(204, 255, 255, 0.7) 100%);
+		}
+		60% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 30%, rgba(51, 210, 51, 0.3) 35%, rgba(204, 255, 255, 0.7) 40%, rgba(204, 255, 255, 0.7) 100%);
+		}
+		70% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 20%, rgba(51, 210, 51, 0.3) 25%, rgba(204, 255, 255, 0.7) 30%, rgba(204, 255, 255, 0.7) 100%);
+		}
+		80% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 10%, rgba(51, 210, 51, 0.3) 15%, rgba(204, 255, 255, 0.7) 20%, rgba(204, 255, 255, 0.7) 100%);
+		}
+		90% {
+			background:radial-gradient(rgba(204, 255, 255, 0.7) 0%, rgba(204, 255, 255, 0.7) 1%, rgba(51, 210, 51, 0.3) 5%, rgba(204, 255, 255, 0.7) 10%, rgba(204, 255, 255, 0.7) 100%);
+		}
+		100% {
+			background-color: rgba(204, 255, 255, 0.7);
+		}
 	}
 }
 .num-range{
