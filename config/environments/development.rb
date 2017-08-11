@@ -75,5 +75,5 @@ Rails.application.configure do
     :password => Settings[:gmail][:password],
     :authentication => 'login',
   }
-
+  config.middleware.delete Rack::Lock
 end

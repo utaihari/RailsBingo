@@ -258,8 +258,6 @@ class RoomsController < ApplicationController
     length = params[:length].to_i
     notices_length = RoomNotice.where(room_id: params[:room_id]).order("created_at DESC").count
 
-    logger.debug "notices_length: "+notices_length.to_s
-
     notices_length -= length
 
     if notices_length > 0

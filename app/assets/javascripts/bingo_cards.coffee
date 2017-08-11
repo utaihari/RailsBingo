@@ -21,6 +21,13 @@ $(->
 	@is_auto = $('#data').data("is_auto")
 	@done_bingo = $('#data').data("done_bingo")
 	@show_hint = $('#data').data("show_hint")
+	@ws_rails = new WebSocketRails("localhost:3000/websocket")
+
+	@get_number = @ws_rails.subscribe("#{@room_id}")
+	@get_number.bind("websocket_add_number", @receive_number)
+
+	@get_condition = @ws_rails.subscribe("#{@room_id}")
+	@get_condition.bind("change_room_condition", @receive_condition)
 
 	if is_auto
 		$('#auto_check').prop("checked",true)
@@ -48,6 +55,15 @@ $(->
 		$('[data-remodal-id=is_auto]').remodal().open()
 	return
 )
+
+@receive_number = (message) ->
+	console.log("receive_number!")
+	console.log(message)
+	return
+@receive_condition = (message) ->
+	console.log("receive_condition!")
+	console.log(message)
+	return
 @onPageLoad = ->
 	room_id = $("#data").data("room_id")
 	@numbers_update()
@@ -63,11 +79,11 @@ game_start_check =  ->
 	if condition == 1
 		notice.push("ゲームが始まりました")
 		change_item_detail()
-		@update_numbers = setInterval(->
-			@numbers_update()
-			update_list()
-			reload_check_numbers()
-		,2000)
+		# @update_numbers = setInterval(->
+		# 	@numbers_update()
+		# 	update_list()
+		# 	reload_check_numbers()
+		# ,2000)
 		@end_check = setInterval(->
 			game_end_check()
 		,10000)
