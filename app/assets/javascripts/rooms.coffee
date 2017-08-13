@@ -5,15 +5,13 @@
 rate = []
 bingo_users = []
 notices_length = 0
-ws_rails = new WebSocketRails("localhost:3000/websocket");
-
 
 $(->
 	@community_id = $("#data").data("community_id")
 	@room_id = $("#data").data("room_id")
 	@condition = $("#data").data("condition")
 	@notices_update(@room_id)
-	@ws_rails = new WebSocketRails("localhost:3000/websocket")
+	@ws_rails = new WebSocketRails("bingo-live.tk/websocket")
 
 	@get_notice = @ws_rails.subscribe("#{@room_id}")
 	@get_notice.bind("add_notice", @receive_notice)
