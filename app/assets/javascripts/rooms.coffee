@@ -55,10 +55,10 @@ $(->
 	return numbers[Math.floor(Math.random() * numbers.length)]
 
 @add_number =(room_id, number) ->
-	# $.post('/API/add_number', {room_id: room_id, number: number}, (data) ->
-	# 	return
-	# 	)
-	ws_rails.trigger("websocket_add_number", {room_id: @room_id, number: number});
+	$.post('/API/add_number', {room_id: room_id, number: number}, (data) ->
+		return
+		)
+	# ws_rails.trigger("websocket_add_number", {room_id: @room_id, number: number});
 	return
 
 @random_number_add =(room_id) ->

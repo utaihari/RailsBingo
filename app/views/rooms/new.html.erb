@@ -14,7 +14,7 @@
 	</div>
 
 	<div class=”controls”>
-		<p>部屋の説明</p>
+		<p>部屋の説明（参加条件や賞品など）</p>
 		<%= f.text_area :detail, rows: 10, cols: 40, :style => 'width: 100%', :id => 'room-detail' %>
 	</div>
 	<div class="form-group">
@@ -28,8 +28,24 @@
 	<div class="form-group">
 		<%= f.label :AllowGuest, "ゲスト許可" %>
 		<%= f.check_box :AllowGuest ,{},"true","false" %>
-		<p>(許可の場合、参加者のメールアドレスは通知されません)</p>
+		<p>(許可の場合、参加者のメールアドレスはあなたに通知されません)</p>
 	</div>
+
+	<div class="form-group" >
+		<%= f.label :show_top_page, "トップページに表示する" %>
+		<span><%= f.check_box :show_top_page, {}, "true","false"%></span>
+	</div>
+
+	<div class="form-group">
+		<%= f.label :pass, "入場パスワード" %>
+		<%= f.text_field :pass, placeholder: '設定しない場合は空白' %>
+	</div>
+
+	<div class="controls">
+		<%= f.label :date, "開催予定日時" %>
+		<%= f.text_field :date, data: { :date_format => 'YYYY/MM/DD HH:mm' }, :class => 'form-control datetimepicker', placeholder: '指定しない場合は空白' %>
+	</div>
+
 	<div class="form-group">
 		<%= f.label :number_of_free, "フリーの個数(１つは真ん中に配置されます)" %>
 		<%= f.number_field :number_of_free %>

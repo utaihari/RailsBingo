@@ -69,3 +69,8 @@ gem 'google-analytics-rails'
 gem 'eventmachine', :git => 'git://github.com/eventmachine/eventmachine.git', :branch => 'master'
 gem 'websocket-rails', github: 'recurser/websocket-rails', branch: 'bugfix/388-latest-faye-websocket'
 gem 'faye-websocket'
+
+source 'https://rails-assets.org' do
+  gem 'rails-assets-bootstrap-sass-official'
+  gem 'rails-assets-eonasdan-bootstrap-datetimepicker'
+end

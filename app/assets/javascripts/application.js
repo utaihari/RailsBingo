@@ -15,6 +15,10 @@
 *= require jquery_ujs
 *= require twitter/bootstrap
 *= require jquery.turbolinks
+*= require bootstrap-sass-official
+*= require moment
+*= require moment/locale/ja
+*= require eonasdan-bootstrap-datetimepicker
 */
 //= require websocket_rails/main
 

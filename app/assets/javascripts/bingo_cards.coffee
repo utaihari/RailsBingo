@@ -13,7 +13,7 @@ number_arrive_time = new Date()
 
 $(->
 	$('#tab-container').easytabs()
-
+	@user_id = $("#data").data("user_id")
 	@room_id = $("#data").data("room_id")
 	@card_id = $("#data").data("card_id")
 	@community_id = $("#data").data("community_id")
@@ -29,21 +29,28 @@ $(->
 	@get_condition = @ws_rails.subscribe("#{@room_id}")
 	@get_condition.bind("change_room_condition", @receive_condition)
 
+	@get_notice = @ws_rails.subscribe("user_#{@user_id}")
+	@get_notice.bind("get_user_notice", @receive_notice)
+
+
+
 	if is_auto
 		$('#auto_check').prop("checked",true)
 
 	for i in [0..24]
 		checks.push(false)
 	@onPageLoad()
-	@update_notice = setInterval(->
-		display_notice()
-	,1000)
-	@start_check = setInterval(->
-		game_start_check(room_id)
-	,5000)
-	@notices_check = setInterval(->
-		get_server_notices(room_id)
-	,20000)
+
+	# @update_notice = setInterval(->
+	# 	display_notice()
+	# ,1000)
+	# @start_check = setInterval(->
+	# 	game_start_check(room_id)
+	# ,5000)
+	# @notices_check = setInterval(->
+	# 	get_server_notices(room_id)
+	# ,20000)
+
 	if !@done_bingo && check_bingo()
 		$('#bingo-button').show()
 	else
@@ -56,38 +63,78 @@ $(->
 	return
 )
 
-@receive_number = (message) ->
-	console.log("receive_number!")
-	console.log(message)
+@receive_number = (number) ->
+	console.log("receive_number")
+	console.log(number)
+	numbers.push(parseInt(number))
+	if number isnt -1
+		notice.push("新しいナンバーは "+ number + "です")
+		display_notice()
+		hide_added_number()
+
+		$("#added-#{number}").addClass("icon-cross")
+		if document.getElementById("select-number-#{number}") != null
+			$("#select-number-#{number}").hide()
+		if @is_auto
+			check_number_local(parseInt(number))
+		if @show_hint
+			set_outputted(parseInt(number))
+
+	number_arrive_time = new Date()
 	return
 @receive_condition = (message) ->
-	console.log("receive_condition!")
-	console.log(message)
+	if message == 1
+		notice.push("ゲームが始まりました")
+		display_notice()
+		change_item_detail()
+		card_nums = $('.bingo-number')
+		numbers.push(-1)
+		for n, index in card_nums
+			if -1 == parseInt($(n).data("number"))
+				if !$(n).hasClass("checked")
+					$(n).addClass("outputted")
+		if @is_auto
+			check_number_local(-1)
+	else if message == 2
+		notice.push("ゲームが終了しました。")
+		display_notice()
+		check_rank()
+		set_number_of_bingos()
+		@update_result()
+		$('#result').show('slow')
+		$('[data-remodal-id=result]').remodal().open()
+	return
+@receive_notice = (message) ->
+	notice.push(message)
+	display_notice()
 	return
 @onPageLoad = ->
 	room_id = $("#data").data("room_id")
+	game_start_check(room_id)
+	get_server_notices(room_id)
 	@numbers_update()
-	# number_length = numbers.length
 	@checks_update()
 	update_list()
 	get_card_numbers()
 	reload_check_numbers()
 	@update_items()
+
 	return
 game_start_check =  ->
 	@check_condition()
 	if condition == 1
 		notice.push("ゲームが始まりました")
+		display_notice()
 		change_item_detail()
 		# @update_numbers = setInterval(->
 		# 	@numbers_update()
 		# 	update_list()
 		# 	reload_check_numbers()
 		# ,2000)
-		@end_check = setInterval(->
-			game_end_check()
-		,10000)
-		clearInterval(@start_check)
+		# @end_check = setInterval(->
+		# 	game_end_check()
+		# ,10000)
+		# clearInterval(@start_check)
 
 		card_nums = $('.bingo-number')
 		for n, index in card_nums
@@ -98,7 +145,7 @@ game_start_check =  ->
 			check_number_local(-1)
 
 	if condition == 2
-		clearInterval(@start_check)
+		# clearInterval(@start_check)
 		game_end_check()
 	return
 game_end_check =  ->
@@ -183,6 +230,7 @@ get_server_notices = ->
 	$.getJSON('/API/get_user_notices',{room_id: @room_id},(json)->
 		for n in json
 			notice.push(n)
+			display_notice()
 		return
 	)
 	return
@@ -191,6 +239,7 @@ update_list = ->
 	if number_length isnt numbers.length
 		if numbers[numbers.length-1] isnt -1
 			notice.push("新しいナンバーは "+ numbers[numbers.length-1] + "です")
+			display_notice()
 			hide_added_number()
 
 			#actions for new numbers
@@ -204,12 +253,12 @@ update_list = ->
 					set_outputted(numbers[i-1])
 
 		number_length = numbers.length
-		$('ul#number-list').empty()
-		for number, index in numbers when number isnt -1
-			$('ul#number-list').prepend("<li> #{number} </li>")
-		$('#last-number').empty()
-		if numbers[number_length-1] isnt -1
-			$('#last-number').text(numbers[number_length-1])
+		# $('ul#number-list').empty()
+		# for number, index in numbers when number isnt -1
+		# 	$('ul#number-list').prepend("<li> #{number} </li>")
+		# $('#last-number').empty()
+		# if numbers[number_length-1] isnt -1
+		# 	$('#last-number').text(numbers[number_length-1])
 		number_arrive_time = new Date()
 	return
 set_outputted = (number) ->
@@ -268,14 +317,11 @@ check_number_local = (number) ->
 
 @bingo = ->
 	current_time = new Date()
-	console.log("done_bingo")
-	console.log(@done_bingo)
 	if !check_bingo() || @done_bingo
-		@done_bingo = true
 		$('#bingo-button').hide()
 		return
+	@done_bingo = true
 	$.post('/API/done_bingo', {card_id: @card_id, room_id: @room_id, times: numbers.length, seconds: current_time-number_arrive_time}, (data) ->
-		@done_bingo = true
 		$('#bingo-button').hide()
 		return
 		)
@@ -289,6 +335,7 @@ check_number_local = (number) ->
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: @card_id, from_room_master: false},(json)->
 		notice.push(json)
+		display_notice()
 		if update_card
 			$.get("/API/#{community_id}/#{room_id}/bingo_card")
 		return
@@ -317,6 +364,7 @@ check_number_local = (number) ->
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/use_item_all',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: @card_id},(json)->
 		notice.push(json)
+		display_notice()
 		if update_card
 			$.get("/API/#{community_id}/#{room_id}/bingo_card")
 		return
@@ -332,6 +380,7 @@ check_number_local = (number) ->
 	s_notice = ""
 	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, number: number},(json)->
 		notice.push(json)
+		display_notice()
 		s_notice = json
 		return
 		)

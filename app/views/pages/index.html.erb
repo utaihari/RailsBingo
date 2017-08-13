@@ -8,20 +8,27 @@
 	<%= link_to "ビンゴを開催する", new_user_registrations_from_top_path(Users::RegistrationsController::FROM_TOP_PAGE), class: "btn btn-info btn-lg" %>
 	<%= link_to "新規登録", new_user_registration_path, class: "btn btn-primary btn-lg" %>
 	<% end %>
-<!-- 	<br>
+	<br>
 	<h3>ビンゴ大会スケジュール</h3>
 	<table class="table">
 		<thead>
 			<tr>
-				<th>コミュニティ名</th>
-				<th>日付</th>
+				<th></th>
 				<th>目玉賞品</th>
+				<th>開催予定の日付</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<td></td>
+				<% if !@upcoming_event.blank? %>
+				<% for event in @upcoming_event %>
+					<td><%= link_to "#{event.room_name}(#{event.community_name})", community_room_path(event.community_id, event.room_id) %></td>
+					<td><%= event.room_prize %></td>
+					<td><%= event.room_date %></td>
+				<% end %>
+				<% end %>
+
 			</tr>
 		</tbody>
-	</table> -->
+	</table>
 </div>

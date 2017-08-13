@@ -1,6 +1,12 @@
 $(->
 	@show_room_detail()
 	@show_profit_item_detail()
+	$(".datetimepicker").datetimepicker({
+    	format: "YYYY/MM/DD HH:mm",
+    	showClear: true,
+    	showClose: true,
+    	locale: 'ja'
+   	});
 	return
 )
 @show_room_detail = ->

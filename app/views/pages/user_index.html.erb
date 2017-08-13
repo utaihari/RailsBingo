@@ -30,7 +30,7 @@
 		<h3>現在開催中のビンゴ</h3>
 		<% @opened_communities.each do |community| %>
 		<div class="opened-community">
-			<p><%= link_to community.name+"("+community.community_name+")", community_path(community.id),class: "btn btn-default" %></p>
+			<p><%= link_to "#{community.name} (#{community.community_name}) #{community.prize} #{community.date}", community_room_path(community.id, community.room_id),class: "btn btn-default" %></p>
 		</div>
 		<% end %>
 	</div>

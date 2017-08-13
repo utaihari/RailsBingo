@@ -13,6 +13,10 @@
  *= require_tree .
  *= require_self
  */
+@import "bootstrap-sprockets";
+@import "bootstrap-sass-official";
+@import "eonasdan-bootstrap-datetimepicker";
+
  body{
  	width:100%;
  	background-color: #FFEEFF;

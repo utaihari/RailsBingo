@@ -3,8 +3,8 @@
 <%= javascript_include_tag "rooms-new" %>
 <script src="http://js.nicedit.com/nicEdit-latest.js" type="text/javascript"></script>
 <script type="text/javascript">bkLib.onDomLoaded(function() {
-        new nicEditor().panelInstance('room-detail');
-        });</script>
+	new nicEditor().panelInstance('room-detail');
+});</script>
 <div class="center70">
 	<% if @communities.length > 1 %>
 	<p>ビンゴを開催するコミュニティを選択</p>
@@ -36,6 +36,10 @@
 		<%= f.label :AllowGuest, "ゲスト許可" %>
 		<%= f.check_box :AllowGuest ,{},"true","false" %>
 		<p>(許可の場合、参加者のメールアドレスは通知されません)</p>
+	</div>
+	<div class="form-group">
+		<%= f.label :show_hint, "既に出力されている数字をわかりやすく表示" %>
+		<%= f.check_box :show_hint ,{},"true","false" %>
 	</div>
 	<div class="form-group" >
 		<%= f.label :canUseItem, "アイテム使用許可" %>

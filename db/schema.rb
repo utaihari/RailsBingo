@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170810132529) do
+ActiveRecord::Schema.define(version: 20170812154630) do
 
   create_table "admin_users", force: :cascade do |t|
     t.integer  "user_id"
@@ -91,8 +91,9 @@ ActiveRecord::Schema.define(version: 20170810132529) do
   create_table "community_user_lists", force: :cascade do |t|
     t.integer  "community_id"
     t.integer  "user_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.integer  "join_count",   default: 0
   end
 
   create_table "items", force: :cascade do |t|
@@ -159,6 +160,9 @@ ActiveRecord::Schema.define(version: 20170810132529) do
     t.boolean  "show_hint",           default: false
     t.datetime "date"
     t.string   "prize",               default: ""
+    t.float    "join_count_bounus",   default: 0.0
+    t.string   "pass",                default: ""
+    t.boolean  "show_top_page",       default: true
   end
 
   create_table "user_item_lists", force: :cascade do |t|

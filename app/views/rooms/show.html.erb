@@ -18,6 +18,8 @@
 	<% end %>
 	<div id="room-detail"><%= raw @room.detail %></div>
 
+	<div><%= @room.date %></div>
+
 	<% if @isRoomOrganizer %>
 
 	<div id="game-main">
@@ -52,9 +54,9 @@
 
 	<% else %>
 	<% if @isRoomMember %>
-	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id, @room.id, @card.id) ,class: "btn btn-info"%>
+	<%= link_to "ビンゴカードを見る", community_room_bingo_card_path(@community.id, @room.id, @card.id) , class: "btn btn-info"%>
 	<% else %>
-	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id, @room.id),　class: "btn btn-info btn-sm" %>
+	<%= link_to "このビンゴに参加する", pre_join_room_path(@community.id, @room.id),class: "btn btn-info btn-sm" %>
 	<% end %>
 	<% end %>
 	<div class="white-box container-fluid" >

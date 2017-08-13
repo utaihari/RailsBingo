@@ -45,7 +45,7 @@ class BingoCardsController < ApplicationController
 		end
 
 		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "#333399")
-		WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "#333399"})
+		WebsocketRails["#{@room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "#333399"})
 		settings = UserSetting.find_by(user_id: current_user.id)
 		if settings == nil
 			settings = UserSetting.create(user_id: current_user.id)
@@ -73,6 +73,7 @@ class BingoCardsController < ApplicationController
 		if session[:invite_by] != nil
 			user_notice = "あなたが招待した#{current_user.name}さんがゲームに参加しました"
 			UserNotice.create(user_id: session[:invite_by], room_id: @room.id, notice: user_notice)
+			WebsocketRails["user_#{session[:invite_by]}"].trigger(:get_user_notice, user_notice)
 			items = item_deliver(session[:invite_by], @room.id, @room.invite_bonus)
 			item_names = []
 			items.each { |i|
@@ -80,6 +81,7 @@ class BingoCardsController < ApplicationController
 			}
 			user_notice = "アイテム #{item_names.join(",")}　を獲得しました"
 			UserNotice.create(user_id: session[:invite_by], room_id: @room.id, notice: user_notice)
+			WebsocketRails["user_#{session[:invite_by]}"].trigger(:get_user_notice, user_notice)
 		end
 		render :action => 'show', community_id: params[:community_id], room_id: params[:room_id], id: @card.id
 	end
@@ -210,7 +212,7 @@ class BingoCardsController < ApplicationController
 				i.quantity += 1
 				i.save
 			else
-				UserItemList.create(user_id: current_user.id, community_id: params[:community_id], item_id: item.id, quantity: 1, temp: falseee)
+				UserItemList.create(user_id: current_user.id, community_id: params[:community_id], item_id: item.id, quantity: 1, temp: false)
 			end
 		end
 		user.got_item_after_game = true
@@ -337,7 +339,7 @@ class BingoCardsController < ApplicationController
 
 		if card.riichi_lines < params[:riichi_lines].to_i
 			RoomNotice.create(room_id: params[:room_id], user_name: current_user.name, notice: "リーチ！", color: "magenta")
-			WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: "リーチ！", color: "magenta"})
+			WebsocketRails["#{params[:room_id]}"].trigger(:add_notice, {user_name: current_user.name, notice: "リーチ！", color: "magenta"})
 
 		end
 		card.checks = checks.join(",")
