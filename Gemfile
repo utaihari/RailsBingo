@@ -74,3 +74,5 @@ source 'https://rails-assets.org' do
   gem 'rails-assets-bootstrap-sass-official'
   gem 'rails-assets-eonasdan-bootstrap-datetimepicker'
 end
+gem 'hiredis'
+gem 'redis', :require => ["redis", "redis/connection/hiredis"]
