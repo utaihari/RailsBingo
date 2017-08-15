@@ -1,7 +1,12 @@
 <%= javascript_include_tag "rooms.js" %>
 
 <div class="center70">
-	<div id="data" data-community_id=<%= @community.id %> data-room_id=<%= @room.id %> data-condition=<%= @room.isPlaying %>></div>
+	<div id="data" data-community_id=<%= @community.id %>
+		data-room_id=<%= @room.id %>
+		data-condition=<%= @room.isPlaying %>
+		data-url=<%= @my_page_url %>
+		data-user_name=<%= current_user.name %>>
+	</div>
 	<h1 onclick="show_room_detail()"><%= @room.name %></h1>
 	<div id="notice"></div>
 	<% if @room.AllowGuest %>

@@ -85,6 +85,7 @@ class RoomsController < ApplicationController
       shape_rendering: 'crispEdges',
       module_size: 3)
     @items = Item.where("((item_type = ?) OR (item_type = ?) OR (item_type = ?)) AND (AllowUseDuringGame = 't')",0,2,4)
+    @my_page_url = Settings.url[:url]
   end
 
   def edit
@@ -225,6 +226,7 @@ class RoomsController < ApplicationController
       @room.rates = rates.join(",")
       @room.times += 1
       @room.save
+      room_notice = {}
 
       auto_cards = BingoCard.includes(:user).includes(:room).where(room_id: params[:room_id], is_auto: true)
 
@@ -244,14 +246,15 @@ class RoomsController < ApplicationController
                 notice = "リーチ！(自動機能により登録されました)"
                 user = User.find(card.user_id)
                 RoomNotice.create!(room_id: params[:room_id], user_name: user.name, notice: notice, color: "magenta")
-                WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "magenta"})
+                room_notice << {user_name: user.name, notice: notice, color: "magenta"}
               end
 
               if check_bingo(card_checks)
                 user = User.find(card.user_id)
                 notice = "ビンゴ！(自動機能により登録されました)"
                 RoomNotice.create!(room_id: params[:room_id], user_name: user.name, notice: notice, color: "red")
-                WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "red"})
+                room_notice << {user_name: user.name, notice: notice, color: "red"}
+                # WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "red"})
                 card.bingo_lines += 1
                 card.done_bingo = true
                 BingoUser.create(room_id: params[:room_id], user_id: user.id, times: @room.times, seconds: 0, note:"自動ユーザー")

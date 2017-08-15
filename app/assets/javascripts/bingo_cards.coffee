@@ -21,7 +21,11 @@ $(->
 	@is_auto = $('#data').data("is_auto")
 	@done_bingo = $('#data').data("done_bingo")
 	@show_hint = $('#data').data("show_hint")
-	@ws_rails = new WebSocketRails("bingo-live.tk/websocket")
+	@url = $('#data').data("url")
+	@user_name = $('#data').data("user_name")
+	@invite_by = $('#data').data("invite_by")
+	@ws_rails = new WebSocketRails("#{@url}/websocket")
+
 
 	@get_number = @ws_rails.subscribe("#{@room_id}")
 	@get_number.bind("websocket_add_number", @receive_number)
@@ -118,6 +122,10 @@ $(->
 	get_card_numbers()
 	reload_check_numbers()
 	@update_items()
+
+	if @first_join == "true"
+		notice = "参加しました"
+		@ws_rails.trigger("add_notice", {room_id: @room_id, notice: {user_name: current_user.name, notice: notice, color: "#333399"}})
 
 	return
 game_start_check =  ->
@@ -272,7 +280,9 @@ set_outputted = (number) ->
 	checks[index] = true
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/check_number',{room_id:@room_id, card_id: @card_id, index: index, riichi_lines: calc_number_of_riichi() , is_auto: "false"},(json)->
-		checks[index] = (json[index] == 't')
+		checks[index] = (json["checks"][index] == 't')
+		for i in json["room_notice"]
+			@ws_rails.trigger("add_notice", i)
 	)
 	return
 
@@ -321,8 +331,10 @@ check_number_local = (number) ->
 		$('#bingo-button').hide()
 		return
 	@done_bingo = true
-	$.post('/API/done_bingo', {card_id: @card_id, room_id: @room_id, times: numbers.length, seconds: current_time-number_arrive_time}, (data) ->
+	$.post('/API/done_bingo', {card_id: @card_id, room_id: @room_id, times: numbers.length, seconds: current_time-number_arrive_time}, (json) ->
 		$('#bingo-button').hide()
+		for i in json["room_notice"]
+			@ws_rails.trigger("add_notice", i)
 		return
 		)
 	return
@@ -334,8 +346,11 @@ check_number_local = (number) ->
 
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: @card_id, from_room_master: false},(json)->
-		notice.push(json)
-		display_notice()
+		for i in json["user_notice"]
+			notice.push(i)
+			display_notice()
+		for i in json["room_notice"]
+			@ws_rails.trigger("add_notice", i)
 		if update_card
 			$.get("/API/#{community_id}/#{room_id}/bingo_card")
 		return
@@ -363,8 +378,11 @@ check_number_local = (number) ->
 
 	$.ajaxSetup({async: false});
 	$.getJSON('/API/use_item_all',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: @card_id},(json)->
-		notice.push(json)
-		display_notice()
+		for i in json["user_notice"]
+			notice.push(i)
+			display_notice()
+		for i in json["room_notice"]
+			@ws_rails.trigger("add_notice", i)
 		if update_card
 			$.get("/API/#{community_id}/#{room_id}/bingo_card")
 		return
@@ -377,11 +395,12 @@ check_number_local = (number) ->
 
 @use_item_select_number = (item_id, number) ->
 	$.ajaxSetup({async: false});
-	s_notice = ""
 	$.getJSON('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, number: number},(json)->
-		notice.push(json)
-		display_notice()
-		s_notice = json
+		for i in json["user_notice"]
+			notice.push(i)
+			display_notice()
+		for i in json["room_notice"]
+			@ws_rails.trigger("add_notice", i)
 		return
 		)
 	quantity = $('.quantity-'+item_id)

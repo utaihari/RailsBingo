@@ -10,8 +10,10 @@ $(->
 	@community_id = $("#data").data("community_id")
 	@room_id = $("#data").data("room_id")
 	@condition = $("#data").data("condition")
+	@user_name = $('#data').data("user_name")
 	@notices_update(@room_id)
-	@ws_rails = new WebSocketRails("bingo-live.tk/websocket")
+	@url = $('#data').data("url")
+	@ws_rails = new WebSocketRails("#{@url}/websocket")
 
 	@get_notice = @ws_rails.subscribe("#{@room_id}")
 	@get_notice.bind("add_notice", @receive_notice)
@@ -54,9 +56,11 @@ $(->
 
 @add_number =(room_id, number) ->
 	$.post('/API/add_number', {room_id: room_id, number: number}, (data) ->
+		for room_notice in data["room_notice"]
+			$('#notices').prepend("<div><span class=\"user_name\">#{room_notice.user_name}さん: </span><span><font color=\"#{room_notice.color}\">#{room_notice.notice}</font></span>")
 		return
 		)
-	# ws_rails.trigger("websocket_add_number", {room_id: @room_id, number: number});
+	ws_rails.trigger("websocket_add_number", {room_id: @room_id, number: number})
 	return
 
 @random_number_add =(room_id) ->
@@ -68,6 +72,7 @@ $(->
 
 @start_game = (room_id) ->
 	$.get("/API/game_main/#{@community_id}/#{room_id}")
+	ws_rails.trigger("change_room_condition", {room_id: @room_id, condition: 1})
 	condition = 1
 	return
 
@@ -154,7 +159,9 @@ bingo_users_length = 0
 
 	if parseInt(item_id) == -1 || parseInt(card_id) == -1
 		return
-	$.post('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: card_id, from_room_master: true},(json)->
+	$.post('/API/use_item',{community_id: @community_id, room_id: @room_id, item_id: item_id, card_id: card_id, from_room_master: true},(data)->
+		for room_notice in data["room_notice"]
+			$('#notices').prepend("<div><span class=\"user_name\">#{room_notice.user_name}さん: </span><span><font color=\"#{room_notice.color}\">#{room_notice.notice}</font></span>")
 		)
 	return
 

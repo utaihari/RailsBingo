@@ -14,5 +14,5 @@ WebsocketRails::EventMap.describe do
 
   subscribe :websocket_add_number, :to => WebsocketRoomController, :with_method => :add_number
   subscribe :change_room_condition, :to => WebsocketRoomController, :with_method => :change_room_condition
-
+  subscribe :add_notice, :to => WebsocketRoomController, :with_method => :add_notice
 end
