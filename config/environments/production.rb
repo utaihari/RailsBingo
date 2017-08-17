@@ -99,5 +99,9 @@ Rails.application.configure do
     :authentication => 'login',
   }
 
+  config.session_store :redis_store, servers: 'redis://localhost:6379/0', expire_in: 1.day
+
+
 GA.tracker = "UA-89830129-1"
+
 end
