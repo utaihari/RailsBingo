@@ -66,8 +66,8 @@ platforms :ruby do
 end
 
 gem 'google-analytics-rails'
-gem 'eventmachine', :git => 'git://github.com/eventmachine/eventmachine.git', :branch => 'master'
-gem 'websocket-rails', github: 'recurser/websocket-rails', branch: 'bugfix/388-latest-faye-websocket'
+gem 'eventmachine'
+gem 'websocket-rails'
 gem 'faye-websocket'
 
 source 'https://rails-assets.org' do
