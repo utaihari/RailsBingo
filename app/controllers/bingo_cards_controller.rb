@@ -28,15 +28,6 @@ class BingoCardsController < ApplicationController
 		@done_bingo = @card.done_bingo
 		@get_items = distribute_item(params[:community_id], params[:room_id])
 		@invite_url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)+"?invite_by=#{current_user.id}"
-		@my_page_url = Settings.url[:url]
-		@is_first_view = false
-		room_user = RoomUserList.find_by(room_id: params[:room_id], user_id: current_user.id)
-		if room_user.is_first_join
-			@is_first_view = true
-			room_user.is_first_join = false
-			room_user.save
-		end
-		@invite_by = room_user.invite_by
 	end
 
 	def create
@@ -50,14 +41,11 @@ class BingoCardsController < ApplicationController
 		notice = "参加しました"
 		if session[:invite_by] != nil
 			user = User.find(session[:invite_by])
-			room_user = RoomUserList.find_by(room_id: params[:room_id], user_id: current_user.id)
-			room_user.invite_by = session[:invite_by]
-			room_user.save
-			# notice = "#{user.name}さんに招待されました"
+			notice = "#{user.name}さんに招待されました"
 		end
 
 		RoomNotice.create!(room_id: params[:room_id], user_name: current_user.name, notice: notice, color: "#333399")
-		# WebsocketRails["#{@room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "#333399"})
+		WebsocketRails["#{@room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "#333399"})
 		settings = UserSetting.find_by(user_id: current_user.id)
 		if settings == nil
 			settings = UserSetting.create(user_id: current_user.id)
@@ -83,12 +71,9 @@ class BingoCardsController < ApplicationController
 		@invite_url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)+"?invite_by=#{current_user.id}"
 		#invite bonus
 		if session[:invite_by] != nil
-			invite_user = RoomUserList.find_by(user_id: session[:invite_by], room_id: @room_id)
-			# invite_user.invite_by = current_user.id
-			# invite_user.save
-			# user_notice = "あなたが招待した#{current_user.name}さんがゲームに参加しました"
-			# UserNotice.create(user_id: session[:invite_by], room_id: @room.id, notice: user_notice)
-			# WebsocketRails["user_#{session[:invite_by]}"].trigger(:get_user_notice, user_notice)
+			user_notice = "あなたが招待した#{current_user.name}さんがゲームに参加しました"
+			UserNotice.create(user_id: session[:invite_by], room_id: @room.id, notice: user_notice)
+			WebsocketRails["user_#{session[:invite_by]}"].trigger(:get_user_notice, user_notice)
 			items = item_deliver(session[:invite_by], @room.id, @room.invite_bonus)
 			item_names = []
 			items.each { |i|
@@ -96,7 +81,7 @@ class BingoCardsController < ApplicationController
 			}
 			user_notice = "アイテム #{item_names.join(",")}　を獲得しました"
 			UserNotice.create(user_id: session[:invite_by], room_id: @room.id, notice: user_notice)
-			# WebsocketRails["user_#{session[:invite_by]}"].trigger(:get_user_notice, user_notice)
+			WebsocketRails["user_#{session[:invite_by]}"].trigger(:get_user_notice, user_notice)
 		end
 		render :action => 'show', community_id: params[:community_id], room_id: params[:room_id], id: @card.id
 	end
@@ -351,16 +336,17 @@ class BingoCardsController < ApplicationController
 		end
 
 		checks[index] = "t"
-		room_notice = {}
+
 		if card.riichi_lines < params[:riichi_lines].to_i
-			room_notice << {user_name: current_user.name, notice: "リーチ！", color: "magenta"}
 			RoomNotice.create(room_id: params[:room_id], user_name: current_user.name, notice: "リーチ！", color: "magenta")
+			WebsocketRails["#{params[:room_id]}"].trigger(:add_notice, {user_name: current_user.name, notice: "リーチ！", color: "magenta"})
+
 		end
 		card.checks = checks.join(",")
 		card.riichi_lines = params[:riichi_lines].to_i
 		card.holes += 1
 		if card.save
-			render :json => {checks: checks, room_notice: room_notice}.to_json
+			render :json => checks
 		else
 			render :json => 0
 		end
@@ -447,42 +433,37 @@ class BingoCardsController < ApplicationController
 		when 0
 			selected_num = increase_rate_random_num(params[:card_id], item.effect)
 			notice = "#{selected_num} の確率が上昇しました"
-			room_notice = {}
-			room_notice << {user_name: current_user.name, notice: notice, color: "black"}
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
-			render :json => {room_notice: room_notice}.to_json and return_val
+			WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "black"})
+			render :json => notice.to_json and return
 		when 1
 			if params[:number] == nil
 				render :json => "error3" and return
 			end
 			increase_rate(room.id, item.effect, params[:number])
 			notice = "#{params[:number]} の確率が上昇しました"
-			room_notice = {}
-			room_notice << {user_name: current_user.name, notice: notice, color: "black"}
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
-			render :json => {room_notice: room_notice}.to_json and return
+			WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "black"})
+			render :json => notice.to_json and return
 		when 2
 			add_free(params[:card_id])
 			notice = "#{item.name}を使用しました"
-			room_notice = {}
-			room_notice << {user_name: current_user.name, notice: notice, color: "black"}
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
-			render :json => {room_notice: room_notice, user_notice: {notice: "FREEが追加されました"}}.to_json and return
+			WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "black"})
+			render :json => "FREEが追加されました".to_json and return
 		when 3
 			n = Array.new
 			n = delete_number(room.id, item.effect.to_i)
 			notice = "#{n.join(',')}が取り消されました"
-			room_notice = {}
-			room_notice << {user_name: current_user.name, notice: notice, color: "black"}
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
-			render :json => {room_notice: room_notice}.to_json and return
+			WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "black"})
+			render :json =>	notice.to_json and return
 		when 4
 			shuffle_card(params[:card_id])
 			notice = "#{item.name}を使用しました"
-			room_notice = {}
-			room_notice << {user_name: current_user.name, notice: notice, color: "black"}
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
-			render :json => {room_notice: room_notice, user_notice: {notice: "カード上の数字がシャッフルされました"}}.to_json and return
+			WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "black"})
+			render :json => "カード上の数字がシャッフルされました".to_json and return
 		end
 	end
 
@@ -492,15 +473,15 @@ class BingoCardsController < ApplicationController
 		item = Item.find(user_item.item_id)
 
 		if room.isPlaying && !item.AllowUseDuringGame
-			render :json => {user_notice: {notice: "error1"}} and return
+			render :json => "error1" and return
 		end
 
 		if user_item == nil
-			render :json => {user_notice: {notice: "error2"}} and return
+			render :json => "error2" and return
 		end
 
 		if user_item.user_id != current_user.id
-			render :json => {user_notice: {notice: "error3"}} and return
+			render :json => "error3" and return
 		end
 
 		quantity = user_item.quantity
@@ -509,21 +490,18 @@ class BingoCardsController < ApplicationController
 		when 0
 			selected_num = increase_rate_random_num_all(params[:card_id], item.effect, quantity)
 			user_item.destroy
-			room_notice = {}
 			notice = "#{selected_num.join(", ")} の確率が上昇しました"
-			room_notice << {user_name: current_user.name, notice: notice, color: "black"}
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
-			render :json => {room_notice: room_notice}.to_json and return
+			WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "black"})
+			render :json => notice.to_json and return
 		when 1
-			user_notice ={}
-			user_notice <<  {notice: "このアイテムはまとめて使用できません"}
-			render :json => {user_notice: user_notice}.to_json and return
+			render :json => "このアイテムはまとめて使用できません".to_json and return
 		when 2
 			use_quantity = add_free_all(params[:card_id], quantity.to_i)
-			room_notice = {}
+
 			notice = "#{item.name}を#{use_quantity}個使用しました"
-			room_notice << {user_name: current_user.name, notice: notice, color: "black"}
 			RoomNotice.create(room_id: room.id, user_name: current_user.name, notice: notice)
+			WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "black"})
 
 			if quantity - use_quantity <= 0
 				user_item.destroy
@@ -531,7 +509,7 @@ class BingoCardsController < ApplicationController
 				user_item.quantity -= use_quantity
 				user_item.save
 			end
-			render :json => {room_notice: room_notice}.to_json and return
+			render :json => "FREEが追加されました".to_json and return
 		end
 	end
 
@@ -748,11 +726,11 @@ class BingoCardsController < ApplicationController
 		card_id = params[:card_id]
 
 		if !check_bingo(card_id, room_id)
-			render :json.to_json => false and return
+			render :json => false and return
 		end
 
 		if BingoUser.exists?(room_id: room_id, user_id: current_user.id)
-			render :json => true.to_json and return
+			render :json => true and return
 		end
 
 		notice = "ビンゴ！！！"
@@ -765,7 +743,7 @@ class BingoCardsController < ApplicationController
 		card.save
 
 		BingoUser.create(room_id: room_id, user_id: current_user.id, times: room.times, seconds: seconds)
-		render :json => true.to_json and return
+		render :json => true and return
 	end
 
 	def auto_check
@@ -781,17 +759,6 @@ class BingoCardsController < ApplicationController
 		card.save
 		settings.save
 		render :json => true and return
-	end
-
-	def check_first_join
-		is_first = false
-		room_user = RoomUserList.find_by(room_id: params[:room_id], user_id: params[:user_id])
-		if room_user.is_first_join
-			is_first = true
-			room_user.is_first_join = false
-			room_user.save
-		end
-		render :json => is_first.to_json and return
 	end
 
 
@@ -888,6 +855,5 @@ class BingoCardsController < ApplicationController
 		end
 		return selected_items
 	end
-
 
 end
