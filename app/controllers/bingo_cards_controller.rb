@@ -28,6 +28,7 @@ class BingoCardsController < ApplicationController
 		@done_bingo = @card.done_bingo
 		@get_items = distribute_item(params[:community_id], params[:room_id])
 		@invite_url = "http://www.bingo-live.tk"+pre_join_room_path(@community.id,@room.id)+"?invite_by=#{current_user.id}"
+		@my_page_url = Settings.url[:websocket_url]
 	end
 
 	def create

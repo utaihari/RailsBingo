@@ -21,7 +21,8 @@ $(->
 	@is_auto = $('#data').data("is_auto")
 	@done_bingo = $('#data').data("done_bingo")
 	@show_hint = $('#data').data("show_hint")
-	@ws_rails = new WebSocketRails("bingo-live.tk/websocket")
+	@url = $('#data').data("url")
+	@ws_rails = new WebSocketRails("#{@url}/websocket")
 
 	@get_number = @ws_rails.subscribe("#{@room_id}")
 	@get_number.bind("websocket_add_number", @receive_number)

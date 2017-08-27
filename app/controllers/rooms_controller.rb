@@ -85,6 +85,7 @@ class RoomsController < ApplicationController
       shape_rendering: 'crispEdges',
       module_size: 3)
     @items = Item.where("((item_type = ?) OR (item_type = ?) OR (item_type = ?)) AND (AllowUseDuringGame = 't')",0,2,4)
+    @my_page_url = Settings.url[:websocket_url]
   end
 
   def edit

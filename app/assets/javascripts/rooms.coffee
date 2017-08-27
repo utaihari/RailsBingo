@@ -11,7 +11,8 @@ $(->
 	@room_id = $("#data").data("room_id")
 	@condition = $("#data").data("condition")
 	@notices_update(@room_id)
-	@ws_rails = new WebSocketRails("bingo-live.tk/websocket")
+	@url = $('#data').data("url")
+	@ws_rails = new WebSocketRails("#{@url}/websocket")
 
 	@get_notice = @ws_rails.subscribe("#{@room_id}")
 	@get_notice.bind("add_notice", @receive_notice)

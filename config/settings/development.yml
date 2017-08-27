@@ -1,2 +1,3 @@
 url:
-  url: 'localhost:3000'
+  websocket_url: 'localhost:3001'
+  url: 'localhost'
