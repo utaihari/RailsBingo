@@ -68,7 +68,7 @@ end
 gem 'google-analytics-rails'
 gem 'eventmachine'
 gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'sync_fixes'
-gem 'faye-websocket'
+gem 'faye-websocket', '0.10.0'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-bootstrap-sass-official'
