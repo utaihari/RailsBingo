@@ -103,6 +103,6 @@ Rails.application.configure do
 
 
   GA.tracker = "UA-89830129-1"
-  config.action_cable.allowed_request_origins = [%r{http://bingo-live.tk.*}]
+  config.action_cable.allowed_request_origins = [ /https?:\/\/.*/ ]
 
 end
