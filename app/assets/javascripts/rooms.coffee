@@ -12,16 +12,25 @@ $(->
 	@condition = $("#data").data("condition")
 	@notices_update(@room_id)
 	@url = $('#data').data("url")
-	@ws_rails = new WebSocketRails("#{@url}/websocket")
+	# @ws_rails = new WebSocketRails("#{@url}/websocket")
+	App.notice = App.cable.subscriptions.create {channel: "NoticeChannel", room: @room_id},
+	  received: (data) ->
+	    # Called when there's incoming data on the websocket for this channel
+	    receive_notice(data['notice'])
+	  connected: ->
+    	# Called when the subscription is ready for use on the server
 
-	@get_notice = @ws_rails.subscribe("#{@room_id}")
-	@get_notice.bind("add_notice", @receive_notice)
+	  disconnected: ->
+    	# Called when the subscription is ready for use on the server
+
+	# @get_notice = @ws_rails.subscribe("#{@room_id}")
+	# @get_notice.bind("add_notice", @receive_notice)
 	# @update_notice = setInterval(->
 	# 	@notices_update(@room_id)
 	# ,1500)
 )
 
-@receive_notice = (message) ->
+receive_notice = (message) ->
 	$('#notices').prepend("<div><span class=\"user_name\">#{message.user_name}さん: </span><span><font color=\"#{message.color}\">#{message.notice}</font></span>")
 	return
 

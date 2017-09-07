@@ -13,13 +13,13 @@ class RoomsController < ApplicationController
       @room = @community.room.build
     else
       @room = Room.new(user_id:current_user.id, community_id: params[:community_id],\
-      name: last_room.name, canUseItem: last_room.canUseItem, AllowGuest: last_room.AllowGuest,\
-      AllowJoinDuringGame: last_room.AllowJoinDuringGame, detail: last_room.detail,\
-      number_of_free: last_room.number_of_free.to_i, can_bring_item: last_room.can_bring_item,\
-      profit: last_room.profit.to_i, bingo_score: last_room.bingo_score.to_f,\
-      riichi_score: last_room.riichi_score.to_f, hole_score: last_room.hole_score.to_f,\
-      invite_bonus: last_room.invite_bonus.to_i, show_hint: last_room.show_hint,\
-      pass: last_room.pass, show_top_page: last_room.show_top_page)
+        name: last_room.name, canUseItem: last_room.canUseItem, AllowGuest: last_room.AllowGuest,\
+        AllowJoinDuringGame: last_room.AllowJoinDuringGame, detail: last_room.detail,\
+        number_of_free: last_room.number_of_free.to_i, can_bring_item: last_room.can_bring_item,\
+        profit: last_room.profit.to_i, bingo_score: last_room.bingo_score.to_f,\
+        riichi_score: last_room.riichi_score.to_f, hole_score: last_room.hole_score.to_f,\
+        invite_bonus: last_room.invite_bonus.to_i, show_hint: last_room.show_hint,\
+        pass: last_room.pass, show_top_page: last_room.show_top_page)
     end
   end
   def direct_new
@@ -43,11 +43,11 @@ class RoomsController < ApplicationController
       date = nil
     end
     @room = Room.new(user_id:current_user.id, community_id: params[:community_id], name: params[:room][:name], canUseItem: params[:room][:canUseItem], AllowGuest: params[:room][:AllowGuest],\
-    AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail],\
-    number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i,\
-    bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f,\
-    invite_bonus: params[:room][:invite_bonus].to_i, rates:number_rate.join(","), show_hint:params[:room][:show_hint],\
-    pass: params[:room][:pass], show_top_page: params[:room][:show_top_page], date: date)
+      AllowJoinDuringGame: params[:room][:AllowJoinDuringGame], detail: params[:room][:detail],\
+      number_of_free: params[:room][:number_of_free].to_i, can_bring_item: params[:room][:can_bring_item], profit: params[:room][:profit].to_i,\
+      bingo_score: params[:room][:bingo_score].to_f, riichi_score: params[:room][:riichi_score].to_f, hole_score: params[:room][:hole_score].to_f,\
+      invite_bonus: params[:room][:invite_bonus].to_i, rates:number_rate.join(","), show_hint:params[:room][:show_hint],\
+      pass: params[:room][:pass], show_top_page: params[:room][:show_top_page], date: date)
 
     if @room.save
       redirect_to controller: 'rooms', action: 'show', id: @room.id
@@ -202,7 +202,8 @@ class RoomsController < ApplicationController
     if !@room.can_bring_item
       UserItemList.delete_all(room_id: @room.id, temp: true)
     end
-    WebsocketRails["#{@room.id}"].trigger(:change_room_condition, 2)
+    RoomConditionChannel.broadcast_to("room_condition_#{@room.id}", condition: 2)
+    # WebsocketRails["#{@room.id}"].trigger(:change_room_condition, 2)
   end
 
   def add_number
@@ -245,14 +246,14 @@ class RoomsController < ApplicationController
                 notice = "リーチ！(自動機能により登録されました)"
                 user = User.find(card.user_id)
                 RoomNotice.create!(room_id: params[:room_id], user_name: user.name, notice: notice, color: "magenta")
-                WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "magenta"})
+                # WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "magenta"})
               end
 
               if check_bingo(card_checks)
                 user = User.find(card.user_id)
                 notice = "ビンゴ！(自動機能により登録されました)"
                 RoomNotice.create!(room_id: params[:room_id], user_name: user.name, notice: notice, color: "red")
-                WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "red"})
+                # WebsocketRails["#{room.id}"].trigger(:add_notice, {user_name: current_user.name, notice: notice, color: "red"})
                 card.bingo_lines += 1
                 card.done_bingo = true
                 BingoUser.create(room_id: params[:room_id], user_id: user.id, times: @room.times, seconds: 0, note:"自動ユーザー")
@@ -264,7 +265,8 @@ class RoomsController < ApplicationController
         end
         card.save
       end
-      WebsocketRails["#{@room.id}"].trigger(:websocket_add_number, params[:number])
+      # WebsocketRails["#{@room.id}"].trigger(:websocket_add_number, params[:number])
+      NumberChannel.broadcast_to("number_#{@room.id}", number: params[:number])
       render :json => rates
     else
       render :json => "ビンゴの主催者では有りません"
@@ -348,7 +350,8 @@ class RoomsController < ApplicationController
       end
       card.save
     end
-    WebsocketRails["#{@room.id}"].trigger(:change_room_condition, 1)
+    # WebsocketRails["#{@room.id}"].trigger(:change_room_condition, 1)
+    RoomConditionChannel.broadcast_to("room_condition_#{@room.id}", condition: 1)
   end
 
   def member_list
@@ -517,8 +520,8 @@ class RoomsController < ApplicationController
   # Never trust parameters from the scary internet, only allow the white list through.
   def room_params
     params.require(:room).permit(:name, :canUseItem, :AllowGuest, :AllowJoinDuringGame,\
-    :detail, :profit, :bingo_score, :riichi_score, :hole_score, :number_of_free, :can_bring_item,\
-    :invite_bonus, :show_hint, :pass, :show_top_page, :date)
+      :detail, :profit, :bingo_score, :riichi_score, :hole_score, :number_of_free, :can_bring_item,\
+      :invite_bonus, :show_hint, :pass, :show_top_page, :date)
   end
 
   def isRoomOrganizer(room_id)

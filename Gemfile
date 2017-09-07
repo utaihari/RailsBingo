@@ -66,13 +66,15 @@ platforms :ruby do
 end
 
 gem 'google-analytics-rails'
-gem 'eventmachine'
-gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'sync_fixes'
-gem 'faye-websocket', '0.10.0'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-bootstrap-sass-official'
   gem 'rails-assets-eonasdan-bootstrap-datetimepicker'
 end
-gem 'hiredis'
-gem 'redis', :require => ["redis", "redis/connection/hiredis"]
+# gem 'eventmachine'
+# gem 'websocket-rails', github: 'moaa/websocket-rails', branch: 'sync_fixes'
+# gem 'faye-websocket', '0.10.0'
+
+
+# gem 'hiredis'
+# gem 'redis', :require => ["redis", "redis/connection/hiredis"]

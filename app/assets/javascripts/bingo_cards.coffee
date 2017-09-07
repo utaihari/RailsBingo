@@ -22,17 +22,33 @@ $(->
 	@done_bingo = $('#data').data("done_bingo")
 	@show_hint = $('#data').data("show_hint")
 	@url = $('#data').data("url")
-	@ws_rails = new WebSocketRails("#{@url}/websocket")
+	# @ws_rails = new WebSocketRails("#{@url}/websocket")
 
-	@get_number = @ws_rails.subscribe("#{@room_id}")
-	@get_number.bind("websocket_add_number", @receive_number)
+	# @get_number = @ws_rails.subscribe("#{@room_id}")
+	# @get_number.bind("websocket_add_number", @receive_number)
 
-	@get_condition = @ws_rails.subscribe("#{@room_id}")
-	@get_condition.bind("change_room_condition", @receive_condition)
+	# @get_condition = @ws_rails.subscribe("#{@room_id}")
+	# @get_condition.bind("change_room_condition", @receive_condition)
 
-	@get_notice = @ws_rails.subscribe("user_#{@user_id}")
-	@get_notice.bind("get_user_notice", @receive_notice)
+	# @get_notice = @ws_rails.subscribe("user_#{@user_id}")
+	# @get_notice.bind("get_user_notice", @receive_notice)
 
+
+	App.number = App.cable.subscriptions.create {channel: "NumberChannel", room: @room_id},
+	  received: (data) ->
+	    # Called when there's incoming data on the websocket for this channel
+	    console.log(data)
+	    receive_number(data['number'])
+	App.condition = App.cable.subscriptions.create {channel: "RoomConditionChannel", room: @room_id},
+	  received: (data) ->
+	    # Called when there's incoming data on the websocket for this channel
+	    console.log(data)
+	    receive_condition(data['condition'])
+	App.user_notice = App.cable.subscriptions.create {channel: "UserNoticeChannel", user_id: @user_id},
+	  received: (data) ->
+	    # Called when there's incoming data on the websocket for this channel
+	    console.log(data)
+	    receive_notice(data['notice'])
 
 
 	if is_auto
@@ -64,7 +80,7 @@ $(->
 	return
 )
 
-@receive_number = (number) ->
+receive_number = (number) ->
 	console.log("receive_number")
 	console.log(number)
 	numbers.push(parseInt(number))
@@ -83,7 +99,7 @@ $(->
 
 	number_arrive_time = new Date()
 	return
-@receive_condition = (message) ->
+receive_condition = (message) ->
 	if message == 1
 		notice.push("ゲームが始まりました")
 		display_notice()
@@ -105,7 +121,7 @@ $(->
 		$('#result').show('slow')
 		$('[data-remodal-id=result]').remodal().open()
 	return
-@receive_notice = (message) ->
+receive_notice = (message) ->
 	notice.push(message)
 	display_notice()
 	return
