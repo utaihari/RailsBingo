@@ -76,7 +76,7 @@ end
 # gem 'faye-websocket', '0.10.0'
 
 
-gem 'hiredis'
-gem 'redis', :require => ["redis", "redis/connection/hiredis"]
-# gem 'redis'
-gem 'redis-rails'
+# gem 'hiredis'
+# gem 'redis', :require => ["redis", "redis/connection/hiredis"]
+# # gem 'redis'
+# gem 'redis-rails'
