@@ -49,7 +49,7 @@ gem 'devise'
 
 gem 'twitter-bootstrap-rails'
 gem 'jquery-turbolinks'
-gem "compass-rails"
+gem 'compass-rails', github: 'Compass/compass-rails'
 
 gem 'bootstrap-sass'
 
@@ -76,7 +76,7 @@ end
 # gem 'faye-websocket', '0.10.0'
 
 
-gem 'hiredis'
-gem 'redis', :require => ["redis", "redis/connection/hiredis"]
-# gem 'redis'
+# gem 'hiredis'
+# gem 'redis', :require => ["redis", "redis/connection/hiredis"]
+gem 'redis'
 gem 'redis-rails'
